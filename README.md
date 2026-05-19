@@ -1,6 +1,7 @@
 # AI-Native CRM Backend (MVP)
 
 [![Repo](https://img.shields.io/badge/GitHub-2nase%2Fcrm--backend-181717?logo=github)](https://github.com/2nase/crm-backend)
+[![CI](https://github.com/2nase/crm-backend/actions/workflows/ci.yml/badge.svg)](https://github.com/2nase/crm-backend/actions/workflows/ci.yml)
 [![NestJS](https://img.shields.io/badge/NestJS-10-E0234E?logo=nestjs&logoColor=white)](https://nestjs.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org)

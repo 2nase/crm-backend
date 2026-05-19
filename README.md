@@ -1,5 +1,11 @@
 # AI-Native CRM Backend (MVP)
 
+[![Repo](https://img.shields.io/badge/GitHub-2nase%2Fcrm--backend-181717?logo=github)](https://github.com/2nase/crm-backend)
+[![NestJS](https://img.shields.io/badge/NestJS-10-E0234E?logo=nestjs&logoColor=white)](https://nestjs.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org)
+[![Prisma](https://img.shields.io/badge/Prisma-5-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io)
+
 The backend foundation of an **AI-native Sales Execution System** — not a standard CRM. It is designed to evolve into a fully autonomous AI Sales Operating System that manages pipeline, analyzes conversations, generates insights, automates sales workflows, and acts as a sales co-pilot.
 
 This MVP delivers the structural skeleton: domain model, REST API, event bus, agent plugin system, automation rules, and an AI service layer wired with deterministic stubs (no real AI calls).

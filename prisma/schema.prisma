@@ -1,0 +1,200 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ContactStatus {
+  LEAD
+  PROSPECT
+  CUSTOMER
+  CHURNED
+  INACTIVE
+}
+
+enum DealStage {
+  LEAD
+  QUALIFIED
+  PROPOSAL
+  NEGOTIATION
+  WON
+  LOST
+}
+
+enum TaskType {
+  FOLLOW_UP
+  CALL
+  EMAIL
+  MEETING
+  PROPOSAL
+  ADMIN
+  OTHER
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TaskStatus {
+  OPEN
+  IN_PROGRESS
+  DONE
+  CANCELLED
+  OVERDUE
+}
+
+enum EmailCategory {
+  OBJECTION
+  FOLLOW_UP
+  CLOSING
+  ONBOARDING
+  PRE_SETTING
+}
+
+enum ActivityType {
+  CONTACT_CREATED
+  CONTACT_UPDATED
+  CONTACT_DELETED
+  DEAL_CREATED
+  DEAL_UPDATED
+  DEAL_STAGE_CHANGED
+  CALL_LOGGED
+  EMAIL_SENT
+  TASK_CREATED
+  TASK_COMPLETED
+  TASK_OVERDUE
+  CONTACT_INACTIVE
+  NOTE_ADDED
+  AGENT_TRIGGERED
+}
+
+model Contact {
+  id              String        @id @default(cuid())
+  name            String
+  email           String?       @unique
+  phone           String?
+  company         String?
+  status          ContactStatus @default(LEAD)
+  lastInteraction DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  deals        Deal[]
+  tasks        Task[]
+  calls        Call[]
+  emails       Email[]
+  activityLogs ActivityLog[]
+
+  @@index([status])
+  @@index([lastInteraction])
+  @@index([createdAt])
+}
+
+model Deal {
+  id           String    @id @default(cuid())
+  title        String
+  value        Decimal   @default(0) @db.Decimal(12, 2)
+  stage        DealStage @default(LEAD)
+  probability  Int       @default(50)
+  contactId    String
+  contact      Contact   @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  stageHistory Json      @default("[]")
+  closedAt     DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  tasks        Task[]
+
+  @@index([contactId])
+  @@index([stage])
+  @@index([createdAt])
+}
+
+model Task {
+  id          String       @id @default(cuid())
+  title       String
+  type        TaskType     @default(FOLLOW_UP)
+  priority    TaskPriority @default(MEDIUM)
+  status      TaskStatus   @default(OPEN)
+  dueDate     DateTime?
+  contactId   String
+  contact     Contact      @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  dealId      String?
+  deal        Deal?        @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  completedAt DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([contactId])
+  @@index([dealId])
+  @@index([status])
+  @@index([dueDate])
+  @@index([priority])
+}
+
+model Call {
+  id             String   @id @default(cuid())
+  contactId      String
+  contact        Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  duration       Int      @default(0)
+  timestamp      DateTime @default(now())
+  transcript     String?
+  summary        String?
+  sentimentScore Float?
+  objections     String[] @default([])
+  metadata       Json     @default("{}")
+  createdAt      DateTime @default(now())
+
+  @@index([contactId])
+  @@index([timestamp])
+  @@index([sentimentScore])
+}
+
+model Email {
+  id         String         @id @default(cuid())
+  contactId  String
+  contact    Contact        @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  subject    String
+  body       String
+  templateId String?
+  template   EmailTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  sentAt     DateTime       @default(now())
+  createdAt  DateTime       @default(now())
+
+  @@index([contactId])
+  @@index([sentAt])
+  @@index([templateId])
+}
+
+model EmailTemplate {
+  id        String        @id @default(cuid())
+  title     String
+  category  EmailCategory
+  subject   String
+  body      String
+  variables Json          @default("[]")
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  emails    Email[]
+
+  @@index([category])
+}
+
+model ActivityLog {
+  id        String       @id @default(cuid())
+  type      ActivityType
+  message   String
+  contactId String?
+  contact   Contact?     @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  metadata  Json         @default("{}")
+  createdAt DateTime     @default(now())
+
+  @@index([contactId])
+  @@index([createdAt])
+  @@index([type])
+}

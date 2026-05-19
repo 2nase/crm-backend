@@ -5,6 +5,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org)
 [![Prisma](https://img.shields.io/badge/Prisma-5-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red)](LICENSE)
 
 The backend foundation of an **AI-native Sales Execution System** — not a standard CRM. It is designed to evolve into a fully autonomous AI Sales Operating System that manages pipeline, analyzes conversations, generates insights, automates sales workflows, and acts as a sales co-pilot.
 
@@ -286,3 +287,11 @@ crm-backend/
 ├── package.json · tsconfig.json · nest-cli.json
 └── .env.example · .gitignore · README.md
 ```
+
+---
+
+## License
+
+**Proprietary — All Rights Reserved.** See [LICENSE](LICENSE) for full terms.
+
+The source is publicly viewable for reference only. No license is granted to use, copy, modify, redistribute, host as a service, or train ML models on this code without prior written permission. For commercial-use or licensing inquiries, contact via the repository.

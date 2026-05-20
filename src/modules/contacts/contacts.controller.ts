@@ -18,8 +18,8 @@ export class ContactsController {
   }
 
   @Get()
-  findAll(): Promise<Contact[]> {
-    return this.service.findAll();
+  findAll(@Query('q') q?: string): Promise<Contact[]> {
+    return this.service.findAll({ q });
   }
 
   @Get(':id')

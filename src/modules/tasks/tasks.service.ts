@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ActivityType, Prisma, Task, TaskStatus } from '@prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { EventBusService } from '../events/event-bus.service';
@@ -16,6 +16,10 @@ export class TasksService {
   ) {}
 
   async create(dto: CreateTaskDto): Promise<Task> {
+    // Verify contact exists
+    const contact = await this.prisma.contact.findUnique({ where: { id: dto.contactId } });
+    if (!contact) throw new BadRequestException(`Contact ${dto.contactId} not found`);
+
     const task = await this.prisma.task.create({
       data: {
         title: dto.title,

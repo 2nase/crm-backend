@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ActivityType, Deal, DealStage, Prisma } from '@prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { EventBusService } from '../events/event-bus.service';
@@ -24,6 +24,10 @@ export class DealsService {
   ) {}
 
   async create(dto: CreateDealDto): Promise<Deal> {
+    // Verify contact exists
+    const contact = await this.prisma.contact.findUnique({ where: { id: dto.contactId } });
+    if (!contact) throw new BadRequestException(`Contact ${dto.contactId} not found`);
+
     const initialStage: DealStage = dto.stage ?? DealStage.LEAD;
     const history: StageHistoryEntry[] = [
       { from: null, to: initialStage, at: new Date().toISOString() },

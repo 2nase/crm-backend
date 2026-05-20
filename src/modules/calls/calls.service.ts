@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ActivityType, Call, Prisma } from '@prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { EventBusService } from '../events/event-bus.service';
@@ -16,6 +16,10 @@ export class CallsService {
   ) {}
 
   async create(dto: CreateCallDto): Promise<Call> {
+    // Verify contact exists
+    const contact = await this.prisma.contact.findUnique({ where: { id: dto.contactId } });
+    if (!contact) throw new BadRequestException(`Contact ${dto.contactId} not found`);
+
     const call = await this.prisma.call.create({
       data: {
         contactId: dto.contactId,

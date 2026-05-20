@@ -11,11 +11,13 @@ export class ActivityLogsController {
     @Query('contactId') contactId?: string,
     @Query('type') type?: ActivityType,
     @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
   ): Promise<ActivityLog[]> {
     return this.service.findAll({
       contactId,
       type,
       limit: limit ? parseInt(limit, 10) : undefined,
+      offset: offset ? parseInt(offset, 10) : undefined,
     });
   }
 }

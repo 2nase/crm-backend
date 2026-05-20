@@ -24,4 +24,12 @@ export class CreateContactDto {
   @IsOptional()
   @IsEnum(ContactStatus)
   status?: ContactStatus;
+
+  @IsOptional()
+  @IsString()
+  tags?: string;
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { Email } from '@prisma/client';
 import { EmailsService } from './emails.service';
 import { CreateEmailDto } from './dto/create-email.dto';
@@ -20,5 +20,10 @@ export class EmailsController {
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Email> {
     return this.service.findOne(id);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string): Promise<{ id: string; deleted: true }> {
+    return this.service.remove(id);
   }
 }

@@ -13,6 +13,7 @@ async function bootstrap(): Promise<void> {
       transformOptions: { enableImplicitConversion: true },
     }),
   );
+  app.enableCors({ origin: '*' });
   app.enableShutdownHooks();
 
   const port = parseInt(process.env.PORT ?? '3000', 10);

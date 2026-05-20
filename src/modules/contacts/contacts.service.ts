@@ -23,6 +23,8 @@ export class ContactsService {
         phone: dto.phone,
         company: dto.company,
         ...(dto.status ? { status: dto.status } : {}),
+        ...(dto.tags !== undefined ? { tags: dto.tags } : {}),
+        ...(dto.notes !== undefined ? { notes: dto.notes } : {}),
         lastInteraction: new Date(),
       },
     });
@@ -40,8 +42,20 @@ export class ContactsService {
     return contact;
   }
 
-  findAll(): Promise<Contact[]> {
-    return this.prisma.contact.findMany({ orderBy: { createdAt: 'desc' } });
+  findAll(filters: { q?: string } = {}): Promise<Contact[]> {
+    return this.prisma.contact.findMany({
+      where: filters.q
+        ? {
+            OR: [
+              { name: { contains: filters.q, mode: 'insensitive' } },
+              { email: { contains: filters.q, mode: 'insensitive' } },
+              { company: { contains: filters.q, mode: 'insensitive' } },
+              { tags: { contains: filters.q, mode: 'insensitive' } },
+            ],
+          }
+        : {},
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   async findOne(id: string): Promise<Contact> {
@@ -58,6 +72,8 @@ export class ContactsService {
       ...(dto.phone !== undefined ? { phone: dto.phone } : {}),
       ...(dto.company !== undefined ? { company: dto.company } : {}),
       ...(dto.status !== undefined ? { status: dto.status } : {}),
+      ...(dto.tags !== undefined ? { tags: dto.tags } : {}),
+      ...(dto.notes !== undefined ? { notes: dto.notes } : {}),
     };
     const updated = await this.prisma.contact.update({ where: { id }, data });
     await this.activity.log({

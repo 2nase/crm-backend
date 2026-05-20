@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ActivityType, Email } from '@prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { EventBusService } from '../events/event-bus.service';
@@ -15,6 +15,10 @@ export class EmailsService {
   ) {}
 
   async create(dto: CreateEmailDto): Promise<Email> {
+    // Verify contact exists
+    const contact = await this.prisma.contact.findUnique({ where: { id: dto.contactId } });
+    if (!contact) throw new BadRequestException(`Contact ${dto.contactId} not found`);
+
     const email = await this.prisma.email.create({
       data: {
         contactId: dto.contactId,
@@ -56,5 +60,11 @@ export class EmailsService {
     const email = await this.prisma.email.findUnique({ where: { id } });
     if (!email) throw new NotFoundException(`Email ${id} not found`);
     return email;
+  }
+
+  async remove(id: string): Promise<{ id: string; deleted: true }> {
+    await this.findOne(id);
+    await this.prisma.email.delete({ where: { id } });
+    return { id, deleted: true };
   }
 }

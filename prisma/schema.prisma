@@ -81,6 +81,8 @@ model Contact {
   phone           String?
   company         String?
   status          ContactStatus @default(LEAD)
+  tags            String?
+  notes           String?
   lastInteraction DateTime?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt

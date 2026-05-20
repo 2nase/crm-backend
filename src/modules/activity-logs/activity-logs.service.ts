@@ -24,7 +24,7 @@ export class ActivityLogsService {
     });
   }
 
-  findAll(filters: { contactId?: string; type?: ActivityType; limit?: number }): Promise<ActivityLog[]> {
+  findAll(filters: { contactId?: string; type?: ActivityType; limit?: number; offset?: number }): Promise<ActivityLog[]> {
     return this.prisma.activityLog.findMany({
       where: {
         ...(filters.contactId ? { contactId: filters.contactId } : {}),
@@ -32,6 +32,7 @@ export class ActivityLogsService {
       },
       orderBy: { createdAt: 'desc' },
       take: Math.min(filters.limit ?? 100, 500),
+      ...(filters.offset ? { skip: filters.offset } : {}),
     });
   }
 }

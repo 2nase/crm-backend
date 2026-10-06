@@ -22,3 +22,8 @@ reports/
 # Claude Code hook state
 .claude/.typecheck-ok
 .claude/.session-start
+
+# Scrapling spider dev cache and checkpoints (can hold cookies, headers, pickled requests)
+.scrapling_cache/
+dev_cache/
+crawl_data/

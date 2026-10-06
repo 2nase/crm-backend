@@ -135,7 +135,7 @@ async def parse(self, response: Response):
     # Pass extra headers for this specific request
     yield Request(
         "https://api.example.com/data",
-        headers={"Authorization": "Bearer token123"},
+        headers={"Accept": "application/json"},
         callback=self.parse_api,
     )
 

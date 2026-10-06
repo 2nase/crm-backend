@@ -32,7 +32,7 @@ DynamicFetcher.fetch('https://example.com', real_chrome=True)
 ```
 If you have a Google Chrome browser installed, use this option. It's the same as the first option, but it will use the Google Chrome browser you installed on your device instead of Chromium. This will make your requests look more authentic, so they're less detectable for better results.
 
-If you don't have Google Chrome installed and want to use this option, you can use the command below in the terminal to install it for the library instead of installing it manually:
+If you don't have Google Chrome installed and want to use this option, the command below installs (or reinstalls) Google Chrome system-wide, outside the project, and needs root/administrator rights (on Linux it runs `apt-get` as root, via `sudo`/`su` if needed), so only run it with the user's explicit approval:
 ```commandline
 playwright install chrome
 ```

@@ -81,6 +81,6 @@ The `Response` object can also convert the page to clean, LLM-ready Markdown in 
 ```python
 markdown = Fetcher.get('https://example.com').markdown(main_content_only=True)
 ```
-Scripts, styles, and hidden/prompt-injection content are always removed before conversion, and you can pass `css_selector` to convert specific elements only. It requires the `rag` extra (included in `ai`/`shell`/`all` too). See `../building-rag-systems.md` for the full guide.
+Scripts, styles, and some hidden content (elements whose inline `style` contains `display:none`, `visibility:hidden`, `opacity:0`, `font-size:0`, `height:0`, or `width:0`, `aria-hidden="true"` elements, `<template>` tags, HTML comments, and zero-width/control characters) are always removed before conversion, and you can pass `css_selector` to convert specific elements only. It requires the `rag` extra (included in `ai`/`shell`/`all` too). See `../building-rag-systems.md` for the full guide.
 
 **Note:** Unlike the [Selector](parsing/main_classes.md#selector) class, the `Response` class's body is always bytes since v0.4.

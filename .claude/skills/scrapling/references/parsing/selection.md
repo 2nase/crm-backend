@@ -74,7 +74,7 @@ title = page.xpath('//*[@class="product"]//h1[contains(text(),"Phone")]/text()')
 You can nest and chain selectors as you want, given that they return results
 ```python
 page.css('.product')[0].css('h1:contains("Phone")::text').get()
-page.xpath('//*[@class="product"]')[0].xpath('//h1[contains(text(),"Phone")]/text()').get()
+page.xpath('//*[@class="product"]')[0].xpath('.//h1[contains(text(),"Phone")]/text()').get()
 page.xpath('//*[@class="product"]')[0].css('h1:contains("Phone")::text').get()
 ```
 Another example
@@ -120,7 +120,7 @@ Given an element (e.g., a product found by title), calling `.find_similar()` on 
 
 Arguments for `find_similar()`:
 
-* **similarity_threshold**: The percentage for comparing elements' attributes (step 3). Default is 0.2 (tag attributes must be at least 20% similar). Set to 0 to disable this check entirely.
+* **similarity_threshold**: The percentage for comparing elements' attributes (step 3). Default is 0.2 (tag attributes must be at least 20% similar). Set to 0 to accept any attribute similarity (but if the original element has no attributes left after `ignore_attributes`, candidates that have some are still dropped unless `match_text` is `True`).
 * **ignore_attributes**: The attribute names passed will be ignored while matching the attributes in the last step. The default value is `('href', 'src',)` because URLs can change significantly across elements, making them unreliable.
 * **match_text**: If `True`, the element's text content will be considered when matching (Step 3). Using this argument in typical cases is not recommended, but it depends.
 

@@ -18,3 +18,7 @@ coverage
 # research working files
 research_notes/
 reports/
+
+# Claude Code hook state
+.claude/.typecheck-ok
+.claude/.session-start

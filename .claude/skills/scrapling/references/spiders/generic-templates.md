@@ -94,7 +94,7 @@ result = MySitemap().start()
 
 ### How URLs are dispatched
 
-For each URL in the sitemap, `SitemapSpider` checks every rule's `LinkExtractor.matches(url)` in order. The first matching rule wins, and a `Request` is yielded with that rule's callback. If no rule matches and `rules()` is non-empty, the URL is dropped (matches Scrapy's behavior). If `rules()` returns an empty list (or the matching rule has no `callback`), the URL is followed without a callback, and in 0.4.15 `response.follow()` then inherits the sitemap's internal callback, so the page is parsed as a sitemap (logging a warning and yielding nothing) and never reaches `parse()`. To route every URL to `parse()`, use a catch-all rule with an explicit callback, e.g. `CrawlRule(LinkExtractor(), callback=self.parse)`, and override `parse()`, which raises `NotImplementedError` by default.
+For each URL in the sitemap, `SitemapSpider` checks every rule's `LinkExtractor.matches(url)` in order. The first matching rule wins, and a `Request` is yielded with that rule's callback. If no rule matches and `rules()` is non-empty, the URL is dropped (matches Scrapy's behavior). If `rules()` returns an empty list (or the matching rule has no `callback`), the URL is followed without a callback, and in 0.4.15 `response.follow()` then inherits the sitemap's internal callback, so the page is parsed as a sitemap (logging a warning and yielding nothing) and never reaches `parse()`. To route every http(s) URL to `parse()`, use a catch-all rule with an explicit callback and the extension filter disabled, e.g. `CrawlRule(LinkExtractor(deny_extensions=()), callback=self.parse)`, and override `parse()`, which raises `NotImplementedError` by default.
 
 ### Sitemap indexes
 

@@ -39,7 +39,7 @@ Some BeautifulSoup shortcuts have no direct Scrapling equivalent. Scrapling avoi
 | Get previous sibling of an element                              | `prev_element = element.previous_sibling`                                                                     | `prev_element = element.previous`                                                 |
 | Navigating to children                                          | `children = list(element.children)`                                                                           | `children = element.children`                                                     |
 | Get all descendants of an element                               | `children = list(element.descendants)`                                                                        | `children = element.below_elements`                                               |
-| Filtering a group of elements that satisfies a condition        | `group = soup.find('p', 'story').css.filter('a')`                                                             | `group = page.find_all('p', 'story').filter(lambda p: p.tag == 'a')`              |
+| Filtering a group of elements that satisfies a condition        | `group = soup.find('p', 'story').css.filter('a')`                                                             | `group = page.find('p', class_='story').children.filter(lambda p: p.tag == 'a')`  |
 
 
 ¹ **Note:** BS4's `find_previous`/`find_all_previous` searches all preceding elements in document order, while Scrapling's `path` only returns ancestors (the parent chain). These are not exact equivalents, but ancestor search covers the most common use case.

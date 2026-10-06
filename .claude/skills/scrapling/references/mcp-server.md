@@ -210,19 +210,19 @@ Start with `make_request` (fastest, lowest resource cost). Escalate to `fetch` i
 ## Content extraction tips
 
 - Use `css_selector` to narrow results before they reach the model -- this saves significant tokens.
-- `main_content_only=true` (default) strips nav/footer by restricting to `<body>`.
+- `main_content_only=true` (default) restricts output to `<body>` and strips `<script>`, `<style>`, `<noscript>`, and `<svg>` tags (in 0.4.15, an `<svg>` that contains a `<style>` can leave later `<noscript>`/`<svg>` elements in place); nav/footer elements inside `<body>` are kept.
 - `extraction_type="markdown"` (default) is best for readability. Use `"text"` for minimal output, `"html"` when structure matters.
 - If a `css_selector` matches multiple elements, all are returned in the `content` list.
 
 ## Prompt injection protection
 
-When `main_content_only=true` (the default), the server automatically sanitizes scraped content to prevent prompt injection from malicious websites. It strips:
+When `main_content_only=true` (the default), the server automatically sanitizes scraped content to reduce the risk of prompt injection from malicious websites. It strips:
 
-- CSS-hidden elements (`display:none`, `visibility:hidden`, `opacity:0`, `font-size:0`, `height:0`, `width:0`)
+- Elements whose inline `style` attribute contains `display:none`, `visibility:hidden`, `opacity:0`, `font-size:0`, `height:0`, or `width:0` (exact lowercase substrings, optionally with one space after the colon); elements hidden by stylesheet rules, the `hidden` attribute, or off-screen positioning are not stripped
 - `aria-hidden="true"` elements
 - `<template>` tags
 - HTML comments
-- Zero-width unicode characters
+- Zero-width unicode characters U+200B, U+200C, U+200D, U+2060, U+FEFF, and U+180E in text (other invisible characters, such as bidi controls and Unicode tag characters, are not stripped)
 
 Keep `main_content_only=true` for maximum protection.
 
@@ -300,7 +300,7 @@ The URL can be a WebSocket endpoint (`ws://`/`wss://`), which is what managed br
 
 **Notes:**
 
-- The browser is already running, so options that only apply while launching one are ignored for CDP sessions: `headless`, `real_chrome`, and `executable_path` (including the server-wide default).
+- The browser is already running, so options that only apply while launching one are ignored for CDP sessions: `headless`, `real_chrome`, `executable_path` (including the server-wide default), and the stealthy-only `hide_canvas`, `block_webrtc`, and `allow_webgl`.
 - Everything else still applies (`locale`, `useragent`, `proxy`, `cookies`, `timezone_id`, and so on), as each session creates its own browser context on the remote browser.
 
 ## Authentication

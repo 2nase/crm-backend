@@ -361,8 +361,8 @@ print(stats.log_levels_counter)
 # {'debug': 200, 'info': 50, 'warning': 3, 'error': 1, 'critical': 0}
 
 # Timing information
-print(stats.start_time)       # Unix timestamp when crawl started
-print(stats.end_time)         # Unix timestamp when crawl finished
+print(stats.start_time)       # Monotonic event-loop clock time when crawl started (not a Unix timestamp)
+print(stats.end_time)         # Monotonic event-loop clock time when crawl finished (not a Unix timestamp)
 print(stats.download_delay)   # The download delay used (seconds)
 
 # Concurrency settings used

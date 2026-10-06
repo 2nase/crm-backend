@@ -41,7 +41,7 @@ Two arguments control the output:
 markdown = Fetcher.get("https://example.com/docs/page").markdown(css_selector="article")
 ```
 
-Whatever you pass, scripts, styles, and hidden content are always removed before conversion. This is the same cleaning the [MCP server](mcp-server.md) uses to protect AI agents from prompt injection: CSS-hidden elements, `aria-hidden` elements, `<template>` tags, HTML comments, and zero-width characters never reach your model.
+Whatever you pass, scripts, styles, and some hidden content are always removed before conversion. This is the same cleaning the [MCP server](mcp-server.md) uses to reduce prompt-injection risk for AI agents: elements whose inline `style` attribute contains `display:none`, `visibility:hidden`, `opacity:0`, `font-size:0`, `height:0`, or `width:0` (exact lowercase substrings, optionally with one space after the colon), `aria-hidden="true"` elements, `<template>` tags, HTML comments, and the zero-width characters U+200B, U+200C, U+200D, U+2060, U+FEFF, and U+180E in text are removed. Elements hidden in other ways (stylesheet rules, the `hidden` attribute, off-screen positioning) and other invisible characters (such as bidi controls and Unicode tag characters) are not removed and can still reach your model.
 
 ## A whole website to a Markdown corpus
 

@@ -14,3 +14,7 @@ coverage
 
 # playwright-cli output (snapshots, screenshots, session data)
 .playwright-cli/
+
+# research working files
+research_notes/
+reports/

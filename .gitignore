@@ -11,3 +11,6 @@ coverage
 
 # unlazy working files
 .unlazy/
+
+# playwright-cli output (snapshots, screenshots, session data)
+.playwright-cli/

@@ -1,32 +1,40 @@
 #!/bin/bash
-# Stop hook: Claude cannot finish while the project-wide typecheck is red.
-# Runs tsc only when src/, prisma/ or TS/npm config changed since the last green run
-# (or since session start). Whole project on purpose: tsc on single files ignores
+# Stop hook: Claude cannot finish while the project typecheck or Prisma client generation is red.
+# Runs only when a .ts file, prisma/schema.prisma or TS/npm config changed since the last green
+# run (or since session start). Whole project on purpose: tsc on single files ignores
 # tsconfig.json, and NestJS decorators need experimentalDecorators/emitDecoratorMetadata.
 cd "$CLAUDE_PROJECT_DIR" || exit 0
 input=$(cat)
+export CHECKPOINT_DISABLE=1 OPENCOLLECTIVE_HIDE=1
 
 # Documented loop guard: on the retry turn let Claude stop and report instead of looping.
 printf '%s' "$input" | grep -q '"stop_hook_active": *true' && exit 0
 
-watched="src prisma tsconfig.json package.json"
 ok=.claude/.typecheck-ok
 ref=$ok
 [ -f "$ref" ] || ref=.claude/.session-start
 if [ -f "$ref" ]; then
-  # shellcheck disable=SC2086
-  [ -z "$(find $watched -newer "$ref" -print -quit 2>/dev/null)" ] && exit 0
+  # Same files tsc compiles: every .ts outside node_modules, dist and dot-directories.
+  changed=$(find . \( -path ./node_modules -o -path ./dist -o -path './.*' \) -prune -o \
+    \( -name '*.ts' -o -name schema.prisma -o -name 'tsconfig*.json' -o -name 'package*.json' \) \
+    -newer "$ref" -print -quit 2>/dev/null)
 else
-  # shellcheck disable=SC2086
-  [ -z "$(git status --porcelain -- $watched 2>/dev/null)" ] && exit 0
+  changed=$(git status --porcelain -- '*.ts' prisma/schema.prisma 'tsconfig*.json' 'package*.json' 2>/dev/null)
 fi
+[ -z "$changed" ] && exit 0
 
 if [ ! -x node_modules/.bin/tsc ]; then
-  echo "Typecheck gate: node_modules missing. Run 'npm ci && npx prisma generate' (do NOT edit tsconfig to silence TS5101)." >&2
+  echo "Typecheck gate: node_modules missing. Run 'npm ci && npm run prisma:generate' (do NOT edit tsconfig to silence TS5101)." >&2
   exit 2
 fi
 if [ ! -f "$ok" ] || [ prisma/schema.prisma -nt "$ok" ]; then
-  node_modules/.bin/prisma generate >/dev/null 2>&1 || true
+  if ! gen=$(node_modules/.bin/prisma generate 2>&1); then
+    {
+      echo "prisma generate failed. Fix prisma/schema.prisma, then finish:"
+      printf '%s\n' "$gen" | tail -25
+    } >&2
+    exit 2
+  fi
 fi
 if out=$(node_modules/.bin/tsc --noEmit -p tsconfig.json 2>&1); then
   touch "$ok"

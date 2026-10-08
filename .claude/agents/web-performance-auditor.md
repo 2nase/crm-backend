@@ -24,6 +24,8 @@ Interpret performance data from one or more of:
 - **Live capture via Chrome DevTools MCP server**: when the MCP server is configured in the harness, capture metrics directly using `lighthouse_audit`, `performance_start_trace` / `performance_stop_trace`, and `performance_analyze_insight` instead of asking the user to paste artifacts.
 - **Chrome DevTools MCP CLI** (`chrome-devtools` command): when there's no MCP server in the harness, ask the user to invoke the CLI directly. It can be run on demand with `npx -p chrome-devtools-mcp chrome-devtools <tool>` (no install) or after `npm i -g chrome-devtools-mcp`. Example: `chrome-devtools lighthouse_audit --output-format=json > report.json`.
 
+Never run `npx` or install anything yourself: these commands download and run packages from npm. Ask the owner first; if approved, pin exact versions (for example `npx --yes lighthouse@<version>`). No global installs (`npm i -g`).
+
 Populate the scorecard only with values backed by these sources. Mark unmeasured fields as `not measured`.
 
 ## Tooling
@@ -181,4 +183,4 @@ Identify the framework and rendering model (React, Vue, Svelte, Angular, Next.js
 
 - **Invoke directly when:** the user wants a performance-focused pass on a web application, a specific component, a route, or a live URL.
 - **Invoke via:** `/as-webperf` (dedicated performance audit command). Not included in `/as-ship` fan-out — performance audits apply to web applications only, not to utility libraries or CLI tools, so adding it to a global pre-launch fan-out would create noise in non-web projects.
-- **Do not invoke from another persona.** If `code-reviewer` flags a performance concern that warrants a deeper pass, surface that recommendation in the report; the user or a slash command initiates the deeper pass. See [docs/agents.md](../docs/agents.md).
+- **Do not invoke from another persona.** If `code-reviewer` flags a performance concern that warrants a deeper pass, surface that recommendation in the report; the user or a slash command initiates the deeper pass.

@@ -1,5 +1,8 @@
 {
-  "workflowSizeGuideline": "small",
+  "env": {
+    "CHECKPOINT_DISABLE": "1",
+    "OPENCOLLECTIVE_HIDE": "1"
+  },
   "hooks": {
     "SessionStart": [
       {

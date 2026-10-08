@@ -14,6 +14,8 @@ description: Run a web performance audit via the web-performance-auditor persona
 - A live URL plus the `chrome-devtools` MCP server configured in the harness (the agent can capture metrics directly via `lighthouse_audit` and `performance_*` tools)
 - The Chrome DevTools MCP CLI invoked locally (via `npx -p chrome-devtools-mcp chrome-devtools <tool>` or after `npm i -g chrome-devtools-mcp`) — the user runs commands like `chrome-devtools lighthouse_audit --output-format=json` and passes the JSON output to the agent
 
+The `npx` commands above download and run packages from npm: ask the owner before running any of them, pin exact versions, and never install globally.
+
 **Quick mode** — default when none of the above are available. The agent scans source code for structural anti-patterns and labels every finding as `potential impact`.
 
 ## Run the audit

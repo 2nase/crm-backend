@@ -1,0 +1,28 @@
+{
+  "env": {
+    "CHECKPOINT_DISABLE": "1",
+    "OPENCOLLECTIVE_HIDE": "1"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-start.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/typecheck-gate.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -8,3 +8,40 @@ coverage
 .nest
 .tsbuildinfo
 .pgdata
+
+# unlazy working files
+.unlazy/
+
+# playwright-cli output (snapshots, screenshots, session data)
+.playwright-cli/
+
+# research working files (repo root only, so src/**/reports/ stays tracked)
+/research_notes/
+/reports/
+
+# Claude Code hook state
+.claude/.typecheck-ok
+.claude/.session-start
+
+# Scrapling spider dev cache and checkpoints (can hold cookies, headers, pickled requests)
+.scrapling_cache/
+dev_cache/
+crawl_data/
+
+# Python bytecode caches (unreviewable binaries)
+__pycache__/
+*.pyc
+
+# Scrapling skill virtualenv (python3 -m venv on Python <= 3.12 does not self-ignore)
+/.venv-scrapling/
+
+# Safety net for playwright-cli files written outside .playwright-cli/ (can hold cookies and tokens)
+/auth.json
+*auth-state*.json
+*.webm
+
+# Replica: screenshots of the original app and copied third-party reviews stay local
+/replica/screens/
+/replica/diffs/
+/replica/reviews.csv
+/replica/feedback.md

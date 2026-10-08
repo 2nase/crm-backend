@@ -6,13 +6,9 @@ RAG pipelines are only as good as the text you feed them. Raw HTML wastes tokens
 
 ## Installation
 
-```bash
-pip install "scrapling[rag]"
+Install as described in `../SKILL.md` > Setup: ask the owner first, then install the pinned `"scrapling[rag]==0.4.15"` into the `.venv-scrapling` venv. Never install into the system Python.
 
-scrapling install
-```
-
-The `rag` extra installs the fetchers with Markdown conversion support (the `ai`, `shell`, and `all` extras include it too). The `scrapling install` command downloads the browser dependencies, which you only need for the browser-based fetchers.
+The `rag` extra installs the fetchers with Markdown conversion support (the `ai`, `shell`, and `all` extras include it too). The browser-based fetchers also need a browser: in cloud sessions use the pre-installed Chromium (`SCRAPLING_EXECUTABLE_PATH`, see SKILL.md) and never run `scrapling install` there; on other machines `scrapling install` downloads the browser dependencies, so ask the owner first.
 
 ## One page to Markdown
 

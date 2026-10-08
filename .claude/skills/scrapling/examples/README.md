@@ -8,12 +8,9 @@ All examples collect **all 100 quotes across 10 pages**.
 
 ## Quick Start
 
-Make sure Scrapling is installed:
+Install Scrapling as described in `../SKILL.md` > Setup: ask the owner first, install the pinned version into the `.venv-scrapling` venv, and never run `scrapling install` in cloud sessions (Chromium is pre-installed there; export `SCRAPLING_EXECUTABLE_PATH`, which examples 02 and 03 read).
 
-```bash
-pip install "scrapling[all]>=0.4.15"
-scrapling install --force
-```
+In cloud sessions the network policy blocks quotes.toscrape.com unless the owner allows the host.
 
 ## Examples
 
@@ -28,11 +25,13 @@ scrapling install --force
 
 **Python scripts:**
 
+Run from the repository root with the venv's Python:
+
 ```bash
-python examples/01_fetcher_session.py
-python examples/02_dynamic_session.py  # Opens a visible browser
-python examples/03_stealthy_session.py # Opens a visible stealth browser
-python examples/04_spider.py           # Auto-crawls all pages, exports quotes.json
+.venv-scrapling/bin/python .claude/skills/scrapling/examples/01_fetcher_session.py
+.venv-scrapling/bin/python .claude/skills/scrapling/examples/02_dynamic_session.py  # Hidden browser
+.venv-scrapling/bin/python .claude/skills/scrapling/examples/03_stealthy_session.py # Hidden stealth browser, certificate checks on
+.venv-scrapling/bin/python .claude/skills/scrapling/examples/04_spider.py           # Obeys robots.txt, exports crawl_data/quotes.json
 ```
 
 ## Escalation Guide
@@ -42,6 +41,6 @@ Start with the fastest, lightest option and escalate only if needed:
 ```
 get / FetcherSession
   └─ If JS required → fetch / DynamicSession
-       └─ If blocked → stealthy-fetch / StealthySession
+       └─ If blocked → stealthy-fetch / StealthySession (third-party site: ask the owner first)
             └─ If multi-page → Spider
 ```

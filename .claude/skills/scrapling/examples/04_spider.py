@@ -12,7 +12,7 @@ link following across many pages.
 Outputs:
   - Live stats to terminal during crawl
   - Final crawl stats at the end
-  - quotes.json in the current directory
+  - crawl_data/quotes.json (crawl_data/ is gitignored)
 """
 
 from scrapling.spiders import Spider, Response
@@ -22,6 +22,7 @@ class QuotesSpider(Spider):
     name = "quotes"
     start_urls = ["https://quotes.toscrape.com/"]
     concurrent_requests = 5  # Fetch up to 5 pages at once
+    robots_txt_obey = True  # Off by default in Scrapling; the project's guardrails require it
 
     async def parse(self, response: Response):
         # Extract all quotes on the current page
@@ -54,5 +55,5 @@ if __name__ == "__main__":
             print(f"       Tags: {', '.join(item['tags'])}")
 
     # Export to JSON
-    result.items.to_json("quotes.json", indent=True)
-    print("\nExported to quotes.json")
+    result.items.to_json("crawl_data/quotes.json", indent=True)
+    print("\nExported to crawl_data/quotes.json")

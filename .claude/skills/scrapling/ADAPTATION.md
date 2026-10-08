@@ -23,8 +23,18 @@ Source: official skill `scrapling-official` from [D4Vinci/Scrapling](https://git
 - `spiders/advanced.md`: login example reads credentials from environment variables, follows with `method="GET", data=None` (0.4.15 would otherwise re-POST the credentials), cache dir inside the project, corrected timestamp comments.
 - `spiders/sessions.md`: removed per-request `block_webrtc`/`hide_canvas` (silently ignored in 0.4.15), fixed an import, replaced a bearer-token example header.
 - Accuracy fixes verified against 0.4.15: sanitization claims in `fetching/choosing.md`, `building-rag-systems.md`, `mcp-server.md` (exact list of what is stripped; library bug: an `<svg>` containing `<style>` can leave later `<noscript>`/`<svg>` elements); `generic-templates.md` (empty `rules()` behaviour); `building-rag-systems.md` (robots.txt is not on by default); `parsing/selection.md` (relative XPath when chaining, `similarity_threshold=0`); `parsing/main_classes.md` (two example outputs); `fetching/static.md` (impersonation target); `fetching/dynamic.md` (Chrome install is system-wide and needs root); `migrating_from_beautifulsoup.md` (one wrong example).
-- Unchanged (byte-identical): parsing/adaptive.md, spiders/architecture.md, getting-started.md, requests-responses.md, platform-templates.md, integrations/scrapy.md, examples 02 and 04.
+- Unchanged (byte-identical): parsing/adaptive.md, spiders/architecture.md, getting-started.md, requests-responses.md, platform-templates.md, integrations/scrapy.md. Examples 02 and 04 were unchanged until the PR review below.
 
 ## Project-level changes outside this folder
 
 - `.gitignore`: `.scrapling_cache/`, `dev_cache/`, `crawl_data/` (spider caches and checkpoints can contain cookies and headers).
+
+## Fixes from the PR review (2026-10-08)
+
+- Setup: ask the owner before the first install; exact pin `"scrapling[rag]==0.4.15"` with `--exclude-newer 2026-10-06` (audit date) so the dependency tree stays at the audited state (dry-run resolved 26 packages); `--no-python-downloads`; the `ai` extra (MCP server) only when the owner wants it; the pip fallback is pinned too. The `rag` extra was chosen over `all` because it already covers the fetchers, the `extract` CLI and Markdown output (checked in the 0.4.15 wheel: IPython is only needed for the interactive shell).
+- Docker: pulls `pyd4vinci/scrapling:0.4.15` pinned by digest (Docker Hub, checked 2026-10-08), ask first; the unpinned `ghcr.io/...:latest` alternative was removed.
+- The `stealthy-fetch` escalation hints now point to the ask-first guardrail.
+- `examples/README.md` and `references/building-rag-systems.md` no longer say `pip install` into the system Python or `scrapling install [--force]`; they point to SKILL.md > Setup. The example run lines use the venv's Python from the repository root.
+- `references/mcp-server.md`: adding the MCP server needs the owner's OK; Docker commands pinned by digest.
+- Examples: 02 and 03 run headless and read `SCRAPLING_EXECUTABLE_PATH` (pre-installed Chromium in cloud sessions); 03 passes `additional_args={"ignore_https_errors": False}` (in 0.4.15 `additional_args` is applied after the stealth defaults, verified in `engines/_browsers/_base.py`); 04 sets `robots_txt_obey = True` and writes `crawl_data/quotes.json` (gitignored) instead of `quotes.json` in the working directory.
+- `references/fetching/choosing.md` (4 links) and `static.md` (1 link): `parsing/main_classes.md` corrected to `../parsing/main_classes.md`.

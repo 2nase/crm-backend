@@ -232,6 +232,8 @@ All browser-based tools (`fetch`, `bulk_fetch`, `stealthy_fetch`, `bulk_stealthy
 
 ## Setup
 
+Adding an MCP server to the project or to a client config needs the owner's explicit OK. Install the `ai` extra as in `../SKILL.md` > Setup (`"scrapling[ai]==0.4.15"` in the `.venv-scrapling` venv, ask first).
+
 Start the server (stdio transport, used by most MCP clients):
 
 ```bash
@@ -249,17 +251,17 @@ scrapling-mcp --http --host 0.0.0.0 --port 8000
 
 The host defaults to `127.0.0.1`, so the server only accepts connections from the same machine. Pass `--host 0.0.0.0` to make it reachable from the network.
 
-Docker alternative:
+Docker alternative (ask first; pull the audited version by digest, never `latest`):
 
 ```bash
-docker pull pyd4vinci/scrapling
-docker run -i --rm pyd4vinci/scrapling mcp
+docker pull pyd4vinci/scrapling:0.4.15@sha256:1bacbc8ec90b3090d462e12f6555e241daf0dfeb684ab326ffa09d52d8226e69
+docker run -i --rm pyd4vinci/scrapling:0.4.15@sha256:1bacbc8ec90b3090d462e12f6555e241daf0dfeb684ab326ffa09d52d8226e69 mcp
 ```
 
 That runs the stdio transport. To use Streamable HTTP inside Docker, bind to `0.0.0.0` yourself and set a token, since the container's `127.0.0.1` is not reachable through the published port:
 
 ```bash
-docker run -p 8000:8000 -e SCRAPLING_MCP_AUTH_TOKEN="<your-token>" pyd4vinci/scrapling mcp --http --host 0.0.0.0
+docker run -p 8000:8000 -e SCRAPLING_MCP_AUTH_TOKEN="<your-token>" pyd4vinci/scrapling:0.4.15@sha256:1bacbc8ec90b3090d462e12f6555e241daf0dfeb684ab326ffa09d52d8226e69 mcp --http --host 0.0.0.0
 ```
 
 ## Custom browser executable

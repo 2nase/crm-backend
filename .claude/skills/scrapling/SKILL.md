@@ -22,12 +22,17 @@ Blazing fast crawls with real-time stats and streaming. Built by Web Scrapers fo
 
 ## Setup (once)
 
-Create a virtual Python environment (never install into the system Python), then install the library inside it:
+Scrapling is a new dependency: **ask the owner before the first install** and wait for a yes. Then create a virtual Python environment (never install into the system Python) and install the audited version inside it:
 
 ```bash
-uv venv .venv-scrapling --python 3.11        # or: python3 -m venv .venv-scrapling
-uv pip install --python .venv-scrapling/bin/python "scrapling[all]>=0.4.15"
+uv venv .venv-scrapling --python 3.11 --no-python-downloads   # any installed Python 3.10+ works
+uv pip install --python .venv-scrapling/bin/python --exclude-newer 2026-10-06 "scrapling[rag]==0.4.15"
 ```
+
+- `==0.4.15` is the version this skill was audited against, and the guardrails below describe its behavior. Upgrade only with the owner's OK, then re-check the guardrails.
+- `--exclude-newer 2026-10-06` (the audit date) also holds the dependencies (curl_cffi, Playwright, Patchright and others) at the versions that existed then.
+- The `rag` extra covers the fetchers, the `scrapling extract` CLI and Markdown output. The MCP server needs the `ai` extra (`"scrapling[ai]==0.4.15"`); install it only when the owner wants the MCP server.
+- Without uv: `python3 -m venv .venv-scrapling && .venv-scrapling/bin/pip install "scrapling[rag]==0.4.15"` (the dependencies then resolve to their newest versions).
 
 Browsers:
 - **Claude Code cloud sessions:** Chromium is pre-installed. Do not run `scrapling install`; point Scrapling at the existing binary instead:
@@ -39,14 +44,10 @@ Use the venv's binary (`.venv-scrapling/bin/scrapling`) for all CLI commands if 
 **Network policy:** cloud sessions may only reach allow-listed hosts. A `CONNECT tunnel failed, response 403` error means the environment's network policy blocks the target host, not that the site blocks you. Tell the user the host name; they can allow it under the environment's *Network access* settings. Never try to route around the policy.
 
 ### Docker
-Another option if the user doesn't have Python or doesn't want to use it is to use the Docker image, but this can be used only in the commands, so no writing Python code for scrapling this way:
+If the owner has no Python or does not want to use it, the Docker image is an alternative (ask first, same as the pip install). It only runs the commands, so no writing Python code for scrapling this way. Pull the audited version by digest, never `latest`:
 
 ```bash
-docker pull pyd4vinci/scrapling
-```
-or
-```bash
-docker pull ghcr.io/d4vinci/scrapling:latest
+docker pull pyd4vinci/scrapling:0.4.15@sha256:1bacbc8ec90b3090d462e12f6555e241daf0dfeb684ab326ffa09d52d8226e69
 ```
 
 ## CLI Usage
@@ -76,9 +77,9 @@ Commands:
 Which command to use generally:
 - Use **`get`** with simple websites, blogs, or news articles.
 - Use **`fetch`** with modern web apps, or sites with dynamic content.
-- Use **`stealthy-fetch`** with protected sites, Cloudflare, or anti-bot systems.
+- Use **`stealthy-fetch`** with protected sites, Cloudflare, or anti-bot systems. On a site the owner does not own, ask first (see Guardrails).
 
-> When unsure, start with `get`. If it fails or returns empty content, escalate to `fetch`, then `stealthy-fetch`. The speed of `fetch` and `stealthy-fetch` is nearly the same, so you are not sacrificing anything.
+> When unsure, start with `get`. If it fails or returns empty content, escalate to `fetch`, then `stealthy-fetch` (ask first on a third-party site, see Guardrails). The speed of `fetch` and `stealthy-fetch` is nearly the same, so you are not sacrificing anything.
 
 #### Key options (requests)
 

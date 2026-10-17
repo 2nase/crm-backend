@@ -25,14 +25,15 @@ Use Chrome DevTools MCP to give your agent eyes into the browser. This bridges t
 
 ### Installation
 
-With the user's approval, add the following to your project's `.mcp.json` or Claude Code settings. The version is pinned on purpose (checked on npm on 2026-10-17, public for at least two weeks; change it only with the owner's OK):
+With the user's approval, add the following to your project's `.mcp.json` or Claude Code settings. The version is pinned on purpose (checked on npm on 2026-10-17, public for at least two weeks; change it only with the owner's OK). By default the server sends usage statistics to Google, sends the URLs of traced pages to Google's CrUX API and checks npm for updates; the two flags and the `env` entry turn that off. Keep the name `chrome-devtools`: the `web-performance-auditor` agent may use this server's tools under that name only.
 
 ```json
 {
   "mcpServers": {
     "chrome-devtools": {
       "command": "npx",
-      "args": ["-y", "chrome-devtools-mcp@1.10.1", "--isolated"]
+      "args": ["-y", "chrome-devtools-mcp@1.10.1", "--isolated", "--no-usage-statistics", "--no-performance-crux"],
+      "env": { "CHROME_DEVTOOLS_MCP_NO_UPDATE_CHECKS": "1" }
     }
   }
 }

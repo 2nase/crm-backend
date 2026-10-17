@@ -7,14 +7,14 @@ description: Run a web performance audit via the web-performance-auditor persona
 ## Determine the mode
 
 **Deep mode** — activate when any of these is available:
-- A Lighthouse JSON report file (e.g. `npx lighthouse <url> --output json --output-path ./report.json`, or `npx -p chrome-devtools-mcp chrome-devtools lighthouse_audit --output-format=json` from the Chrome DevTools MCP CLI)
+- A Lighthouse JSON report file (e.g. from `npx --yes lighthouse@13.5.0 <url> --output json --output-path /tmp/lighthouse-report.json`)
 - A PageSpeed Insights JSON response (includes Lighthouse + CrUX)
 - A CrUX API response (requires `CRUX_API_KEY` or `GOOGLE_API_KEY`)
 - A DevTools performance trace
 - A live URL plus the `chrome-devtools` MCP server configured in the harness (the agent can capture metrics directly via `lighthouse_audit` and `performance_*` tools)
-- The Chrome DevTools MCP CLI invoked locally (via `npx -p chrome-devtools-mcp chrome-devtools <tool>` or after `npm i -g chrome-devtools-mcp`) — the user runs commands like `chrome-devtools lighthouse_audit --output-format=json` and passes the JSON output to the agent
+- The Chrome DevTools MCP CLI invoked locally (`npx --yes -p chrome-devtools-mcp@1.10.1 chrome-devtools <tool>`, with the telemetry settings in the `web-performance-auditor` agent) — the user runs its commands and passes the output to the agent
 
-The `npx` commands above download and run packages from npm: ask the owner before running any of them, pin exact versions, and never install globally.
+The `npx` commands above download and run packages from npm: ask the owner before running any of them, keep the exact versions (checked on npm on 2026-10-17), and never install globally. Keep reports and traces outside the repository: they hold screenshots and URLs of the audited pages.
 
 **Quick mode** — default when none of the above are available. The agent scans source code for structural anti-patterns and labels every finding as `potential impact`.
 

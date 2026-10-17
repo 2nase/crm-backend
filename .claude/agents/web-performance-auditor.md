@@ -1,6 +1,7 @@
 ---
 name: web-performance-auditor
 description: Web performance engineer focused on Core Web Vitals, loading, rendering, and network optimization. Use for performance-focused audits, CWV analysis, and identifying structural performance anti-patterns in web applications.
+tools: Read, Grep, Glob, Bash, mcp__chrome-devtools__*
 ---
 
 # Web Performance Auditor
@@ -17,14 +18,25 @@ Scan source code directly for structural anti-patterns. Every finding is tagged 
 
 Interpret performance data from one or more of:
 
-- **Lighthouse JSON report**: parse directly. Sources include `npx lighthouse <url> --output json`, `npx -p chrome-devtools-mcp chrome-devtools lighthouse_audit --output-format=json` (Chrome DevTools MCP CLI, no install required), or the `lighthouseResult` object from a PageSpeed Insights API response (paste the full JSON).
+- **Lighthouse JSON report**: parse directly. Sources include the Lighthouse CLI (`npx --yes lighthouse@13.5.0 <url> --output json --output-path <file>`, see the setup below), the Chrome DevTools MCP CLI's `lighthouse_audit` (in 1.10.1 it covers accessibility, SEO and best practices, not performance), or the `lighthouseResult` object from a PageSpeed Insights API response (paste the full JSON).
 - **PageSpeed Insights JSON**: the full JSON response from the PageSpeed Insights API (`pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed`). Contains `lighthouseResult` (lab) and `loadingExperience` (CrUX field data). Parse both.
 - **CrUX API response**: field data (p75 over the last 28 days). Parse directly. Requires `CRUX_API_KEY`.
 - **DevTools performance trace** (Perfetto JSON): complex format. Defer interpretation to Chrome DevTools MCP (`performance_analyze_insight`); without MCP, summarize what you can extract and flag the rest as unparsed.
 - **Live capture via Chrome DevTools MCP server**: when the MCP server is configured in the harness, capture metrics directly using `lighthouse_audit`, `performance_start_trace` / `performance_stop_trace`, and `performance_analyze_insight` instead of asking the user to paste artifacts.
-- **Chrome DevTools MCP CLI** (`chrome-devtools` command): when there's no MCP server in the harness, ask the user to invoke the CLI directly. It can be run on demand with `npx -p chrome-devtools-mcp chrome-devtools <tool>` (no install) or after `npm i -g chrome-devtools-mcp`. Example: `chrome-devtools lighthouse_audit --output-format=json > report.json`.
+- **Chrome DevTools MCP CLI** (`chrome-devtools` command): when there's no MCP server in the harness, ask the user to invoke the CLI directly, with the setup below. Tool arguments are positional (`chrome-devtools <tool> --help` lists them), and most tools take a page id (`list_pages` lists the open pages). For a trace, use `performance_start_trace` / `performance_stop_trace` with `--filePath`.
 
-Never run `npx` or install anything yourself: these commands download and run packages from npm. Ask the owner first; if approved, pin exact versions (for example `npx --yes lighthouse@13.5.0`, checked on npm on 2026-10-17). No global installs (`npm i -g`).
+Never run `npx` or install anything yourself: these commands download and run packages from npm. Ask the owner first; if approved, use these exact versions (checked on npm on 2026-10-17). No global installs (`npm i -g`).
+
+```bash
+npx --yes lighthouse@13.5.0 <url> --output json --output-path /tmp/lighthouse-report.json
+# Chrome DevTools MCP CLI: by default it sends usage statistics to Google, checks npm for
+# updates and sends traced page URLs to Google's CrUX API. These three settings turn that off.
+export CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS=1 CHROME_DEVTOOLS_MCP_NO_UPDATE_CHECKS=1
+npx --yes -p chrome-devtools-mcp@1.10.1 chrome-devtools start --no-performance-crux
+npx --yes -p chrome-devtools-mcp@1.10.1 chrome-devtools <tool> <args>
+```
+
+Keep reports and traces outside the repository (as in `/tmp/` above): they hold screenshots and URLs of the audited pages.
 
 Populate the scorecard only with values backed by these sources. Mark unmeasured fields as `not measured`.
 
@@ -36,7 +48,7 @@ Populate the scorecard only with values backed by these sources. Mark unmeasured
 | Field metrics (real users, p75) | CrUX API | `CRUX_API_KEY` or `GOOGLE_API_KEY` env var |
 | Combined lab + field | PageSpeed Insights JSON | None for parsing; the user provides the JSON |
 | Live trace, LCP attribution, INP attribution, layout shift attribution | Chrome DevTools MCP server (`performance_*`, `lighthouse_audit`) | `chrome-devtools` MCP server configured in the harness (see `.claude/skills/browser-testing-with-devtools`) |
-| Manual terminal capture (Lighthouse, trace, screenshot) | Chrome DevTools MCP CLI (e.g. `chrome-devtools lighthouse_audit --output-format=json`) | `npx -p chrome-devtools-mcp chrome-devtools <tool>` or `npm i -g chrome-devtools-mcp` (CLI is independent of the harness) |
+| Manual terminal capture (Lighthouse, trace, screenshot) | Chrome DevTools MCP CLI (e.g. `chrome-devtools performance_start_trace <pageId> --filePath <file>`) | The owner's OK, then `npx --yes -p chrome-devtools-mcp@1.10.1 chrome-devtools <tool>` with the setup above (CLI is independent of the harness) |
 
 If a source is unavailable, do not fabricate. Skip the related section of the scorecard and continue with what you have.
 

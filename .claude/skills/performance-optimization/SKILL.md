@@ -200,7 +200,7 @@ Time to Interactive: < 3.5s on 4G
 Lighthouse Performance score: ≥ 90
 ```
 
-**Enforce in CI:** neither tool is installed in this repo. Ask the owner first: npx downloads and runs a package from npm. Then use the exact versions below (checked on npm on 2026-10-17, each public for at least two weeks; change them only with the owner's OK), or add the tool as a devDependency and run it with `npx --no-install`.
+**Enforce in CI:** neither tool is installed in this repo. Ask the owner first: npx downloads and runs a package from npm. Then use the exact versions below (checked on npm on 2026-10-17, each public for at least two weeks; change them only with the owner's OK), or add the tool as a devDependency and run it with `npx --no-install`. The npx route pins only the top-level package: its dependencies resolve fresh and their install scripts run. The devDependency route pins the whole tree in package-lock.json; install with `npm i -D --save-exact --before=<date two weeks back> <tool>@<version>`.
 ```bash
 # Bundle size check
 npx bundlesize@0.18.2 --config bundlesize.config.json
@@ -208,6 +208,8 @@ npx bundlesize@0.18.2 --config bundlesize.config.json
 # Lighthouse CI
 npx @lhci/cli@0.15.1 autorun
 ```
+
+`autorun` uploads reports only when an upload target is configured (checked in the 0.15.1 source). The `temporary-public-storage` target publishes them on a public URL, and reports hold screenshots of the pages, so set an upload target only with the owner's OK.
 
 ## See Also
 

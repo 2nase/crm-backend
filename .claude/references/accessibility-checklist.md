@@ -122,7 +122,7 @@ Quick reference for WCAG 2.1 AA compliance. Use alongside the `frontend-ui-engin
 
 ## Testing Tools
 
-Neither audit CLI is installed in this repo. Ask the owner first: npx downloads and runs a package from npm. Then use the exact versions below (checked on npm on 2026-10-17, each public for at least two weeks; change them only with the owner's OK).
+Neither audit CLI is installed in this repo. Ask the owner first: npx downloads and runs a package from npm. Then use the exact versions below (checked on npm on 2026-10-17, each public for at least two weeks; change them only with the owner's OK). Only the top-level package is pinned: npx resolves its dependencies fresh and runs their install scripts. `@axe-core/cli` 4.13.0 depends on `chromedriver@latest` and pa11y 10.0.0 on puppeteer, and both download a driver or a browser when installed. To pin the whole tree, add the tool as a devDependency with `npm i -D --save-exact --before=<date two weeks back> <tool>@<version>` (package-lock.json then holds every version) and run it with `npx --no-install`.
 
 ```bash
 # Automated audit

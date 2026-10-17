@@ -114,7 +114,7 @@ Last reviewed: 2026-08-08 by @addy
 
 | Dimension | Rule | Checked by | Runs at |
 |-----------|------|-----------|---------|
-| Types | Zero type errors | `tsc --noEmit` | every edit |
+| Types | Zero type errors | `npm run typecheck` | every edit |
 | Lint | Zero errors from our config | `biome check` | every edit |
 | Secrets | No secrets in source | `gitleaks detect --redact` | every edit |
 | Coverage | Changed lines ≥ 80% covered | `vitest run --coverage` + git diff | task end, CI |
@@ -148,7 +148,7 @@ Picking a dimension means installing something; confirm each install with the us
 
 | Dimension | Tool | Install | Run | Gate on |
 |-----------|------|---------|-----|---------|
-| Types (TS) | tsc | already there | `tsc --noEmit` | any error |
+| Types (TS) | tsc | already there | `npm run typecheck` | any error |
 | Types (Python) | mypy | `pip install mypy` | `mypy .` | any error |
 | Lint | your existing config | already there | `eslint .` / `biome check` / `ruff check` | any error |
 | Coverage (JS) | your test runner | already there | `vitest run --coverage` (or `jest --coverage`) | coverage of changed lines |
@@ -161,6 +161,8 @@ Picking a dimension means installing something; confirm each install with the us
 | Accessibility | axe-core | `npm i -D @axe-core/cli` | `axe $URL --tags wcag2a,wcag2aa,wcag21aa` | zero critical or serious |
 | Architecture | dependency-cruiser | `npm i -D dependency-cruiser` | `depcruise --validate src` | any violation |
 | Assertion quality | Stryker | `npm i -D @stryker-mutator/core` | `stryker run --mutate <changed files>` | mutation score |
+
+The install commands show the tool, not the version. Install exact versions that have been public for at least two weeks, with no caret: check the version on npm, then run `npm i -D --save-exact --before=<date two weeks back> <tool>@<version>` (for example `@axe-core/cli@4.13.0` or `lighthouse@13.5.0`, checked on npm on 2026-10-17). `--before` also keeps the tool's own dependencies to releases from before that date. For `pip` and `pipx`, pin with `==<version>`; Homebrew installs its current version, so say that when you ask. Ask the owner before upgrading any of them.
 
 Five things that will bite you if you skip them:
 
@@ -301,7 +303,7 @@ The skill was applied correctly when:
 - [ ] At least one constraint is external (not judged by this project's own tests)
 - [ ] Measured-only metrics record today's value and a direction
 - [ ] Exceptions have an owner and an expiry date
-- [ ] `AGENTS.md` or `CLAUDE.md` points at the file
+- [ ] `CLAUDE.md` (and `AGENTS.md` if the project has one) points at the file, or the owner declined that line
 - [ ] A trial run on the current branch produces no failures the user disagrees with
 
 ## See Also

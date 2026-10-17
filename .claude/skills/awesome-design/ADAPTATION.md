@@ -8,7 +8,7 @@ Every file was read in full by an audit agent, then re-audited by an independent
 
 ## Changes to upstream
 
-- Before the PR review, 41 of 74 DESIGN.md files differed from upstream (54 after the fixes below). The edits were of two kinds:
+- Before the PR review, 41 of 74 DESIGN.md files differed from upstream (55 after the fixes below). The edits were of two kinds:
   - The 'Run `npx @google/design.md lint`' step now needs the user's approval (it executes an unpinned npm package), in all 34 files that have it: airtable, figma, framer, hashicorp, hp, ibm, intercom, linear.app, meta, minimax, mintlify, miro, mistral.ai, mongodb, nike, notion, nvidia, ollama, opencode.ai, pinterest, playstation, posthog, raycast, renault, replicate, resend, revolut, sentry, shopify, slack, spacex, stripe, supabase, superhuman.
   - In 14 files, single lines that named the reference brand's logo, wordmark, mascot, product names or product UI now point to the product's own: hp L631, lamborghini L276 and L278, mastercard L347, miro L767 and L818, nvidia L576, ollama L486, opencode.ai L475, posthog L627, L632 and L639, raycast L605, starbucks L554, tesla L274, together.ai L624, vodafone L525, L530 and L537, voltagent L510. The earlier record said that 'instructions to place a real brand's logo or wordmark now point to the product's own logo'. That was true only for these lines: other lines in these and other files still prescribed the brand's own assets. The fixes below cover them.
 - `SKILL.md` is new (upstream ships none): usage, guardrails against impersonation and proprietary fonts, and an index built from the auditors' per-brand summaries.
@@ -54,3 +54,8 @@ Every file was read in full by an audit agent, then re-audited by an independent
   - bmw-m: L4, L249 and L256 no longer put the tricolor on logos, the M wordmark or model badges; L482 says the product's own logo scales with the viewport.
   - dell-1996 (same gap, found while fixing the two above): `buy-a-dell-sticker` became `cta-sticker` (L215, L544), L366 no longer puts the purple stripe behind the brand's wordmark, and L396, L410, L455 and L468 drop the reference's headline and the "BUY-a-DELL" name.
 - elevenlabs L4 and supabase L4: the `description` values are now quoted. raycast L4, a stray `属于:` key from upstream in front of the real `description: |` block, is now a YAML comment. Why: an unquoted ": " inside those values made the frontmatter invalid YAML (js-yaml: "bad indentation of a mapping entry"), so a parser or the design.md linter would stop there. Found while checking every frontmatter block for this review; the text and the line numbers are unchanged.
+
+## Fixes from the fourth PR review of 2026-10-17
+
+- bmw-m L266: the first stop of the M tricolor is now "used on motorsport chrome", no longer on "M-badge accents". Why: review finding (low); the third-review fix had missed this line, so a token description still tied the stripe to the brand's badge.
+- The count at the top of *Changes to upstream* now says 55 instead of 54: the elevenlabs quote fix above also changed a file. Why: review finding (low).

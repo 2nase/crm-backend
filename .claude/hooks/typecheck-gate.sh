@@ -1,8 +1,9 @@
 #!/bin/bash
 # Stop hook: Claude cannot finish while the project typecheck or Prisma client generation is red.
-# Runs only when a watched file (see watched.sh) was added, edited, deleted or renamed since the
-# last green run (or since session start). Whole project on purpose: tsc on single files ignores
-# tsconfig.json, and NestJS decorators need experimentalDecorators/emitDecoratorMetadata.
+# Runs only when a watched file (see watched.sh) was added, edited, deleted, renamed or replaced
+# since the last green run (before the first one: since the first session in this checkout).
+# Whole project on purpose: tsc on single files ignores tsconfig.json, and NestJS decorators
+# need experimentalDecorators/emitDecoratorMetadata.
 cd "$CLAUDE_PROJECT_DIR" || exit 0
 input=$(cat)
 export CHECKPOINT_DISABLE=1 OPENCOLLECTIVE_HIDE=1
@@ -12,14 +13,14 @@ printf '%s' "$input" | grep -q '"stop_hook_active": *true' && exit 0
 
 . .claude/hooks/watched.sh
 ok=.claude/.typecheck-ok       # its mtime is the start of the last green run
-list=.claude/.typecheck-files  # watched files at that point (or at session start)
+list=.claude/.typecheck-files  # fingerprint of the watched files at that point (or at session start)
 ref=$ok
 [ -f "$ref" ] || ref=.claude/.session-start
 if [ -f "$ref" ]; then
   changed=$(watched -newer "$ref" -print -quit)
-  # A delete or rename leaves no newer file behind, so compare the file list too.
+  # A delete, rename or restored copy leaves no newer file behind, so compare contents too.
   if [ -z "$changed" ] && { [ -f "$list" ] || [ -f "$ok" ]; }; then
-    [ "$(watched -print | LC_ALL=C sort)" = "$(cat "$list" 2>/dev/null)" ] || changed=list
+    [ "$(fingerprint)" = "$(cat "$list" 2>/dev/null)" ] || changed=list
   fi
 else
   changed=$(git status --porcelain -- '*.ts' '*.tsx' '*.mts' '*.cts' 'src/*.json' \
@@ -34,16 +35,16 @@ fi
 # Taken before the check: an edit made while it runs stays newer than the next reference.
 start=.claude/.typecheck-start.$$
 touch "$start"
-snapshot=$(watched -print | LC_ALL=C sort)
-if [ ! -f "$ok" ] || [ prisma/schema.prisma -nt "$ok" ]; then
-  if ! gen=$(node_modules/.bin/prisma generate 2>&1); then
-    rm -f "$start"
-    {
-      echo "prisma generate failed. Fix prisma/schema.prisma, then finish:"
-      printf '%s\n' "$gen" | tail -25
-    } >&2
-    exit 2
-  fi
+snapshot=$(fingerprint)
+# Every run regenerates the Prisma client that tsc checks against: a restored schema can keep
+# an old modification time.
+if ! gen=$(node_modules/.bin/prisma generate 2>&1); then
+  rm -f "$start"
+  {
+    echo "prisma generate failed. Fix prisma/schema.prisma, then finish:"
+    printf '%s\n' "$gen" | tail -25
+  } >&2
+  exit 2
 fi
 if out=$(node_modules/.bin/tsc --noEmit -p tsconfig.json 2>&1); then
   printf '%s\n' "$snapshot" > "$list.$$" && mv -f "$list.$$" "$list"

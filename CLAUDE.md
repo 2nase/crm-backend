@@ -4,7 +4,7 @@ NestJS 10 + TypeScript (strict) + Prisma 5 + PostgreSQL (embedded for dev). Arch
 The owner writes in German: reply in German; code, commits and docs stay in English.
 
 ## Commands
-- Deps: `npm ci && npm run prisma:generate` (cloud sessions: done by the SessionStart hook).
+- Deps: `npm ci && npm run prisma:generate` (hosted cloud sessions: done by the SessionStart hook).
   A bare `tsc` (or `npm run typecheck` without node_modules) can run a global TS 6 that fails
   on tsconfig (TS5101). Install deps and use the npm scripts; never edit tsconfig to silence it.
 - Gate: `npm run typecheck` (whole project). Never run `tsc` on single files: that ignores
@@ -16,7 +16,8 @@ The owner writes in German: reply in German; code, commits and docs stay in Engl
   npx silently downloads and runs its latest version. Use `npm run` scripts or `npx --no-install`.
   With the owner's OK, only the exact version a skill names (`npx --yes <pkg>@x.y.z`,
   `npm init <pkg>@x.y.z`). That pins only the top package (its dependencies resolve fresh), so a
-  tool used again belongs in devDependencies (`npm i -D --save-exact`).
+  tool used again belongs in devDependencies, also with the owner's OK:
+  `npm i -D --save-exact --before=<date two weeks back> <pkg>@x.y.z`.
 - There is no test runner, linter or smoke script yet. Never claim tests passed.
 
 ## Gotchas
@@ -34,9 +35,11 @@ The owner writes in German: reply in German; code, commits and docs stay in Engl
 ## Definition of done
 - IMPORTANT: not done until `npm run typecheck` passes; quote the command and its output.
   A Stop hook enforces this when a file tsc compiles, the Prisma schema or TS/npm config was
-  added, edited, deleted or renamed since the last green run.
+  added, edited, deleted, renamed or replaced since the last green run (before the first one:
+  since the first session in this checkout).
 - Fix root causes; no `any` or `@ts-ignore` to silence errors.
-- Touch only what the task needs. No new dependencies or global installs without asking.
+- Touch only what the task needs. No new dependencies or global installs without asking; pin
+  exact versions that have been public for at least two weeks.
 - Ask the owner first for: anything that costs money; accounts, passwords and keys; messages
   to others (email, PR or issue comments, chat); publishing; new third-party services and the
   owner's or customers' data going to one; deleting branches, data or many files; removing or

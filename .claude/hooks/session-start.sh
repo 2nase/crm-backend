@@ -1,13 +1,13 @@
 #!/bin/bash
-# SessionStart: sets the typecheck Stop hook's reference point in every session. In cloud
-# sessions it also makes the gate work in a fresh VM (dependencies, Prisma client, .env).
-# Idempotent: installs only when node_modules is missing or package-lock.json changed.
+# SessionStart: sets the typecheck Stop hook's reference point, local sessions included. In
+# hosted cloud sessions it also makes the gate work in a fresh VM (dependencies, Prisma client,
+# .env). Idempotent: installs only when node_modules is missing or package-lock.json changed.
 set -euo pipefail
 cd "${CLAUDE_PROJECT_DIR:?}"
-input=""
-[ -t 0 ] || input=$(cat)
+[ -t 0 ] || cat > /dev/null  # the hook input is not needed
 
-if [ "${CLAUDE_CODE_REMOTE:-}" = "true" ]; then
+# Hosted cloud only: a self-hosted environment can be the owner's own machine.
+if [ "${CLAUDE_CODE_REMOTE:-}" = "true" ] && [ "${CLAUDE_CODE_REMOTE_ENVIRONMENT_TYPE:-}" != "self_hosted" ]; then
   # No usage telemetry from Prisma, no opencollective ping from @nestjs/core's postinstall.
   export CHECKPOINT_DISABLE=1 OPENCOLLECTIVE_HIDE=1
 
@@ -24,13 +24,15 @@ if [ "${CLAUDE_CODE_REMOTE:-}" = "true" ]; then
   [ -f .env ] || cp .env.example .env
 fi
 
-# Reference point for the typecheck Stop hook: only files changed after this get checked.
-# Set it on startup only, so resume, clear and compact keep unverified edits in view.
-if [ ! -f .claude/.session-start ] || printf '%s' "$input" | grep -q '"source": *"startup"'; then
-  # Before the first green run the gate compares against this list to see deletes and renames.
+# Reference point for the typecheck Stop hook until its first green run: files changed after
+# this get checked. Set once per checkout, so later, parallel, resumed or cleared sessions keep
+# unverified edits in view.
+if [ ! -f .claude/.session-start ]; then
+  # Before the first green run the gate compares against this fingerprint to see deletes,
+  # renames and restored copies.
   if [ ! -f .claude/.typecheck-ok ]; then
     . .claude/hooks/watched.sh
-    watched -print | LC_ALL=C sort > .claude/.typecheck-files || true
+    fingerprint > .claude/.typecheck-files || true
   fi
   touch .claude/.session-start
 fi

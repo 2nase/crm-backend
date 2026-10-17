@@ -2,8 +2,9 @@ node_modules
 dist
 .env
 .env.local
-# other env files and key material (see security-and-hardening/SKILL.md, Secrets)
-.env.*
+# other env files (.env.test, .env.production, .envrc, editor backups) and key material
+# (see security-and-hardening/SKILL.md, Secrets)
+.env*
 !.env.example
 *.pem
 *.key
@@ -23,6 +24,9 @@ coverage
 # research working files (repo root only, so src/**/reports/ stays tracked)
 /research_notes/
 /reports/
+
+# Lighthouse CI reports (page screenshots and URLs)
+/.lighthouseci/
 
 # Claude Code hook state (.typecheck-ok, .typecheck-files, temporary .typecheck-start.<pid>)
 .claude/.typecheck-*

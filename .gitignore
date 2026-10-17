@@ -19,8 +19,8 @@ coverage
 /research_notes/
 /reports/
 
-# Claude Code hook state
-.claude/.typecheck-ok
+# Claude Code hook state (.typecheck-ok, .typecheck-files, temporary .typecheck-start.<pid>)
+.claude/.typecheck-*
 .claude/.session-start
 
 # Scrapling spider dev cache and checkpoints (can hold cookies, headers, pickled requests)

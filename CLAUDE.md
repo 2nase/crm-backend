@@ -24,7 +24,8 @@ The owner writes in German: reply in German; code, commits and docs stay in Engl
 
 ## Definition of done
 - IMPORTANT: not done until `npm run typecheck` passes; quote the command and its output.
-  A Stop hook enforces this when .ts files, the Prisma schema or TS/npm config changed.
+  A Stop hook enforces this when a file tsc compiles, the Prisma schema or TS/npm config was
+  added, edited, deleted or renamed since the last green run.
 - Fix root causes; no `any` or `@ts-ignore` to silence errors.
 - Touch only what the task needs. No new dependencies or global installs without asking.
 - Ask the owner first for anything outward-facing or irreversible: pushing to main, tags,

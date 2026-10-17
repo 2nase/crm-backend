@@ -6,7 +6,7 @@ A standing, project-wide bar that every change must clear before it counts as do
 
 The binding bar is the *Definition of done* in the project's `CLAUDE.md`. Where this file and `CLAUDE.md` differ, `CLAUDE.md` wins. Today that means:
 
-- Not done until `npm run typecheck` passes; quote the command and its output. A Stop hook runs `prisma generate` and the same type check when `.ts` files, the Prisma schema or TS/npm config changed.
+- Not done until `npm run typecheck` passes; quote the command and its output. A Stop hook runs `prisma generate` and the same type check when a file tsc compiles, the Prisma schema or TS/npm config was added, edited, deleted or renamed.
 - The only other check in package.json is `npm run build`. There is no test runner, linter or smoke script yet: no `npm test`, `npm run test:e2e` or `npm run lint`. Never claim tests passed.
 - A multi-file change gets the `reviewer` subagent (fresh context) before it is called done.
 - Ask the owner first for anything outward-facing or irreversible.

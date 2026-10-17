@@ -2,6 +2,11 @@ node_modules
 dist
 .env
 .env.local
+# other env files and key material (see security-and-hardening/SKILL.md, Secrets)
+.env.*
+!.env.example
+*.pem
+*.key
 *.log
 .DS_Store
 coverage
@@ -41,6 +46,11 @@ __pycache__/
 /storage-state-*.json
 /.playwright/
 *.webm
+
+# Playwright test runner output (run state, failure screenshots, traces, saved logins)
+/test-results/
+/playwright-report/
+/playwright/.auth/
 
 # Replica: screenshots of the original app and copied third-party reviews stay local
 /replica/screens/

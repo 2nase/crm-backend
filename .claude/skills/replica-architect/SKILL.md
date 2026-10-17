@@ -1,16 +1,21 @@
 ---
 name: replica-architect
 description: >-
-  Plans the stack, database schema and API for an app clone, from the recon
-  map replica-recon wrote. Picks boring, managed tech, turns the inferred data
-  model into real SQL with indexes and access rules, lists every route by
-  flow, and orders the build as a thin vertical slice first. Use when the user
-  says "plan the clone", "what stack should I use", "design the database",
-  "write the schema", "plan the API", "architecture for my version of X", or
-  after /replica-recon finishes.
+  Replica pack, step 2 of 11: a clean-room rebuild of an existing app. Only
+  when the owner is explicitly building such a clone (replica/recon.md
+  exists); not for ordinary work on this CRM. Plans the stack, database
+  schema and API for an app clone, from the recon map replica-recon wrote.
+  Picks boring, managed tech, turns the inferred data model into real SQL
+  with indexes and access rules, lists every route by flow, and orders the
+  build as a thin vertical slice first. Use when the user says "plan the
+  clone", "architecture for my version of X", or after /replica-recon
+  finishes.
 ---
 
 # replica-architect
+
+**Only for a Replica project the owner asked for** (a clone of an existing
+app), not for ordinary work on this CRM.
 
 Reads `replica/recon.md` and `replica/features.csv`. Writes
 `replica/architecture.md` (template: architecture.md in this folder).

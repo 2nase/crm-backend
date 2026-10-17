@@ -21,9 +21,19 @@ checked as well as contents.
 Skipped: .git, node_modules, build output folders, lock files, binary files,
 and the replica/ planning folder (where the original's name belongs). Pass
 --include-replica to check that too, for example if it sits inside public/.
+Also skipped, because they are not part of the app: Claude Code's .claude/
+folder and CLAUDE.md files (the skills and settings), virtualenvs (any folder
+with a pyvenv.cfg), tool working folders (.playwright-cli, .scrapling_cache,
+.unlazy, .pgdata and similar), and research_notes/, reports/, crawl_data/ and
+dev_cache/ at the top level.
+
+Files that can hold secrets (.env, .env.*, .npmrc, key files, credentials and
+auth state) are still searched, but a hit there shows only the file and line,
+never the line itself, so no secret ends up in the output.
 """
 
 import argparse
+import fnmatch
 import json
 import os
 import re
@@ -31,9 +41,23 @@ import sys
 
 SKIP_DIRS = {".git", "node_modules", ".next", ".nuxt", ".svelte-kit", "dist", "build",
              "out", ".vercel", ".turbo", ".cache", "coverage", "__pycache__", ".venv",
-             "venv", "Pods", ".expo", "DerivedData", ".gradle"}
+             "venv", "Pods", ".expo", "DerivedData", ".gradle",
+             # Claude Code config and tool working folders, not the app
+             ".claude", ".venv-scrapling", ".playwright-cli", ".auth", ".scrapling_cache",
+             ".unlazy", ".pgdata", ".mypy_cache", ".pytest_cache", ".ruff_cache", ".tox",
+             ".nox"}
+# Research and crawl output: skipped at the top level only, so app folders with
+# these names (src/reports/) are still searched.
+SKIP_TOP_DIRS = {"research_notes", "reports", "crawl_data", "dev_cache"}
 SKIP_FILES = {"package-lock.json", "yarn.lock", "pnpm-lock.yaml", "bun.lockb",
-              "Podfile.lock", "Cargo.lock", "poetry.lock"}
+              "Podfile.lock", "Cargo.lock", "poetry.lock", "CLAUDE.md", "CLAUDE.local.md"}
+# Searched, but a hit shows only file and line (matched on the lower-case file name).
+SECRET_FILES = (".env", ".env.*", "*.env", ".envrc", ".dev.vars", ".npmrc", ".yarnrc.yml",
+                ".netrc", ".pypirc", "*.pem", "*.key", "*.p8", "id_rsa*", "id_dsa*",
+                "id_ecdsa*", "id_ed25519*", "credentials.json", "*service-account*.json",
+                "google-services.json", "googleservice-info.plist", "auth.json",
+                "*auth-state*.json", "*storage-state*.json", "*storagestate*.json")
+HIDDEN = "(line not shown: this file can hold secrets)"
 BINARY_EXT = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".icns", ".pdf", ".zip",
               ".gz", ".woff", ".woff2", ".ttf", ".otf", ".eot", ".mp4", ".mov", ".mp3",
               ".wav", ".avif", ".heic", ".psd", ".sketch", ".fig", ".jar", ".so", ".dylib"}
@@ -74,6 +98,11 @@ def is_binary(path):
         return True
 
 
+def is_secret(name):
+    name = name.lower()
+    return any(fnmatch.fnmatchcase(name, pat) for pat in SECRET_FILES)
+
+
 def sweep(root, avoid=(), domains=(), colors=(), include_replica=False, max_size=2_000_000):
     pats = build_patterns(avoid, domains)
     cols = {norm_hex(c) for c in colors if HEX.fullmatch(c.strip())}
@@ -87,6 +116,10 @@ def sweep(root, avoid=(), domains=(), colors=(), include_replica=False, max_size
                 continue
             if d == "replica" and rel_dir == "." and not include_replica:
                 continue
+            if d in SKIP_TOP_DIRS and rel_dir == ".":
+                continue
+            if os.path.isfile(os.path.join(dirpath, d, "pyvenv.cfg")):
+                continue  # a virtualenv, whatever its name
             keep.append(d)
         dirnames[:] = sorted(keep)
         for d in dirnames:
@@ -100,6 +133,7 @@ def sweep(root, avoid=(), domains=(), colors=(), include_replica=False, max_size
                 continue
             path = os.path.join(dirpath, fn)
             rel = os.path.normpath(os.path.join(rel_dir, fn))
+            secret = is_secret(fn)
             for kind, label, rx in pats:
                 if kind == "name" and rx.search(fn):
                     hits.append({"file": rel, "line": 0, "kind": "path", "match": label,
@@ -115,13 +149,13 @@ def sweep(root, avoid=(), domains=(), colors=(), include_replica=False, max_size
                 for kind, label, rx in pats:
                     if rx.search(line):
                         hits.append({"file": rel, "line": i, "kind": kind, "match": label,
-                                     "text": line.strip()[:160]})
+                                     "text": HIDDEN if secret else line.strip()[:160]})
                 if cols:
                     for m in HEX.finditer(line):
                         if norm_hex(m.group(0)) in cols:
                             hits.append({"file": rel, "line": i, "kind": "color",
                                          "match": norm_hex(m.group(0)),
-                                         "text": line.strip()[:160]})
+                                         "text": HIDDEN if secret else line.strip()[:160]})
     return hits
 
 

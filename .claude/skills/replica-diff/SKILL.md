@@ -1,22 +1,27 @@
 ---
 name: replica-diff
 description: >-
-  Compares an app clone against the original: a feature parity score from the
-  feature matrix (weighted by must, should, could) with the missing list in
-  build order, plus a screenshot layout diff that ignores colour so a rebrand
-  does not count against you. Two standard-library Python tools. Use when the
-  user says "how close is my clone", "compare it to the original", "what's
-  missing", "parity check", "diff the screens", "is it ready", or after
+  Replica pack, step 7 of 11: a clean-room rebuild of an existing app. Only
+  when the owner is explicitly building such a clone (replica/recon.md
+  exists); not for ordinary work on this CRM. Compares an app clone against
+  the original: a feature parity score from the feature matrix (weighted by
+  must, should, could) with the missing list in build order, plus a
+  screenshot layout diff that ignores colour so a rebrand does not count
+  against you. Two standard-library Python tools. Use when the user says
+  "how close is my clone", "compare my clone to the original", or after
   /replica-test.
 ---
 
 # replica-diff
 
+**Only for a Replica project the owner asked for** (a clone of an existing
+app, with `replica/recon.md`), not for ordinary work on this CRM.
+
 Two tools in this folder, both standard-library Python, no installs:
 
 ```bash
 python3 .claude/skills/replica-diff/parity.py replica/features.csv                         # feature parity + missing list
-python3 .claude/skills/replica-diff/imgdiff.py replica/screens/S07.png replica/clone-screens/S07.png --out diff-S07.png
+python3 .claude/skills/replica-diff/imgdiff.py replica/screens/S07.png replica/clone-screens/S07.png --out replica/diffs/S07.png
 python3 .claude/skills/replica-diff/imgdiff.py a.png b.png --json > replica/diffs/S07.json # for parity.py --visual
 python3 .claude/skills/replica-diff/parity.py replica/features.csv --visual replica/diffs/*.json --markdown > replica/parity.md
 ```
@@ -50,7 +55,8 @@ list in build order. Must-haves not done means not shippable, and it says so.
 For each key screen, take two screenshots at the **same viewport** (1440x900
 desktop, 390x844 mobile) in the **same state** (same data shape, same tab
 open, logged in the same way). The original's come from public pages or the
-user's own account, saved in `replica/screens/`. The clone's go in
+user's own account, saved in `replica/screens/`. They stay local (gitignored,
+like `replica/diffs/`): never commit, push or publish them. The clone's go in
 `replica/clone-screens/`.
 
 ```bash

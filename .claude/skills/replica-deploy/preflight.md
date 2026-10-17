@@ -18,7 +18,7 @@ Date: {{YYYY-MM-DD}}  Commit: {{sha}}  Go from user: {{yes / not yet}}
 
 - [ ] separate production database, backups on, migrations in the deploy
 - [ ] env vars set (names match .env.example)
-- [ ] Stripe live: products, prices, webhook endpoint + secret, one real purchase refunded
+- [ ] Stripe live: products, prices, webhook endpoint + secret, one real purchase by the owner, refunded
 - [ ] OAuth redirect URIs and origins include the production domain
 - [ ] Google OAuth verification approved (if using sensitive scopes)
 - [ ] email sending domain verified

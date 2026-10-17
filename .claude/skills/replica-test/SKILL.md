@@ -1,20 +1,24 @@
 ---
 name: replica-test
 description: >-
-  Clicks through every flow of an app clone and tests it for bugs: a test plan
-  generated from the recon flows with happy paths and edge cases, Playwright
-  end-to-end tests where possible, a browser click-through where not, and bug
-  reports in a fixed format with severity, steps and evidence. Use when the
-  user says "test my clone", "find bugs", "QA this", "click through
-  everything", "write e2e tests", "does it work", or after /replica-build or
-  /replica-backend.
+  Replica pack, step 6 of 11: a clean-room rebuild of an existing app. Only
+  when the owner is explicitly building such a clone (replica/recon.md
+  exists); not for testing or QA of this CRM. Clicks through every flow of an
+  app clone and tests it for bugs: a test plan generated from the recon flows
+  with happy paths and edge cases, Playwright end-to-end tests where
+  possible, a browser click-through where not, and bug reports in a fixed
+  format with severity, steps and evidence. Use when the user says "test my
+  clone", or after /replica-build or /replica-backend.
 ---
 
 # replica-test
 
+**Only for a Replica project the owner asked for** (a clone of an existing
+app, with `replica/recon.md`), not for ordinary work on this CRM.
+
 Reads the flows in `replica/recon.md`. Writes `replica/test-plan.md`,
 `replica/bugs.md`, and end-to-end tests in the project (`e2e/`). Templates in
-this folder: `test-plan.md`, `bug-report.md`, `e2e.example.spec.ts`.
+this folder: `test-plan.md`, `bug-report.md`, `e2e.example.ts`.
 
 ## The rule
 
@@ -42,15 +46,21 @@ Number every case: F01-H1, F01-E3, F01-N2.
 
 Playwright, one spec per flow, against the local dev server with seed data.
 Use roles and labels for selectors (`getByRole('button', { name: 'Book' })`),
-never CSS classes. See `e2e.example.spec.ts`.
+never CSS classes. See `e2e.example.ts`.
 
 ```bash
-npm i -D @playwright/test && npx playwright install chromium
-npx playwright test
+npm i -D --save-exact @playwright/test@1.63.0 @axe-core/playwright@4.13.0
+npx --no-install playwright install chromium
+npx --no-install playwright test
 ```
 
-`@playwright/test` is a new dev dependency: ask the user first. In Claude Code cloud
-sessions Chromium is pre-installed (`PLAYWRIGHT_BROWSERS_PATH`), so skip `playwright install`.
+`@playwright/test` and `@axe-core/playwright` are new dev dependencies: ask the
+owner first (npm downloads both, and `playwright install` downloads Chromium),
+then pin exact versions (the ones above were checked on npm on 2026-10-17). In Claude Code cloud sessions Chromium is
+pre-installed (`PLAYWRIGHT_BROWSERS_PATH`), so skip `playwright install` and
+pin the `@playwright/test` version that `npx --no-install playwright --version`
+prints, so the browser matches. Write `playwright.config.ts` with
+`testDir: 'e2e'`, so Playwright only runs the specs in `e2e/`.
 
 Add to every spec: fail on console errors, fail on any 5xx response, and an
 axe accessibility scan (`@axe-core/playwright`) on each screen.

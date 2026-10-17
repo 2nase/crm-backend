@@ -1,15 +1,20 @@
 ---
 name: replica-backend
 description: >-
-  Builds the backend of an app clone: auth, database migrations and access
-  rules, payments with Stripe, email, background jobs and third-party
-  integrations through official APIs only, plus a security checklist. Use when
-  the user says "add login", "set up auth", "wire up the database", "add
-  payments", "connect Stripe", "add Google Calendar", "send emails",
-  "backend for my clone", or when /replica-build is running on fake data.
+  Replica pack, step 5 of 11: a clean-room rebuild of an existing app. Only
+  when the owner is explicitly building such a clone (replica/recon.md
+  exists); not for ordinary work on this CRM, such as adding login, payments
+  or email to it. Builds the backend of an app clone: auth, database
+  migrations and access rules, payments with Stripe, email, background jobs
+  and third-party integrations through official APIs only, plus a security
+  checklist. Use when the user says "backend for my clone", or when
+  /replica-build is running on fake data.
 ---
 
 # replica-backend
+
+**Only for a Replica project the owner asked for** (a clone of an existing
+app, with `replica/recon.md`), not for ordinary work on this CRM.
 
 Reads `replica/architecture.md`. Writes migrations and server code, and keeps
 `replica/backend.md` (checklist below) up to date.

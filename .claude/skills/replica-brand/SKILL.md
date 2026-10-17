@@ -1,16 +1,21 @@
 ---
 name: replica-brand
 description: >-
-  Names and rebrands an app clone so it is the user's own: name candidates
-  with the trademark, domain, store and handle checks to run, a new palette
-  checked for contrast, a logo brief, a voice guide, and a sweep tool that
-  finds anything of the original left in the codebase. Use when the user says
-  "name my app", "rebrand the clone", "make it mine", "pick a name and
-  colours", "logo brief", "brand voice", "check for leftovers", or after
-  /replica-entrepreneur. Always runs before /replica-launch.
+  Replica pack, step 9 of 11: a clean-room rebuild of an existing app. Only
+  when the owner is explicitly building such a clone (replica/recon.md
+  exists); not for ordinary branding or work on this CRM. Names and rebrands
+  an app clone so it is the user's own: name candidates with the trademark,
+  domain, store and handle checks to run, a new palette checked for
+  contrast, a logo brief, a voice guide, and a sweep tool that finds
+  anything of the original left in the codebase. Use when the user says
+  "rebrand the clone", or after /replica-entrepreneur. Always runs before
+  /replica-launch.
 ---
 
 # replica-brand
+
+**Only for a Replica project the owner asked for** (a clone of an existing
+app, with `replica/recon.md`), not for ordinary work on this CRM.
 
 Nothing launches under the original's identity. This skill is the line
 between "a clone" and "your app".
@@ -99,9 +104,14 @@ python3 .claude/skills/replica-brand/sweep.py . --config replica/brand.json
 
 It searches file contents and file names for the original's name (also inside
 identifiers like `CalendlyEmbed`), domains and colours, skipping
-`node_modules`, build output and the `replica/` planning folder. Exit 1 means
-something is left. Fix until it says clean. Also check by eye: the favicon,
-the page titles, the email templates, the OG image, the app icon.
+`node_modules`, build output, the `replica/` planning folder, `.claude/` and
+`CLAUDE.md` (the skills and settings, not the app), virtualenvs and tool
+folders. In `.env` and key files it shows only the file and line, never the
+text, so no secret is printed. Do not print those lines yourself: fix
+`.env.example` directly (it holds no values), and for the other files tell the
+owner which file and line to change. Exit 1 means something is left. Fix
+until it says clean. Also check by eye: the favicon, the page titles, the
+email templates, the OG image, the app icon.
 
 ## Output
 

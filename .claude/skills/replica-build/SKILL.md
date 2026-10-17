@@ -1,15 +1,20 @@
 ---
 name: replica-build
 description: >-
-  Rebuilds an app screen by screen from the recon map: app shell first, then
-  the core flow as a vertical slice, then every screen with all its states,
-  ticking off the feature matrix as it goes. Writes every line fresh, never
-  the original's code, assets or copy. Use when the user says "build the
-  clone", "build screen S07", "start building", "rebuild this screen",
-  "implement the booking page", or after /replica-design.
+  Replica pack, step 4 of 11: a clean-room rebuild of an existing app. Only
+  when the owner is explicitly building such a clone (replica/recon.md
+  exists); not for ordinary work on this CRM. Rebuilds an app screen by
+  screen from the recon map: app shell first, then the core flow as a
+  vertical slice, then every screen with all its states, ticking off the
+  feature matrix as it goes. Writes every line fresh, never the original's
+  code, assets or copy. Use when the user says "build the clone", "build
+  screen S07", or after /replica-design.
 ---
 
 # replica-build
+
+**Only for a Replica project the owner asked for** (a clone of an existing
+app, with `replica/recon.md`), not for ordinary work on this CRM.
 
 Reads `replica/recon.md`, `replica/architecture.md`, `replica/design/`.
 Updates `replica/features.csv` (the `clone` column) and keeps

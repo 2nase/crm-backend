@@ -1,16 +1,20 @@
 ---
 name: replica-recon
 description: >-
-  Reverse-engineers any app into a recon map: screen inventory, user flows,
-  component list, inferred data model and a feature matrix, from public pages,
-  screenshots, app store listings, help docs and the user's own account. The
-  first step of the Replica pack. Use when the user says "clone this app",
-  "reverse engineer X", "how does X work", "map out X", "what screens does X
-  have", "I want to build my own version of X", "copy this app", or pastes an
-  app's URL or App Store link and wants to rebuild it.
+  Replica pack, step 1 of 11: a clean-room rebuild of an existing app. Only
+  when the owner explicitly asks to clone or rebuild an existing app; not for
+  ordinary work on this CRM. Reverse-engineers that app into a recon map:
+  screen inventory, user flows, component list, inferred data model and a
+  feature matrix, from public pages, screenshots, app store listings, help
+  docs and the user's own account. Use when the user says "clone this app",
+  "I want to build my own version of X", "copy this app", or pastes an app's
+  URL or App Store link and wants to rebuild it.
 ---
 
 # replica-recon
+
+**Only for a Replica project the owner asked for** (a clone of an existing
+app), not for ordinary work on this CRM.
 
 Everything else in the pack builds from what this skill writes. A bad recon
 map means a bad clone, so take the time here.
@@ -42,7 +46,8 @@ anything the app owns.
   competing product. If the user's account is under terms like that, say so
   and work from public sources only.
 - **Screenshots are reference.** They live in `replica/screens/`, are used to
-  compare layouts, and never go into the clone.
+  compare layouts, and never go into the clone. They stay local:
+  `replica/screens/` is gitignored, so never commit, push or publish them.
 
 ## Step 1: scope
 

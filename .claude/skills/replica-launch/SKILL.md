@@ -1,16 +1,20 @@
 ---
 name: replica-launch
 description: >-
-  Writes the launch for an app clone: the landing page built on the
-  positioning angle, pricing set against the original's public pricing and
-  its users' complaints, and the App Store and Google Play listing linted
-  against the stores' limits and copycat rules. Use when the user says
-  "landing page", "pricing", "how much should I charge", "App Store
-  listing", "store screenshots", "launch plan", "Product Hunt", or after
+  Replica pack, step 10 of 11: a clean-room rebuild of an existing app. Only
+  when the owner is explicitly building such a clone (replica/recon.md
+  exists); not for ordinary marketing or work on this CRM. Writes the launch
+  for an app clone: the landing page built on the positioning angle, pricing
+  set against the original's public pricing and its users' complaints, and
+  the App Store and Google Play listing linted against the stores' limits
+  and copycat rules. Use when the user says "launch my clone", or after
   /replica-brand.
 ---
 
 # replica-launch
+
+**Only for a Replica project the owner asked for** (a clone of an existing
+app, with `replica/recon.md`), not for ordinary work on this CRM.
 
 Reads `replica/fixes.md` (the angle and the evidence), `replica/brand.md`,
 and `replica/brand.json`. Writes `replica/launch/`: `landing.md`,
@@ -30,6 +34,10 @@ Start from `listing.example.json` in this folder.
 - **No reviewer quotes as testimonials.** The original's reviews are research.
 - **The original's name stays out** of your app name, store listing, keywords
   and ads. Apple and Google reject it, and it invites a takedown.
+- **Claude drafts, the owner sends.** Launch posts (Product Hunt, Hacker News,
+  Reddit), community replies and messages to the first users are drafts. The
+  owner reviews them and posts or sends them. Never post, comment or message
+  anyone without the owner's explicit OK for that message.
 
 ## Step 1: landing page
 

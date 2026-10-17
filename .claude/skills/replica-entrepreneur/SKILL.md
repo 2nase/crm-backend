@@ -1,17 +1,22 @@
 ---
 name: replica-entrepreneur
 description: >-
-  Researches the app being cloned and reads what its real users say in public
-  reviews (App Store, Google Play, G2, Capterra, Trustpilot, Reddit, Hacker
-  News, its own feature-request board), then ranks what they hate, what is
-  missing and what is unsolved, turns it into a fix plan for the clone and a
-  positioning angle you can sell. Every quote is real, verbatim and linked.
-  Use when the user says "what do people hate about X", "read the reviews",
-  "how do I make mine better", "find the gap", "what features are missing",
-  "how do I position this", "make it sellable", or after /replica-diff.
+  Replica pack, step 8 of 11: a clean-room rebuild of an existing app. Only
+  when the owner is explicitly building such a clone (replica/recon.md
+  exists); not for ordinary market research or work on this CRM. Researches
+  the app being cloned and reads what its real users say in public reviews
+  (App Store, Google Play, G2, Capterra, Trustpilot, Reddit, Hacker News, its
+  own feature-request board), then ranks what they hate, what is missing and
+  what is unsolved, turns it into a fix plan for the clone and a positioning
+  angle you can sell. Every quote is real, verbatim and linked. Use when the
+  user says "how do I make my clone better", "what do users of the original
+  hate", or after /replica-diff.
 ---
 
 # replica-entrepreneur
+
+**Only for a Replica project the owner asked for** (a clone of an existing
+app, with `replica/recon.md`), not for ordinary work on this CRM.
 
 A straight copy of an app has no reason to exist. This skill finds the reason:
 what the original's users hate, in their own words, and fixes it in yours.
@@ -40,6 +45,11 @@ python3 .claude/skills/replica-entrepreneur/reviews.py replica/reviews.csv --out
   illegal in the US (the FTC's 2024 rule) and in many other places.
 - **Reviewers are not your testimonials.** Their words are research. Do not
   put them on your landing page.
+- **Reviews stay local.** `replica/reviews.csv`, `replica/feedback.md` and
+  `replica/fixes.md` (its lists quote reviews) are gitignored: never commit,
+  push or publish them. Store no personal data: no
+  reviewer names or handles (the sheet has no column for them), and leave out
+  any review whose text names a private person or gives contact details.
 
 ## Step 1: collect
 
@@ -62,10 +72,12 @@ best fixes hide.
 ## Step 2: rank
 
 ```bash
-python3 .claude/skills/replica-entrepreneur/reviews.py replica/reviews.csv --out replica/feedback.md
+[ -f replica/themes.json ] || cp .claude/skills/replica-entrepreneur/themes.json replica/themes.json
+python3 .claude/skills/replica-entrepreneur/reviews.py replica/reviews.csv --themes replica/themes.json --out replica/feedback.md
 ```
 
-It sorts reviews into themes (`themes.json`, edit it for the app's category),
+It sorts reviews into themes (`replica/themes.json`, a copy of `themes.json`
+in this folder: edit the copy for the app's category, never the original),
 weights low ratings and recent reviews higher, marks themes with fewer than 3
 reviews or only one source as thin, lists every request in the users' own
 words, and surfaces low ratings that matched no theme. Read that last list by

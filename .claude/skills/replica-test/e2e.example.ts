@@ -1,4 +1,5 @@
 // Example Playwright spec for one flow. Copy to e2e/f01-book.spec.ts and adapt.
+// This template is named .ts, not .spec.ts, so Playwright never runs it from this folder.
 // Selectors use roles and labels, so they survive restyling and the rebrand.
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';

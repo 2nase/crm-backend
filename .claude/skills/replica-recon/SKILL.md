@@ -74,7 +74,8 @@ Ask four things, or propose answers and get a yes:
      and "Replica";
    - into its `CLAUDE.md`, the CRM's `npx` rule (*Commands*) and, from
      *Definition of done*, "No new dependencies or global installs without
-     asking" and the "Ask the owner first for" list, so sessions opened
+     asking; pin exact versions that have been public for at least two
+     weeks" and the "Ask the owner first for" list, so sessions opened
      there keep them.
 
    All Replica work happens there, `replica/` included: every path in the
@@ -87,7 +88,9 @@ Ask four things, or propose answers and get a yes:
    `playwright.config.ts` or clone dependencies to the CRM repository, never
    connect it to a host, and never edit its tsconfig to quiet the typecheck
    gate (that is the owner's decision). In the clone's own repository, where
-   this pack has been copied, this question is already answered: skip it.
+   this pack has been copied, this question is already answered for the app
+   that repository was made for: skip it. For a different app, ask the owner
+   for its own new repository, as above.
 
 ## Step 2: list the sources
 

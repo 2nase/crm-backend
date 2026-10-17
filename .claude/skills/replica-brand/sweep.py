@@ -31,11 +31,13 @@ Files that commonly hold secrets are still searched, but a hit there shows
 only the file and line, never the line itself: .env and .env.*, .npmrc, .netrc,
 .pgpass and similar dotfiles, key, certificate, keystore and VPN files,
 Terraform variables, Android local.properties, Docker and kube configs, auth
-state, and other files named like credentials, secrets or service accounts or
-kept in a folder named so. Source code is the exception to that last group:
-CredentialsForm.tsx or lib/secrets.ts prints its lines like any other file.
-The list covers the usual names, not every file a secret could be in. Other
-files print the start of the matching line.
+state, other files named like credentials, secrets, service accounts or
+kubeconfig, and files kept in a folder named secrets or credentials (their
+hits say so). Web source code (.ts, .tsx, .js, .vue, .svelte, .astro, .html,
+.css and the like) and CI workflows in .github/workflows/ are the exception to
+those last two groups: CredentialsForm.tsx or lib/secrets.ts prints its lines
+like any other file. The list covers the usual names, not every file a secret
+could be in. Other files print the start of the matching line.
 """
 
 import argparse
@@ -64,17 +66,20 @@ SECRET_FILES = (".env", ".env.*", "*.env", ".envrc", ".dev.vars", ".npmrc", ".ya
                 "id_ecdsa*", "id_ed25519*", "credentials", "credentials.json",
                 "*service-account*.json", "google-services.json", "googleservice-info.plist",
                 "auth.json", "*auth-state*.json", "*storage-state*.json", "*storagestate*.json",
-                "*firebase-adminsdk*", "*.p12", "*.pfx", "*.keystore", "*.jks", "*.tfvars",
-                "*.tfvars.json", "local.properties")
+                "*firebase-adminsdk*", "*.p12", "*.pfx", "*.keystore", "*.jks", "*.crt", "*.cer",
+                "*.tfvars", "*.tfvars.json", "local.properties")
 # The same, matched on the end of the lower-case path.
 SECRET_PATHS = ("/.docker/config.json", "/.kube/config")
-# Names that also fit ordinary app code (CredentialsForm.tsx, lib/secrets.ts). They hide the
-# lines of other files only, and also match a folder on the path (secrets/prod.json).
-BROAD_SECRET_NAMES = ("*credentials*", "*secret*", "*serviceaccount*")
-CODE_EXT = {".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".vue", ".svelte", ".astro", ".css",
-            ".scss", ".sass", ".less", ".html", ".md", ".mdx", ".py", ".rb", ".go", ".rs",
-            ".java", ".kt", ".swift", ".dart", ".php"}
+# Names that also fit ordinary app code (CredentialsForm.tsx, lib/secrets.ts), and folders
+# whose files are hidden (secrets/prod.json). Both hide the lines of files other than web code
+# and CI workflows; a folder hit says so, since a feature folder can be named like this too.
+BROAD_SECRET_NAMES = ("*credentials*", "*secret*", "*serviceaccount*", "*service_account*",
+                      "*kubeconfig*")
+SECRET_DIRS = {"secret", "secrets", ".secrets", "credentials", ".credentials"}
+CODE_EXT = {".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".mts", ".cts", ".vue", ".svelte",
+            ".astro", ".css", ".scss", ".sass", ".less", ".html"}
 HIDDEN = "(line not shown: this file can hold secrets)"
+HIDDEN_DIR = "(line not shown: it is in a secrets or credentials folder)"
 BINARY_EXT = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".icns", ".pdf", ".zip",
               ".gz", ".woff", ".woff2", ".ttf", ".otf", ".eot", ".mp4", ".mov", ".mp3",
               ".wav", ".avif", ".heic", ".psd", ".sketch", ".fig", ".jar", ".so", ".dylib"}
@@ -115,17 +120,24 @@ def is_binary(path):
         return True
 
 
-def is_secret(rel):
-    rel = rel.replace(os.sep, "/").lower()
+def hidden_text(rel):
+    """What a hit in this file shows instead of its line, or None to show the line."""
+    path = rel.replace(os.sep, "/")
+    rel = path.lower()
     parts = rel.split("/")
     if any(fnmatch.fnmatchcase(parts[-1], pat) for pat in SECRET_FILES):
-        return True
+        return HIDDEN
     if ("/" + rel).endswith(SECRET_PATHS):
-        return True
+        return HIDDEN
     ext = os.path.splitext(parts[-1])[1]
-    if ext in CODE_EXT or (parts[0] == ".github" and ext in (".yml", ".yaml")):
-        return False  # app code and CI workflows, written for the clone
-    return any(fnmatch.fnmatchcase(part, pat) for part in parts for pat in BROAD_SECRET_NAMES)
+    workflow = path.startswith(".github/workflows/") and path.endswith((".yml", ".yaml"))
+    if ext in CODE_EXT or workflow:
+        return None  # web app code and CI workflows, written for the clone
+    if any(fnmatch.fnmatchcase(parts[-1], pat) for pat in BROAD_SECRET_NAMES):
+        return HIDDEN
+    if any(part in SECRET_DIRS for part in parts[:-1]):
+        return HIDDEN_DIR
+    return None
 
 
 def sweep(root, avoid=(), domains=(), colors=(), include_replica=False, max_size=2_000_000):
@@ -158,7 +170,7 @@ def sweep(root, avoid=(), domains=(), colors=(), include_replica=False, max_size
                 continue
             path = os.path.join(dirpath, fn)
             rel = os.path.normpath(os.path.join(rel_dir, fn))
-            secret = is_secret(rel)
+            hidden = hidden_text(rel)
             for kind, label, rx in pats:
                 if kind == "name" and rx.search(fn):
                     hits.append({"file": rel, "line": 0, "kind": "path", "match": label,
@@ -174,13 +186,13 @@ def sweep(root, avoid=(), domains=(), colors=(), include_replica=False, max_size
                 for kind, label, rx in pats:
                     if rx.search(line):
                         hits.append({"file": rel, "line": i, "kind": kind, "match": label,
-                                     "text": HIDDEN if secret else line.strip()[:160]})
+                                     "text": hidden or line.strip()[:160]})
                 if cols:
                     for m in HEX.finditer(line):
                         if norm_hex(m.group(0)) in cols:
                             hits.append({"file": rel, "line": i, "kind": "color",
                                          "match": norm_hex(m.group(0)),
-                                         "text": HIDDEN if secret else line.strip()[:160]})
+                                         "text": hidden or line.strip()[:160]})
     return hits
 
 

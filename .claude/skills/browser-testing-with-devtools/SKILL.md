@@ -25,14 +25,14 @@ Use Chrome DevTools MCP to give your agent eyes into the browser. This bridges t
 
 ### Installation
 
-With the user's approval, add the following to your project's `.mcp.json` or Claude Code settings (consider pinning an exact version instead of `@latest`):
+With the user's approval, add the following to your project's `.mcp.json` or Claude Code settings. The version is pinned on purpose (checked on npm on 2026-10-17, public for at least two weeks; change it only with the owner's OK):
 
 ```json
 {
   "mcpServers": {
     "chrome-devtools": {
       "command": "npx",
-      "args": ["-y", "chrome-devtools-mcp@latest", "--isolated"]
+      "args": ["-y", "chrome-devtools-mcp@1.10.1", "--isolated"]
     }
   }
 }

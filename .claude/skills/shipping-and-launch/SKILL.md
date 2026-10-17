@@ -9,6 +9,8 @@ description: Prepares production launches. Use when preparing to deploy to produ
 
 Ship with confidence. The goal is not just to deploy — it's to deploy safely, with monitoring in place, a rollback plan ready, and a clear understanding of what success looks like. Every launch should be reversible, observable, and incremental.
 
+**Ask the owner first** before every deploy, rollback, production flag change, push to `main` or release announcement. They are outward-facing. This skill prepares and checks; the owner decides when to ship.
+
 ## When to Use
 
 - Deploying a feature to production for the first time
@@ -263,7 +265,7 @@ Every deployment needs a rollback plan before it happens:
 ### Rollback Steps
 1. Disable feature flag (if applicable)
    OR
-1. Deploy previous version: `git revert <commit> && git push`
+1. Deploy previous version: `git revert <commit>`, then `git push` once the owner approves
 2. Verify rollback: health check, error monitoring
 3. Communicate: notify team of rollback
 

@@ -57,6 +57,8 @@ Pull Request Opened
 
 ### Basic CI Pipeline
 
+In this repo, `.github/workflows/ci.yml` already exists: a Postgres service, then `npm ci`, `prisma generate`, `prisma migrate deploy`, `npm run typecheck` and `npm run build`. There is no lint or test script yet. Extend that file instead of replacing it with the example below, and add a lint or test step only together with its script (a new dev dependency: ask the owner first).
+
 ```yaml
 # .github/workflows/ci.yml
 name: CI
@@ -85,7 +87,7 @@ jobs:
         run: npm run lint
 
       - name: Type check
-        run: npx tsc --noEmit
+        run: npm run typecheck
 
       - name: Test
         run: npm test -- --coverage
@@ -125,7 +127,7 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - name: Run migrations
-        run: npx prisma migrate deploy
+        run: npm run prisma:deploy
         env:
           DATABASE_URL: postgresql://ci_user:${{ secrets.CI_DB_PASSWORD }}@localhost:5432/testdb
       - name: Integration tests
@@ -138,6 +140,8 @@ jobs:
 
 ### E2E Tests
 
+Playwright is not a dependency of this repo. Adding `@playwright/test` is a new dependency: ask the owner first. Once it is in devDependencies, `npx --no-install` runs the locked version; without it, the command fails instead of downloading the latest one.
+
 ```yaml
   e2e:
     runs-on: ubuntu-latest
@@ -149,11 +153,11 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - name: Install Playwright
-        run: npx playwright install --with-deps chromium
+        run: npx --no-install playwright install --with-deps chromium
       - name: Build
         run: npm run build
       - name: Run E2E tests
-        run: npx playwright test
+        run: npx --no-install playwright test
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
@@ -178,19 +182,21 @@ Feed it to the agent:
 Fix the issue and verify locally before pushing again."
     │
     ▼
-Agent fixes → pushes → CI runs again
+Agent fixes → pushes to the PR branch (never to main without the owner's OK) → CI runs again
 ```
 
 **Key patterns:**
 
 ```
-Lint failure → Agent runs `npm run lint --fix` and commits
+Lint failure → Agent runs `npm run lint -- --fix` and commits
 Type error  → Agent reads the error location and fixes the type
 Test failure → Agent follows debugging-and-error-recovery skill
 Build error → Agent checks config and dependencies
 ```
 
 ## Deployment Strategies
+
+Deploys and rollbacks are outward-facing, and a hosting platform is a new third-party service. Ask the owner first before you add, change or trigger any of the workflows below; they are examples, not steps to run. Their `npx vercel@62.0.0` lines are pinned on purpose (npx downloads and runs a package from npm; checked on npm on 2026-10-17: the newer 62.x releases up to 63.0.0 are deprecated for a self-upgrade bug). Change the version only with the owner's OK.
 
 ### Preview Deployments
 
@@ -204,7 +210,7 @@ deploy-preview:
   steps:
     - uses: actions/checkout@v4
     - name: Deploy preview
-      run: npx vercel --token=${{ secrets.VERCEL_TOKEN }}
+      run: npx vercel@62.0.0 --token=${{ secrets.VERCEL_TOKEN }}
 ```
 
 ### Feature Flags
@@ -265,7 +271,7 @@ jobs:
       - name: Rollback deployment
         run: |
           # Deploy the specified previous version
-          npx vercel rollback ${{ inputs.version }}
+          npx vercel@62.0.0 rollback ${{ inputs.version }}
 ```
 
 ## Environment Management
@@ -306,6 +312,8 @@ Designate someone responsible for keeping CI green. When the build breaks, the B
 - **Branch protection:** No force-pushes to main
 - **Auto-merge:** If all checks pass and approved, merge automatically
 
+These are repository settings. Changing them, or merging into main yourself, needs the owner's OK.
+
 ## CI Optimization
 
 When the pipeline exceeds 10 minutes, apply these strategies in order of impact:
@@ -345,7 +353,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: '22', cache: 'npm' }
       - run: npm ci
-      - run: npx tsc --noEmit
+      - run: npm run typecheck
 
   test:
     runs-on: ubuntu-latest

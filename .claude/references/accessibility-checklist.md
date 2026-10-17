@@ -122,10 +122,12 @@ Quick reference for WCAG 2.1 AA compliance. Use alongside the `frontend-ui-engin
 
 ## Testing Tools
 
+Neither audit CLI is installed in this repo. Ask the owner first: npx downloads and runs a package from npm. Then use the exact versions below (checked on npm on 2026-10-17, each public for at least two weeks; change them only with the owner's OK).
+
 ```bash
 # Automated audit
-npx axe-core          # Programmatic accessibility testing
-npx pa11y             # CLI accessibility checker
+npx @axe-core/cli@4.13.0 <url>   # axe-core's CLI (the axe-core package has none)
+npx pa11y@10.0.0 <url>           # CLI accessibility checker
 
 # In browser
 # Chrome DevTools → Lighthouse → Accessibility

@@ -1,6 +1,6 @@
 ---
 name: doubt-driven-development
-description: Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when you want every assumption cross-examined before proceeding, when stress-testing a plan for hidden failure modes, when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production auth, security-sensitive logic, a high-stakes migration, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.
+description: Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when you want every assumption cross-examined before proceeding, when stress-testing a plan for hidden failure modes, when correctness matters more than speed, when working in unfamiliar code, or when stakes are high (production auth, security-sensitive logic, a high-stakes migration, irreversible operations). The reviewer is a fresh subagent of the same model; other vendors' models (OpenAI, Google) are used only when the user explicitly asks.
 ---
 
 # Doubt-Driven Development
@@ -105,30 +105,30 @@ CONTRACT: <paste contract>
 
 **Pass ARTIFACT + CONTRACT only. Do NOT pass the CLAIM.** Handing the reviewer your conclusion biases it toward agreement. The reviewer must independently determine whether the artifact satisfies the contract.
 
-In Claude Code, the role-based reviewers in `agents/` start with isolated context by design and are usable here — see `agents/` for the roster and per-domain match.
+In Claude Code, the role-based reviewers in `.claude/agents/` start with isolated context by design and are usable here — see `.claude/agents/` for the roster and per-domain match.
 
 **The adversarial prompt above takes precedence over the persona's default response shape.** Personas like `code-reviewer` are written to produce balanced verdicts with both strengths and weaknesses; doubt-driven needs issues-only output. Paste the adversarial prompt verbatim into the invocation so it overrides the persona's default. If a persona's response shape can't be overridden cleanly, fall back to a generic subagent with the adversarial prompt.
 
-#### Cross-model escalation
+#### Cross-model escalation (opt-in)
 
-A single-model reviewer shares blind spots with the original author — a colder, different-architecture model catches them. Doubt-driven is already opt-in for non-trivial decisions, so within that scope offering cross-model is part of the skill's value, not optional friction.
+A single-model reviewer shares blind spots with the original author — a colder, different-architecture model catches them. But those models run through other vendors' CLIs, so code leaves the machine. The default is the same-model review above.
 
-**Interactive sessions: always offer. Never silently skip.**
+**Only when the user asks for it.** Do not offer cross-model unprompted, and never run a CLI without the user's explicit OK.
 
-**Step 1: Ask the user**
+**Step 1: Ask the user, with the facts**
 
-After the single-model review in Step 3 above, but before RECONCILE, pause and ask:
+When the user asks for a cross-model opinion, finish the single-model review in Step 3 first. Before RECONCILE, ask:
 
-> *"Single-model review complete. Want a cross-model second opinion? Options: Gemini CLI, Codex CLI, manual external review (you paste it elsewhere), or skip."*
+> *"Single-model review complete. A cross-model second opinion sends code from this repo to OpenAI (Codex CLI) or Google (Gemini CLI). It sends the artifact, and their CLI is an agent that can also read other files on this machine, including the rest of this repo. It may cost money on your account with that company, and their CLI must be installed and signed in. Never use it for code with customer data or secrets. Options: skip (recommended), manual external review (you paste the artifact elsewhere yourself), Gemini CLI, or Codex CLI."*
 
-This question is mandatory in every interactive doubt cycle — even on artifacts that feel low-stakes. The user — not the agent — decides whether the cost is worth it. The agent's job is to surface the choice.
+Ask this before every run, even if the user agreed earlier. The user — not the agent — decides whether the cost and the data leaving the machine are worth it. Never put customer data, secrets or `.env` values into the prompt; if the artifact holds any, recommend skip.
 
 **Step 2: If the user picks a CLI — verify, then invoke**
 
 1. Check the tool is in PATH (`which gemini`, `which codex`).
 2. Test it works (`gemini --version` or equivalent) before passing the full prompt — a stale or broken binary may pass `which` but fail on real input.
 3. Confirm the exact invocation with the user, including required flags, auth, and env vars (e.g., API keys). Implementations vary; never assume.
-4. Pass ARTIFACT + CONTRACT + the adversarial prompt **only**. No session context, no CLAIM.
+4. Pass ARTIFACT + CONTRACT + the adversarial prompt **only**. No session context, no CLAIM. Write the prompt into a new, empty temp directory and run the CLI from there, never from the repo.
 5. Mind shell escaping. If the artifact contains quotes, `$(...)`, or backticks, prefer stdin (`echo … | gemini`) or a heredoc over inline `-p "…"`. When in doubt, ask the user to confirm the invocation before running it.
 6. Take the output into Step 4 (RECONCILE).
 
@@ -137,22 +137,27 @@ This question is mandatory in every interactive doubt cycle — even on artifact
 Example shapes (verify flags against your installed tool — syntax differs across implementations and versions):
 
 ```bash
-# Write the adversarial prompt + ARTIFACT + CONTRACT to a temp file first.
-# Then pipe via stdin so shell metacharacters in the artifact stay inert.
+# Write the adversarial prompt + ARTIFACT + CONTRACT into a new, empty temp
+# directory, never into the repo. Then pipe via stdin so shell metacharacters
+# in the artifact stay inert.
+d=$(mktemp -d)   # write the prompt to "$d/doubt-prompt.md"
 
-# Codex (read-only sandbox keeps the CLI from writing to your workspace):
-codex exec --sandbox read-only -C <repo-path> - < /tmp/doubt-prompt.md
+# Codex (read-only sandbox keeps the CLI from writing to your workspace;
+# --skip-git-repo-check because the temp directory is not a git repo):
+codex exec --sandbox read-only --skip-git-repo-check -C "$d" - < "$d/doubt-prompt.md"
 
 # Gemini ('--approval-mode plan' is read-only; '-p ""' triggers non-interactive
-# mode and the prompt is read from stdin):
-gemini --approval-mode plan -p "" < /tmp/doubt-prompt.md
+# mode and the prompt is read from stdin; run it from the temp directory):
+(cd "$d" && gemini --approval-mode plan -p "" < doubt-prompt.md)
 ```
 
 A read-only sandbox is the load-bearing detail: a doubt artifact may itself contain instructions (intentional or accidental prompt injection) that the cross-model CLI would otherwise execute against your workspace.
 
+The empty directory reduces what the CLI sees, but it does not remove the exposure. Read-only blocks writes, not reads: Codex's read-only sandbox can still open files outside that directory by absolute path, including this repo and its `.env`. That is why skip is the recommended answer in this repo.
+
 **Step 3: If the CLI is unavailable or fails**
 
-Surface the failure explicitly. Offer: run it manually, try a different tool, or skip. Do not silently fall back to single-model — the user should know cross-model didn't happen.
+Surface the failure explicitly. Offer: run it manually, try a different tool, or skip. Do not silently fall back to single-model — the user should know cross-model didn't happen. Do not install a CLI yourself: that is a global install, which needs the user's OK, and only the user can sign in to it.
 
 **Step 4: If the user skips**
 
@@ -160,10 +165,10 @@ Acknowledge the skip in the output (*"Proceeding with single-model findings only
 
 **Non-interactive contexts** (CI, `/loop`, autonomous-loop, scheduled runs):
 
-- Cross-model is **skipped**, and the skip must be **announced** in the output: *"Cross-model skipped: non-interactive context."*
+- Cross-model is **skipped**: nobody is there to agree to it. If the task asked for it, **announce** the skip in the output: *"Cross-model skipped: non-interactive context."*
 - **Never invoke an external CLI without explicit user authorization** — this is a load-bearing safety property.
 
-Cross-model adds cost, latency, and tool fragility. The agent surfaces the choice every cycle; the user decides whether this artifact warrants it.
+Cross-model adds cost, latency and tool fragility, and it sends code to another vendor. The agent does not raise it unprompted; the user decides whether an artifact warrants it.
 
 ### Step 4: RECONCILE — Fold findings back
 
@@ -201,7 +206,7 @@ If 3 cycles is "obviously insufficient" because the artifact is large: the artif
 | "If I doubt every step I'll never ship" | The skill applies to non-trivial decisions, not every keystroke. Re-read "When NOT to Use." |
 | "Two opinions are always better than one" | Not when the second has less context and produces noise. Reconcile, don't defer. |
 | "The reviewer disagreed so I was wrong" | The reviewer lacks your context — disagreement is information, not verdict. Re-read the artifact, classify, then decide. |
-| "Cross-model is always better" | Cross-model catches blind spots a single model shares with itself, but it adds cost and tool fragility. Offer it every interactive doubt cycle — the user decides whether the artifact warrants it. The agent's job is to surface the choice, not to gate it. |
+| "Cross-model is always better" | Cross-model catches blind spots a single model shares with itself, but it adds cost and tool fragility, and it sends code to another vendor. It runs only when the user asks; the same-model review is the default. |
 | "User said yes once, so I can keep invoking the CLI" | Each invocation is its own authorization. The artifact, the prompt, and the flags change between calls — re-confirm the exact command with the user before every run. |
 
 ## Red Flags
@@ -215,7 +220,8 @@ If 3 cycles is "obviously insufficient" because the artifact is large: the artif
 - **Doubt theater (checkable signal)**: across 2 or more cycles where the reviewer surfaced substantive findings, zero findings were classified as actionable. You are validating, not doubting. Stop and escalate.
 - Doubting only after committing — that's `/as-review`, not doubt-driven development
 - Hardcoding an external CLI invocation without confirming with the user that the tool exists, is configured, and accepts that exact syntax
-- **Silently skipping cross-model in an interactive doubt cycle.** Even when not recommending it, the offer must be visible. Skipping is fine; silent skipping is not.
+- **Offering or running cross-model unprompted**, or asking without saying that the code goes to OpenAI or Google, may cost money, and needs their CLI installed and signed in
+- Running a cross-model CLI from the repo instead of an empty temp directory
 - Falling back silently when an external CLI errors or is missing — surface the failure and let the user redirect
 - Stripping the contract from the reviewer's input
 - Passing the CLAIM to the reviewer (biases toward agreement)
@@ -238,6 +244,6 @@ After applying doubt-driven development:
 - [ ] The reviewer's prompt was adversarial ("find issues"), not validating ("is it good")
 - [ ] Findings were classified against the artifact text (not rubber-stamped) using the precedence: contract misread / actionable / trade-off / noise
 - [ ] A stop condition was met (trivial findings, 3 cycles, or user override)
-- [ ] In interactive mode, cross-model was **explicitly offered** to the user (regardless of artifact stakes) and the response was acknowledged in the output
-- [ ] In non-interactive mode, cross-model was skipped and the skip was announced
-- [ ] Any external CLI invocation was preceded by a PATH check, a working-binary test, syntax confirmation with the user, and explicit authorization to run
+- [ ] Cross-model ran only if the user asked for it and agreed after hearing that the code goes to OpenAI or Google, may cost money, and needs their CLI installed and signed in; any skip was acknowledged in the output
+- [ ] In non-interactive mode, cross-model did not run, and the skip was announced if the task asked for it
+- [ ] Any external CLI invocation was preceded by a PATH check, a working-binary test, syntax confirmation with the user, and explicit authorization to run, and it ran from an empty temp directory

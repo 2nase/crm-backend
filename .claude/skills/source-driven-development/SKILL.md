@@ -1,6 +1,6 @@
 ---
 name: source-driven-development
-description: Grounds every implementation decision in official documentation. Use when you want to verify an approach against the official docs before implementing it, or when you want authoritative, source-cited code free from outdated patterns. Use when building with any framework or library where correctness matters.
+description: Grounds every implementation decision in official documentation. Use when you want to verify an approach against the official docs before implementing it, or when you want authoritative, source-cited code free from outdated patterns. Use when the user asks for documented or verified code, or when a framework or library API is unfamiliar, new, or changed in the installed version.
 ---
 
 # Source-Driven Development
@@ -16,7 +16,7 @@ Every framework-specific code decision must be backed by official documentation.
 - The user explicitly asks for documented, verified, or "correct" implementation
 - Implementing features where the framework's recommended approach matters (forms, routing, data fetching, state management, auth)
 - Reviewing or improving code that uses framework-specific patterns
-- Any time you are about to write framework-specific code from memory
+- You are about to write framework-specific code from memory and are not sure it matches the installed version
 
 **When NOT to use:**
 
@@ -140,9 +140,9 @@ Surface the conflict. Don't silently pick one.
 
 ### Step 4: Cite Your Sources
 
-Every framework-specific pattern gets a citation. The user must be able to verify every decision.
+Every framework-specific pattern gets a citation. The user must be able to verify every decision. Cite in your reply by default; put source URLs in code comments only when the user asks for them.
 
-**In code comments:**
+**In code comments (only when the user asks):**
 
 ```typescript
 // React 19 form handling with useActionState

@@ -292,7 +292,7 @@ if (!success) return res.status(429).end();
 git diff --cached | grep -i "password\|secret\|api_key\|token"
 ```
 
-**If a secret is ever committed, rotate it.** Deleting the line or rewriting history is not enough — assume it's compromised the moment it reaches a remote. Revoke and reissue the key first, then purge it from history.
+**If a secret is ever committed, it must be rotated.** Stop and tell the owner which secret and where (file, commit, branch), without repeating its value. Deleting the line or rewriting history is not enough — assume it's compromised the moment it reaches a remote. The owner revokes and reissues the key first. Purging it from history means rewriting history and force-pushing: only with the owner's explicit OK.
 
 ## Data Classification
 

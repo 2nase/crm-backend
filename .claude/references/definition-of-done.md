@@ -2,6 +2,15 @@
 
 A standing, project-wide bar that every change must clear before it counts as done. Unlike acceptance criteria, which vary per task and answer "did we build the right thing?", the Definition of Done is the same every time and answers "is this finished to our standard?". Use it as the final gate in `planning-and-task-breakdown`, `incremental-implementation`, and `shipping-and-launch`.
 
+## In this repo
+
+The binding bar is the *Definition of done* in the project's `CLAUDE.md`. Where this file and `CLAUDE.md` differ, `CLAUDE.md` wins. Today that means:
+
+- Not done until `npm run typecheck` passes; quote the command and its output. A Stop hook runs `prisma generate` and the same type check when `.ts` files, the Prisma schema or TS/npm config changed.
+- The only other check in package.json is `npm run build`. There is no test runner, linter or smoke script yet: no `npm test`, `npm run test:e2e` or `npm run lint`. Never claim tests passed.
+- A multi-file change gets the `reviewer` subagent (fresh context) before it is called done.
+- Ask the owner first for anything outward-facing or irreversible.
+
 ## Definition of Done vs. Acceptance Criteria
 
 | | Acceptance Criteria | Definition of Done |
@@ -16,7 +25,7 @@ The two are complementary. A task is done only when **its** acceptance criteria 
 
 ## The Standing Checklist
 
-Apply this to every change before declaring it done.
+Apply this to every change before declaring it done. An item that needs a tool the project does not have yet (tests, a linter, metrics or tracing) does not apply until the project has it: mark it "n/a" instead of ticking it. Adding such a tool is a new dependency, so ask the owner first.
 
 ### Correctness
 - [ ] All acceptance criteria for the task are met
@@ -56,7 +65,7 @@ The depth behind these items lives in `code-review-and-quality` (the five-axis r
 - **Per feature**: confirm Integration and Documentation before considering the feature complete.
 - **Per release**: the full checklist is the floor; `shipping-and-launch` adds the deploy-specific gates on top.
 
-Tailor the list to the project once, then reuse it unchanged. A Definition of Done that is renegotiated every sprint is not a Definition of Done.
+Tailor the list to the project once, then reuse it unchanged; for this repo, *In this repo* above is that tailoring. A Definition of Done that is renegotiated every sprint is not a Definition of Done.
 
 ## Red Flags
 

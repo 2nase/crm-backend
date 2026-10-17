@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: Drives development with tests using the red-green-refactor loop. Use when implementing any logic, fixing any bug, or changing any behavior. Use when you need to prove that code works, when a bug report arrives, or when you're about to modify existing functionality.
+description: Drives development with tests using the red-green-refactor loop. Use when the owner asks for tests or test-first work. Use when the project already has a test runner and you are implementing logic, fixing a bug, or changing behavior. Not for a project without a test runner unless the owner asks, because setting one up adds a new dependency.
 ---
 
 # Test-Driven Development
@@ -17,7 +17,7 @@ Write a failing test before writing the code that makes it pass. For bug fixes, 
 - Adding edge case handling
 - Any change that could break existing behavior
 
-**When NOT to use:** Pure configuration changes, documentation updates, or static content changes that have no behavioral impact.
+**When NOT to use:** Pure configuration changes, documentation updates, or static content changes that have no behavioral impact. Also not when the project has no test runner and the owner has not asked for tests: adding a test framework is a new dependency, so ask the owner first.
 
 **Related:** For browser-based changes, combine TDD with runtime verification using Chrome DevTools MCP — see the Browser Testing section below.
 

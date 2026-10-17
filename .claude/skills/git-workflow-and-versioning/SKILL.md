@@ -1,6 +1,6 @@
 ---
 name: git-workflow-and-versioning
-description: Structures git workflow practices. Use when making any code change. Use when committing, branching, resolving conflicts, splitting uncommitted work in a messy working tree into clean atomic commits, opening or reviewing a pull request (PR), pushing to a remote, or when you need to organize work across multiple parallel streams. Use when cutting a release, choosing a semantic version bump, tagging, or writing a changelog.
+description: Structures git workflow practices. Use when committing, branching, resolving conflicts, splitting uncommitted work in a messy working tree into clean atomic commits, opening or reviewing a pull request (PR), pushing to a remote, or when you need to organize work across multiple parallel streams. Use when cutting a release, choosing a semantic version bump, tagging, or writing a changelog.
 ---
 
 # Git Workflow and Versioning
@@ -11,7 +11,9 @@ Git is your safety net. Treat commits as save points, branches as sandboxes, and
 
 ## When to Use
 
-Always. Every code change flows through git.
+When committing, branching, resolving conflicts, opening or reviewing a pull request, pushing, or cutting a release. Routine edits don't need this whole workflow.
+
+**Ask the owner first** before merging into or pushing to `main`, creating or pushing a tag, publishing a release, force-pushing or otherwise rewriting pushed history, or deleting a branch. These steps are outward-facing or hard to undo.
 
 ## Core Principles
 
@@ -132,7 +134,7 @@ main (always deployable)
 
 - Branch from `main` (or the team's default branch)
 - Keep branches short-lived (merge within 1-3 days) — long-lived branches are hidden costs
-- Delete branches after merge
+- Delete branches after merge (ask the owner first)
 - Prefer feature flags over long-lived branches for incomplete features
 
 ### Branch Naming
@@ -186,7 +188,7 @@ Agent starts work
     └── Feature complete → All commits form a clean history
 ```
 
-This pattern means you never lose more than one increment of work. If an agent goes off the rails, `git reset --hard HEAD` takes you back to the last successful state. It irreversibly discards all uncommitted changes, including any the user made, so confirm with the user before running it.
+This pattern means you never lose more than one increment of work. If an agent goes off the rails, `git reset --hard HEAD` takes you back to the last successful state. It irreversibly discards all uncommitted changes, including any the user made, so confirm with the user before running it. The same goes for every other way to "revert to last commit" that throws away uncommitted work, such as `git checkout -- .`, `git restore .`, `git clean -fd` or `git stash drop`.
 
 ## Change Summaries
 
@@ -219,14 +221,14 @@ git diff --staged
 # 2. Ensure no secrets
 git diff --staged | grep -i "password\|secret\|api_key\|token"
 
-# 3. Run tests
+# 3. Run tests (if package.json has a `test` script)
 npm test
 
-# 4. Run linting
+# 4. Run linting (if package.json has a `lint` script)
 npm run lint
 
 # 5. Run type checking
-npx tsc --noEmit
+npm run typecheck
 ```
 
 Automate this with git hooks:
@@ -285,7 +287,7 @@ The number is a promise, so make the code match it. A "patch" that changes behav
 
 ### Tag the release, and let the tag be the source of truth
 
-A release is an immutable point in history, not a moving branch. Tag it so it can always be reproduced:
+A release is an immutable point in history, not a moving branch. Tag it so it can always be reproduced. Creating and pushing a tag publishes a release, so ask the owner first:
 
 ```bash
 git tag -a v1.4.0 -m "Release 1.4.0"

@@ -88,8 +88,10 @@ Don't deprecate without a working alternative. The replacement must:
 ### Migration Guide
 1. Replace `import { client } from 'old-service'` with `import { client } from 'new-service'`
 2. Update configuration (see examples below)
-3. Run the migration verification script: `npx migrate-check`
+3. Check that nothing still imports it (`grep -rn "old-service" src/` prints nothing), then run `npm run typecheck`
 ```
+
+The guide's last step names checks the project really has. Never point consumers at an `npx` package that exists only in an example: npx downloads and runs whatever is published under that name.
 
 ### Step 3: Migrate Incrementally
 

@@ -24,7 +24,7 @@ Interpret performance data from one or more of:
 - **Live capture via Chrome DevTools MCP server**: when the MCP server is configured in the harness, capture metrics directly using `lighthouse_audit`, `performance_start_trace` / `performance_stop_trace`, and `performance_analyze_insight` instead of asking the user to paste artifacts.
 - **Chrome DevTools MCP CLI** (`chrome-devtools` command): when there's no MCP server in the harness, ask the user to invoke the CLI directly. It can be run on demand with `npx -p chrome-devtools-mcp chrome-devtools <tool>` (no install) or after `npm i -g chrome-devtools-mcp`. Example: `chrome-devtools lighthouse_audit --output-format=json > report.json`.
 
-Never run `npx` or install anything yourself: these commands download and run packages from npm. Ask the owner first; if approved, pin exact versions (for example `npx --yes lighthouse@<version>`). No global installs (`npm i -g`).
+Never run `npx` or install anything yourself: these commands download and run packages from npm. Ask the owner first; if approved, pin exact versions (for example `npx --yes lighthouse@13.5.0`, checked on npm on 2026-10-17). No global installs (`npm i -g`).
 
 Populate the scorecard only with values backed by these sources. Mark unmeasured fields as `not measured`.
 
@@ -35,7 +35,7 @@ Populate the scorecard only with values backed by these sources. Mark unmeasured
 | Lab metrics, opportunities, diagnostics | Lighthouse JSON | None (parse a provided file) |
 | Field metrics (real users, p75) | CrUX API | `CRUX_API_KEY` or `GOOGLE_API_KEY` env var |
 | Combined lab + field | PageSpeed Insights JSON | None for parsing; the user provides the JSON |
-| Live trace, LCP attribution, INP attribution, layout shift attribution | Chrome DevTools MCP server (`performance_*`, `lighthouse_audit`) | `chrome-devtools` MCP server configured in the harness (see `skills/browser-testing-with-devtools`) |
+| Live trace, LCP attribution, INP attribution, layout shift attribution | Chrome DevTools MCP server (`performance_*`, `lighthouse_audit`) | `chrome-devtools` MCP server configured in the harness (see `.claude/skills/browser-testing-with-devtools`) |
 | Manual terminal capture (Lighthouse, trace, screenshot) | Chrome DevTools MCP CLI (e.g. `chrome-devtools lighthouse_audit --output-format=json`) | `npx -p chrome-devtools-mcp chrome-devtools <tool>` or `npm i -g chrome-devtools-mcp` (CLI is independent of the harness) |
 
 If a source is unavailable, do not fabricate. Skip the related section of the scorecard and continue with what you have.
@@ -174,8 +174,8 @@ Identify the framework and rendering model (React, Vue, Svelte, Angular, Next.js
 5. Every finding must include a specific, actionable recommendation.
 6. Do not recommend micro-optimizations without evidence they affect a Core Web Vital or another measurable metric.
 7. Acknowledge good performance practices — positive reinforcement matters.
-8. Use `references/performance-checklist.md` as the minimum baseline for each area.
-9. Delegate granular optimization guidance and remediation steps to `skills/performance-optimization/SKILL.md` — keep this report at the audit level.
+8. Use `.claude/references/performance-checklist.md` as the minimum baseline for each area.
+9. Delegate granular optimization guidance and remediation steps to the `performance-optimization` skill (`.claude/skills/performance-optimization/SKILL.md`) — keep this report at the audit level.
 10. Fold AI-generated anti-patterns into their relevant area (Network or Rendering/JS); do not create a separate "AI" category.
 11. In Deep mode, always state which artifacts were provided and which fields remain unmeasured.
 

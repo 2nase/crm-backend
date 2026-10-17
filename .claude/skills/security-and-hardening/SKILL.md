@@ -126,7 +126,7 @@ Pattern: [Rate limiting](references/hardening-patterns.md#rate-limiting).
 
 ### Secrets
 
-Secrets come from the environment. `.env.example` is committed with placeholders; real `.env*` files and key material are gitignored; grep the staged diff before committing. **A secret that reaches a remote is compromised the moment it lands: rotate it first, then purge history.**
+Secrets come from the environment. `.env.example` is committed with placeholders; real `.env*` files and key material are gitignored; grep the staged diff before committing. **A secret that reaches a remote is compromised the moment it lands.** If you find a leaked or committed secret, stop and tell the owner which secret and where (file, commit, branch), without repeating its value. The owner rotates it first. Purging it from history means rewriting history and force-pushing: only with the owner's explicit OK.
 
 Pattern: [Secrets management](references/hardening-patterns.md#secrets-management).
 

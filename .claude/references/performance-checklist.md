@@ -190,17 +190,19 @@ For a shared cache, the same idea needs a distributed lock, or `stale-while-reva
 2. **Identify slow interactions** — open DevTools → Performance panel → record while interacting; look for long tasks triggered by clicks/keystrokes
 3. **Test on mid-range Android** — INP issues often only surface on slower hardware; use a real device or DevTools CPU throttling (4×–6× slowdown)
 
+None of these CLI tools is installed in this repo. Ask the owner first: npx downloads and runs a package from npm. Then use the exact versions below (checked on npm on 2026-10-17, each public for at least two weeks; change them only with the owner's OK), or add the tool as a devDependency and run it with `npx --no-install`.
+
 ```bash
 # Lighthouse CLI
-npx lighthouse https://localhost:3000 --output json --output-path ./report.json
+npx lighthouse@13.5.0 https://localhost:3000 --output json --output-path ./report.json
 
 # Bundle analysis
-npx webpack-bundle-analyzer stats.json
+npx webpack-bundle-analyzer@5.4.0 stats.json
 # or for Vite:
-npx vite-bundle-visualizer
+npx vite-bundle-visualizer@1.2.1
 
 # Check bundle size
-npx bundlesize
+npx bundlesize@0.18.2
 
 # Web Vitals in code
 import { onLCP, onINP, onCLS } from 'web-vitals';

@@ -21,7 +21,7 @@ In other harnesses without an Agent tool, invoke each persona's system prompt se
 Constraints (from Claude Code's subagent model):
 - Subagents cannot spawn other subagents — do not let one persona delegate to another.
 - Each subagent gets its own context window and returns only its report to this main session.
-- If you need teammates that talk to each other instead of just reporting back, use Claude Code Agent Teams and reference these personas as teammate types (see `references/orchestration-patterns.md`).
+- If you need teammates that talk to each other instead of just reporting back, use Claude Code Agent Teams and reference these personas as teammate types (see `.claude/references/orchestration-patterns.md`; only with the owner's OK, since CLAUDE.md rules out Agent Teams for routine work).
 
 **Persona resolution.** `code-reviewer`, `security-auditor` and `test-engineer` are project agents in this repo's `.claude/agents/`. Customize them there; `/as-ship` picks up the changes automatically.
 

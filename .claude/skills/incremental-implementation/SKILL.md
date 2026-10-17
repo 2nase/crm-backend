@@ -203,7 +203,7 @@ After each increment, verify with the repository's own commands (see the test-dr
 - [ ] The change does one thing and does it completely
 - [ ] All existing tests still pass (the repository's test command: `npm test`, `./gradlew test`, `pytest`, ...)
 - [ ] The build succeeds (the repository's build command)
-- [ ] Type checking passes, where the stack has one (`npx tsc --noEmit`, `mypy`, ...)
+- [ ] Type checking passes, where the stack has one (`npm run typecheck` in this repo, `mypy`, ...)
 - [ ] Linting passes (the repository's lint command)
 - [ ] The new functionality works as expected
 - [ ] The change is committed with a descriptive message

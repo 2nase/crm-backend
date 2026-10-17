@@ -110,7 +110,7 @@ main agent → research sub-agent (reads 50 files) → digest → main agent con
 
 **Cost:** one isolated sub-agent context. Worth it any time the alternative is loading hundreds of files into the main context.
 
-**On Claude Code, use the built-in `Explore` subagent** rather than defining a custom research persona. `Explore` runs on Haiku, is denied write/edit tools, and is purpose-built for this pattern. Define a custom research subagent only when `Explore` doesn't fit (e.g. you need a domain-specific system prompt the model wouldn't infer).
+**On Claude Code, use a read-only research subagent that runs on the session's model.** The built-in `Explore` subagent is denied write/edit tools and built for this pattern, but upstream notes that it runs on Haiku. In this repo the owner runs Opus at max effort on purpose and subagents inherit the session's model (CLAUDE.md), so prefer `general-purpose` with a read-only brief, or a custom research subagent with `model: inherit` and no write/edit tools.
 
 ---
 
@@ -120,7 +120,7 @@ This catalog is harness-agnostic, but most readers will run it on Claude Code. H
 
 ### Where personas live
 
-Plugin subagents go in `agents/` at the plugin root. This repo is a plugin (`.claude-plugin/plugin.json`), so `agents/code-reviewer.md`, `agents/security-auditor.md`, and `agents/test-engineer.md` are auto-discovered when the plugin is enabled. No path configuration needed.
+This repo is not a plugin. The personas are project subagents in `.claude/agents/`: `code-reviewer.md`, `security-auditor.md`, `test-engineer.md` and `web-performance-auditor.md` from the upstream pack, plus this project's own `reviewer.md` and `runner.md`. Claude Code discovers them automatically in this project, just like the skills in `.claude/skills/` and the commands in `.claude/commands/`. No path configuration needed.
 
 ### Subagents vs. Agent Teams
 
@@ -153,17 +153,17 @@ Before defining a custom subagent, check whether one of these covers the role:
 
 | Built-in | Purpose |
 |----------|---------|
-| `Explore` | Read-only codebase search and analysis. Use this for Pattern 5 (research isolation). |
+| `Explore` | Read-only codebase search and analysis. Upstream notes it runs on Haiku; in this repo use a subagent on the session's model for Pattern 5 (research isolation). |
 | `Plan` | Read-only research during plan mode. |
 | `general-purpose` | Multi-step tasks needing both exploration and modification. |
 
 Don't redefine these. Layer your specialist personas (code-reviewer, security-auditor, test-engineer) on top of them.
 
-### Frontmatter restrictions for plugin agents
+### Frontmatter fields take effect here
 
-Plugin subagents do **not** support the `hooks`, `mcpServers`, or `permissionMode` frontmatter fields — these are silently ignored. If a future persona needs any of those, the user must copy the file into `.claude/agents/` or `~/.claude/agents/` instead.
+The personas here are project subagents, not plugin agents, so Claude Code honors their `hooks`, `mcpServers` and `permissionMode` frontmatter fields. (Plugin agents ignore those three, and `initialPrompt` too.) That makes an agent's frontmatter as sensitive as `.claude/settings.json`: `permissionMode` can switch off permission prompts for that agent, `hooks` run shell commands, and `mcpServers` start or connect tool servers. Ask the owner before adding or changing any of them.
 
-The fields that DO work in plugin agents are: `name`, `description`, `tools`, `disallowedTools`, `model`, `maxTurns`, `skills`, `memory`, `background`, `effort`, `isolation`, `color`, `initialPrompt`. Use `model` per-persona if you want to optimize cost (e.g. Haiku for `test-engineer` coverage scans, Sonnet for `code-reviewer`, Opus for `security-auditor`).
+Subagents inherit the session's model and effort. The owner runs Opus at max effort on purpose (see `CLAUDE.md`), so don't set a lower `model` or `effort` per persona.
 
 ### Spawning multiple subagents in parallel
 
@@ -200,9 +200,9 @@ This is exactly the case the Agent Teams docs describe: *"With multiple independ
 
 `/as-ship` is a verdict; Agent Teams is an investigation.
 
-### Setup (one-time, per-environment)
+### Setup (one-time, per-environment, only with the owner's OK)
 
-Agent Teams is experimental. In `~/.claude/settings.json`:
+Agent Teams is experimental and costs more: each teammate is a separate Claude instance. `CLAUDE.md` rules it out for routine work, so ask the owner first, and only for a case like the one above. The switch goes into the owner's global `~/.claude/settings.json`, so it applies to every project; make that edit only with the owner's OK:
 
 ```json
 {
@@ -273,7 +273,7 @@ Do **not** rebuild this as a `/debug` slash command that fans out subagents. Sub
 - Production-bound verdict on a known diff → use `/as-ship` (subagents).
 - One specialist perspective on one artifact → direct persona invocation.
 - Sequential lifecycle (spec → plan → build) → user-driven slash commands (Pattern 4).
-- Read-heavy research with a small digest → built-in `Explore` subagent.
+- Read-heavy research with a small digest → a read-only subagent on the session's model (Pattern 5).
 
 Reach for Agent Teams only when teammates **need** to challenge each other to produce the right answer.
 
@@ -293,9 +293,9 @@ A persona whose job is to decide which other persona to call.
 - Pure routing layer with no domain value
 - Adds two paraphrasing hops → information loss + roughly 2× token cost
 - The user already knew they wanted a review; they could have called `/as-review` directly
-- Replicates the work that slash commands and intent mapping in `AGENTS.md` already do
+- Replicates the work that slash commands and skill descriptions already do
 
-**What to do instead:** add or refine slash commands. Document intent → command mapping in `AGENTS.md`.
+**What to do instead:** add or refine slash commands. Document intent → command mapping in `CLAUDE.md`, with the owner's OK.
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: context-engineering
-description: Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.
+description: Optimizes agent context setup. Use when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.
 ---
 
 # Context Engineering
@@ -11,7 +11,6 @@ Feed agents the right information at the right time. Context is the single bigge
 
 ## When to Use
 
-- Starting a new coding session
 - Agent output quality is declining (wrong patterns, hallucinated APIs, ignoring conventions)
 - Switching between different parts of a codebase
 - Setting up a new project for AI-assisted development
@@ -50,9 +49,9 @@ Create a rules file that persists across sessions. This is the highest-leverage 
 ## Commands
 - Build: `npm run build`
 - Test: `npm test`
-- Lint: `npm run lint --fix`
+- Lint: `npm run lint -- --fix`
 - Dev: `npm run dev`
-- Type check: `npx tsc --noEmit`
+- Type check: `npm run typecheck`
 
 ## Code Conventions
 - Functional components with hooks (no class components)
@@ -249,6 +248,8 @@ For richer context, use Model Context Protocol servers:
 | **PostgreSQL** | Direct database schema and query results |
 | **Filesystem** | Project file access and search |
 | **GitHub** | Issue, PR, and repository context |
+
+Adding an MCP server is a new third-party service: ask the owner first. A database server such as PostgreSQL would give it access to CRM data.
 
 ## Confusion Management
 

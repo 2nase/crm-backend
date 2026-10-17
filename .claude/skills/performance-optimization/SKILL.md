@@ -200,13 +200,13 @@ Time to Interactive: < 3.5s on 4G
 Lighthouse Performance score: ≥ 90
 ```
 
-**Enforce in CI:**
+**Enforce in CI:** neither tool is installed in this repo. Ask the owner first: npx downloads and runs a package from npm. Then use the exact versions below (checked on npm on 2026-10-17, each public for at least two weeks; change them only with the owner's OK), or add the tool as a devDependency and run it with `npx --no-install`.
 ```bash
 # Bundle size check
-npx bundlesize --config bundlesize.config.json
+npx bundlesize@0.18.2 --config bundlesize.config.json
 
 # Lighthouse CI
-npx @lhci/cli autorun
+npx @lhci/cli@0.15.1 autorun
 ```
 
 ## See Also

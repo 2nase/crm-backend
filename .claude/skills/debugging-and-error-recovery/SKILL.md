@@ -192,7 +192,7 @@ Build fails:
 ├── Type error → Read the error, check the types at the cited location
 ├── Import error → Check the module exists, exports match, paths are correct
 ├── Config error → Check build config files for syntax/schema issues
-├── Dependency error → Check package.json, run npm install
+├── Dependency error → Check package.json, run npm ci
 └── Environment error → Check Node version, OS compatibility
 ```
 

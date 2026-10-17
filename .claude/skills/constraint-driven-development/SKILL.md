@@ -1,6 +1,6 @@
 ---
 name: constraint-driven-development
-description: Establishes a project's quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says "set up constraints" or "define our standards", when the user wants dimensions they care about — accessibility, web performance, coverage — set up as enforced constraints, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don't know what number to pick, or when an agent writes more code than anyone will read.
+description: Establishes a project's quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use only on an explicit request, such as when the user says "set up constraints" or "define our standards", when the user wants dimensions they care about — accessibility, web performance, coverage — set up as enforced constraints, when the user asks you to stop an agent silencing checks or skipping tests to get to green, or when the user asks which coverage or performance threshold to pick.
 ---
 
 # Constraint-Driven Development
@@ -17,7 +17,7 @@ Spec-driven development says what to build. Test-driven development proves it wo
 
 ## When to Use
 
-Apply this skill when:
+Apply this skill only when the user asks for it (it runs an interview and installs tools), typically when:
 
 - Starting a project or a significant feature and no quality bar is written down
 - The user asks to "set up constraints", "add quality gates", "define our standards", or "stop the agent shipping junk"
@@ -66,8 +66,11 @@ Q1: Beyond the floor, which of these do you want enforced?
     (d) Accessibility
     (e) Architecture boundaries
 GUESS: (a) and (b) — you have a test runner already and you're handling user input.
-DEFAULT if unsure: (a) and (b).
+DEFAULT if unsure: the floor only. Each pick needs setup and usually a new tool, so it needs a clear yes.
 Say what each pick costs: (c) and (d) need a running URL, (e) needs a rules file written.
+Before the user picks (b), say what leaves the machine: Semgrep downloads its `p/...` rules
+from semgrep.dev and sends usage metrics to Semgrep unless run with `--metrics=off`;
+osv-scanner sends package names and versions to api.osv.dev unless run in its offline mode.
 ```
 
 ```
@@ -115,7 +118,7 @@ Last reviewed: 2026-08-08 by @addy
 | Lint | Zero errors from our config | `biome check` | every edit |
 | Secrets | No secrets in source | `gitleaks detect --redact` | every edit |
 | Coverage | Changed lines ≥ 80% covered | `vitest run --coverage` + git diff | task end, CI |
-| Security: code | No high findings | `semgrep scan --config p/default` | CI |
+| Security: code | No high findings | `semgrep scan --metrics=off --config p/default` | CI |
 | Security: deps | Nothing at high or above | `osv-scanner scan source -r .` | CI |
 | Accessibility | Zero critical or serious | `axe $PREVIEW_URL --tags wcag2a,wcag2aa,wcag21aa` | preview deploy |
 | Performance | LCP ≤ 2500ms, CLS ≤ 0.1 | `lighthouse $PREVIEW_URL --output=json` | preview deploy |
@@ -137,7 +140,7 @@ number and no command in this column is an aspiration, not a constraint.
 | W1 | `no-explicit-any` | `src/legacy/**` | Rewrite tracked in ENG-441 | @addy | 2026-11-01 |
 ```
 
-Then add one line to `AGENTS.md` and `CLAUDE.md`: `Read CONSTRAINTS.md before writing code. Do not weaken it to make a change pass.`
+Then ask the user before adding one line to `CLAUDE.md` (and to `AGENTS.md` only if the project already has one): `Read CONSTRAINTS.md before writing code. Do not weaken it to make a change pass.`
 
 ### Step 4: Install what each dimension needs
 
@@ -150,7 +153,7 @@ Picking a dimension means installing something; confirm each install with the us
 | Lint | your existing config | already there | `eslint .` / `biome check` / `ruff check` | any error |
 | Coverage (JS) | your test runner | already there | `vitest run --coverage` (or `jest --coverage`) | coverage of changed lines |
 | Coverage (Python) | pytest-cov | `pip install pytest-cov` | `pytest --cov --cov-report=lcov` | same |
-| Security: code | Semgrep | `pipx install semgrep` | `semgrep scan --config p/default --config p/owasp-top-ten` | any high finding |
+| Security: code | Semgrep | `pipx install semgrep` | `semgrep scan --metrics=off --config p/default --config p/owasp-top-ten` | any high finding |
 | Security: secrets | gitleaks | `brew install gitleaks` | `gitleaks detect --redact --no-banner` | any finding |
 | Security: dependencies | osv-scanner | `brew install osv-scanner` | `osv-scanner scan source -r .` | high or above |
 | Performance: page | Lighthouse | `npm i -D lighthouse` | `lighthouse $URL --output=json --quiet` | LCP, CLS, performance score |
@@ -174,7 +177,7 @@ Add each one to the project's own script so it's reproducible without an agent:
   "scripts": {
     "check:fast": "tsc --noEmit && eslint . && gitleaks detect --redact --no-banner",
     "check:task": "npm run check:fast && vitest run --coverage",
-    "check:full": "npm run check:task && semgrep scan --config p/default && osv-scanner scan source -r ."
+    "check:full": "npm run check:task && semgrep scan --metrics=off --config p/default && osv-scanner scan source -r ."
   }
 }
 ```
@@ -254,7 +257,7 @@ State the number and the reason together. A threshold without a rationale gets d
 Constraints work at three levels of teeth. Start at the first.
 
 1. **Written only.** `CONSTRAINTS.md` exists and agents read it. Costs nothing, catches the honest mistakes, relies on the agent complying.
-2. **Scripted.** An `npm run check` (or `make check`) that runs the fast checks, wired into your agent's post-edit hook and your CI. Deterministic, no new dependency.
+2. **Scripted.** An `npm run check` (or `make check`) that runs the fast checks, run by `/as-build` and your CI. A post-edit hook in `.claude/settings.json` would run it after every edit, always on: add one only with the user's explicit OK. Deterministic, no new dependency.
 3. **Tool-backed.** A dedicated runner that handles diff scoping, budgets, ratchets, and the guard checks. Use when the config outgrows a shell script. The floor-guard reference in [references/floor-guard.md](references/floor-guard.md) is the starting point for the guard-checks half of this.
 
 Most projects should stop at 2. Move to 3 when you're maintaining more than about thirty lines of check-running shell.

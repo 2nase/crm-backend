@@ -14,8 +14,9 @@ is not evidence. Only a check that could have failed, and didn't, is.
 
 ## 1. Write gates before real work
 
-Before implementing, create `GATES.md` in the repo root (or `.unlazy/<scope>/`
-for larger trees) from `templates/gates.md`. One observable outcome per gate.
+Before implementing, create `.unlazy/<scope>/GATES.md` from `templates/gates.md`
+(`<scope>` is a short name for the task; git ignores `.unlazy/`). One observable
+outcome per gate.
 
 ```markdown
 # Gates: <task>
@@ -33,7 +34,8 @@ Scope: <one sentence describing the complete deliverable>
 
 Rules:
 - Unique explicit ids (G1, G2, …). Runnable gates need both `CHECK:` and `EXPECT:`;
-  manual gates have neither. Optional `CWD:` for a subdirectory.
+  manual gates have neither. Commands run from the repo root, not from
+  `.unlazy/`; optional `CWD:` for a subdirectory.
 - A runnable gate is met only when the command **exits 0 AND** `EXPECT:` matches
   combined stdout+stderr. Error text that happens to contain the token never counts.
 - `EVIDENCE:` records what you actually observed (exit code, matched line,
@@ -45,14 +47,16 @@ Rules:
 ## 2. Gates must be able to fail honestly
 
 - Observe the outcome directly: the check reads the file/service/test named in the title.
-- Print a success-only marker after all assertions (e.g. `npm test` summary line,
+- Print a success-only marker after all assertions (e.g. a test runner's summary line,
   or a small script that exits non-zero on any failure).
 - `echo ok` style oracles are worthless — reject them.
 - For absence checks ("no X left"), first confirm the same check finds X on a
   known positive case, otherwise a wrong path looks like success.
 - Never copy a number from the brief into `EXPECT:`; compute it from source.
-- Prefer repo-native commands (`npm test`, `npx tsc --noEmit`, `npm run lint`,
-  targeted jest/vitest runs) over ad-hoc pipelines.
+- Prefer repo-native commands over ad-hoc pipelines, and only scripts that
+  package.json really has. In this repo that is `npm run typecheck` (the gate
+  CLAUDE.md requires) and `npm run build`; there is no test runner or linter
+  yet. Never use `npx <tool>` for a package that is not installed.
 
 ## 3. Security boundary
 
@@ -69,7 +73,8 @@ Rules:
   outcomes, give each its own gate or an explicit handoff.
 - **Depth Tree (orchestrated):** for builds/deep reviews, write a `PLAN.md`
   first (see below), give each leaf its own `gates/leaf-<id>.md` and each
-  branch a `gates/node-<id>.md` with integration gates.
+  branch a `gates/node-<id>.md` with integration gates, all in the same
+  `.unlazy/<scope>/` folder.
 
 ## 5. Build the Depth Tree
 
@@ -108,6 +113,7 @@ Immediately before the final message:
 
 ## Housekeeping
 
-- `GATES.md`, `PLAN.md` and `.unlazy/` are working files; don't commit them
-  unless the user asks.
+- `GATES.md`, `PLAN.md` and `gates/` are working files. They live only in
+  `.unlazy/<scope>/`, which git ignores; never write them to the repo root, and
+  don't commit them unless the user asks.
 - Don't create gates for trivial edits or factual replies.

@@ -18,7 +18,9 @@ The figures are the published agentic benchmark averages: a headless Claude
 Code session (Haiku 4.5) doing 12 feature tickets on a real FastAPI + React
 repo, each task averaged over 4 runs, against the same agent without the
 skill, plus 6 safety tasks. They are measured, not computed from the current
-repo. Source: `benchmarks/results/2026-06-18-agentic.md` and the README.
+repo. Source: `benchmarks/results/2026-06-18-agentic.md` and the README of
+the upstream repo, https://github.com/DietrichGebert/ponytail at commit
+552acd5; neither file is installed here.
 
 ## Scoreboard
 

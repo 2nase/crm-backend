@@ -20,3 +20,13 @@ The six skills, as project skills: `ponytail`, `ponytail-review`, `ponytail-audi
 ## Audit notes
 
 All six SKILL.md files (395 lines) were read in full; hooks were reviewed for network, process and file access. No prompt injection, hidden content, telemetry or promotional directives. `ponytail-gain` shows the author's published benchmark averages and explicitly refuses to invent per-repo numbers.
+
+## Fixes from the PR review (2026-10-08)
+
+Before these fixes, the six SKILL.md files were diffed against the raw upstream files at 552acd5. The only differences were changes 1 to 3 above. The upstream files have 395 lines in total.
+
+- `ponytail` description: it said "Use on ANY coding task" and also fired on complaints about over-engineering, so it switched itself on for routine work. That is the always-on effect the hooks were left out for, and it contradicted the help card's "no auto-activation". It now fires only when the user asks: `/ponytail` or one of its phrases ("ponytail", "be lazy", "lazy mode", "simplest solution", "minimal solution", "yagni", "do less", "shortest path"). `disable-model-invocation` was not added, because that needs the owner's OK, so the phrases still work.
+- `ponytail` *Persistence*: "ACTIVE EVERY RESPONSE ... Still active if unsure" became: active from the user's request until the current task is done, unless the user says to keep it on. `/ponytail off` is now a real switch (also in `argument-hint`), because the help card already promised it.
+- `ponytail` *Boundaries*: it applies only on request and ends with the task, and CLAUDE.md comes first: its ask-first rules still apply, and its Definition of done decides when work is done. This replaces "or when a coding task triggers it" from change 1. The pointer to Caveman, a third-party skill that is neither installed nor reviewed, was removed.
+- `ponytail-help`: the level line, *Deactivate* and *Installation in this project* now match: it starts with `/ponytail` or when asked, ends with the task, and `/ponytail off` works.
+- `ponytail-gain`: the source line pointed to `benchmarks/results/2026-06-18-agentic.md` and "the README", which are not installed here (README.md in this repo is the CRM's). It now names the upstream repo and commit. The scoreboard figures were checked against that upstream file and match: 12 feature tasks at -54% lines, -22% tokens, -20% cost and -27% time; 6 safety tasks, 100% safe.

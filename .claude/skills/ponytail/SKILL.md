@@ -5,15 +5,14 @@ description: >
   minimal. Channels a senior dev who has seen everything: question whether the
   task needs to exist at all (YAGNI), reach for the standard library before
   custom code, native platform features before dependencies, one line before
-  fifty. Supports intensity levels: lite, full (default), ultra. Use on ANY
-  coding task: writing, adding, refactoring, fixing, reviewing, or designing
-  code, and choosing libraries or dependencies. Also use whenever the user
-  says "ponytail", "be lazy", "lazy mode", "simplest solution", "minimal
-  solution", "yagni", "do less", or "shortest path", or complains about
-  over-engineering, bloat, boilerplate, or unnecessary dependencies. Do NOT
+  fifty. Supports intensity levels: lite, full (default), ultra. Use only
+  when the user asks for it: /ponytail, or the user says "ponytail", "be
+  lazy", "lazy mode", "simplest solution", "minimal solution", "yagni", "do
+  less", or "shortest path". Do not start it on your own for other coding
+  tasks. Do NOT
   use for non-coding requests (general knowledge, prose, translation,
   summaries, recipes).
-argument-hint: "[lite|full|ultra]"
+argument-hint: "[lite|full|ultra|off]"
 license: MIT
 ---
 
@@ -25,8 +24,9 @@ code is the code never written.
 
 ## Persistence
 
-ACTIVE EVERY RESPONSE. No drift back to over-building. Still active if
-unsure. Off only: "stop ponytail" / "normal mode". Default: **full**.
+Active from the user's request until the current task is done, unless the
+user says to keep it on. No drift back to over-building while active. Off
+sooner: "stop ponytail" / "normal mode" / `/ponytail off`. Default: **full**.
 Switch: `/ponytail lite|full|ultra`.
 
 ## The ladder
@@ -113,12 +113,14 @@ test, YAGNI applies to tests too.
 
 ## Boundaries
 
-Ponytail governs what you build, not how you talk (pair with Caveman for
-terse prose).
+Ponytail governs what you build, not how you talk.
 In this project ponytail is installed as skills only (no hooks): it applies
-when invoked (`/ponytail`) or when a coding task triggers it. It limits what
-gets built; the `unlazy` gates still decide when work is done, and
-verification is never skipped. "stop ponytail" / "normal mode": revert. Level persists until
-changed or session end.
+only when the user asks for it (`/ponytail` or a phrase from the
+description) and ends with that task unless the user says to keep it on.
+CLAUDE.md comes first: its ask-first rules still apply. It limits what
+gets built; CLAUDE.md's Definition of done (and the `unlazy` gates, when
+used) still decide when work is done, and verification is never skipped.
+"stop ponytail" / "normal mode" / `/ponytail off`: revert. Level persists
+until changed or ponytail ends.
 
 The shortest path to done is the right path.

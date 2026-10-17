@@ -20,7 +20,7 @@ write flag files, or persist anything.
 | **Full** | `/ponytail` | The ladder enforced: YAGNI → stdlib → native → one line → minimum. Default. |
 | **Ultra** | `/ponytail ultra` | YAGNI extremist. Deletion before addition. Challenges requirements before building. |
 
-Level sticks until changed or session end.
+Level sticks until changed or ponytail ends.
 
 ## Skills
 
@@ -40,13 +40,15 @@ slash-command forms above (OpenCode ships all six as slash commands).
 ## Deactivate
 
 Say "stop ponytail" or "normal mode". Resume anytime with `/ponytail`.
-`/ponytail off` also works.
+`/ponytail off` also works. Ponytail also ends when the task is done, unless
+you asked to keep it on.
 
 ## Installation in this project
 
 Audited skills-only adaptation: no hooks, no auto-activation, no config file,
-no plugin updates. Activate with `/ponytail [lite|full|ultra]`; the level holds
-for the conversation until "stop ponytail" or "normal mode".
+no plugin updates. Activate with `/ponytail [lite|full|ultra]` or by asking for
+it ("ponytail", "lazy mode"). It lasts for that task unless you ask to keep it
+on; "stop ponytail", "normal mode" or `/ponytail off` end it sooner.
 
 ## More
 

@@ -37,3 +37,5 @@ Every action you perform with `playwright-cli` generates corresponding Playwrigh
 This code appears in the output and can be copied directly into the test. Most of the time, a specific locator or an expectation should be updated, but it could also be a bug in the app. Use your judgement.
 
 After fixing the test, stop the background test run. Rerun to check that test passes.
+
+Changed for this project from `microsoft/playwright-cli` @ `b85c7a7` (Apache-2.0); see "Provenance" in [SKILL.md](../SKILL.md).

@@ -46,3 +46,11 @@ Every file was read in full by an audit agent, then re-audited by an independent
   - bmw-m L441: the tricolor stripe is for dividers and motorsport-style chrome, never beside a letter mark or wordmark as a logo.
   - dell-1996 L544: the sticker carries the product's own call to action; the "BUY a <name>" layout is named only as the reference's.
 
+
+## Fixes from the third PR review of 2026-10-17
+
+- The three components from the second review still carried their logo composition in tokens and descriptions, which `SKILL.md` L17 tells Claude to map onto the project. Why: review finding (low); `SKILL.md` L25 already ranks the guardrail above the DESIGN.md text, so this was a consistency gap.
+  - nintendo-2001: `logo-pill` became `logo-slot` (L106, L496, L506), with `textColor` `{colors.ink}` instead of Nintendo Red and `rounded` `{rounded.sm}` instead of `{rounded.full}`; L507 calls it a white `{rounded.sm}` plate. L7, L356, L368, L382, L482, L484 and L640 no longer tie Nintendo Red or the full rounding to the logo.
+  - bmw-m: L4, L249 and L256 no longer put the tricolor on logos, the M wordmark or model badges; L482 says the product's own logo scales with the viewport.
+  - dell-1996 (same gap, found while fixing the two above): `buy-a-dell-sticker` became `cta-sticker` (L215, L544), L366 no longer puts the purple stripe behind the brand's wordmark, and L396, L410, L455 and L468 drop the reference's headline and the "BUY-a-DELL" name.
+- elevenlabs L4 and supabase L4: the `description` values are now quoted. raycast L4, a stray `属于:` key from upstream in front of the real `description: |` block, is now a YAML comment. Why: an unquoted ": " inside those values made the frontmatter invalid YAML (js-yaml: "bad indentation of a mapping entry"), so a parser or the design.md linter would stop there. Found while checking every frontmatter block for this review; the text and the line numbers are unchanged.

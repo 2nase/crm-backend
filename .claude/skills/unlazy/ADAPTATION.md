@@ -4,7 +4,7 @@ Source: the method of [Leonxlnx/unlazy](https://github.com/Leonxlnx/unlazy) (MIT
 
 ## What this is
 
-Three files, plus this record and `LICENSE`: `SKILL.md`, `templates/gates.md` and `templates/PLAN.md`. The skill's header and the commit message call this a clean-room adaptation: the method restated in the skill's own words. A check against upstream at 1667149 on 2026-10-17 (all lines of 25 or more characters, whitespace normalized) found 2 identical lines, both template placeholders (`Scope: <one sentence describing the complete deliverable>` and `- [ ] G1: <observable outcome measured directly from the artifact>`), and 5 near-identical ones (three section headings, the G3 placeholder and the domain-expert pass). Everything else is restated. Upstream's MIT license is included as `LICENSE` (an unchanged copy from 1667149), because the method, the structure and those lines come from upstream.
+Three files, plus this record and `LICENSE`: `SKILL.md`, `templates/gates.md` and `templates/PLAN.md`. The skill's header and the commit message call this a clean-room adaptation: the method restated in the skill's own words. A check against all 16 Markdown and YAML files of upstream at 1667149 on 2026-10-17 (all lines of 25 or more characters, whitespace normalized) found 2 identical lines, both template placeholders (`Scope: <one sentence describing the complete deliverable>` and `- [ ] G1: <observable outcome measured directly from the artifact>`), and 6 near-identical ones (three section headings, the G3 placeholder, the domain-expert pass, and the `templates/PLAN.md` line on interfaces and schemas shared between leaves, close to upstream `references/method.md`). Everything else is restated. Upstream's MIT license is included as `LICENSE` (an unchanged copy from 1667149), because the method, the structure and those lines come from upstream.
 
 ## Deliberately not included
 
@@ -28,3 +28,7 @@ The PR review of 2026-10-08 covered all three files: no hidden Unicode, no HTML-
 ## Fixes from the second PR review of 2026-10-17
 
 - *Source* and *What this is*: the source commit and the copied-text check above are new, and `LICENSE` was added. Why: CLAUDE.md asks for the source commit, the record said the clean-room claim was unchecked, and the MIT license asks to keep its notice with substantial portions. The review had flagged both gaps (low).
+
+## Fixes from the third PR review of 2026-10-17
+
+- *What this is*: the copied-text check had compared against upstream `SKILL.md` and `templates/` only. Run against every upstream Markdown and YAML file, it finds one more near-identical line (`templates/PLAN.md` L9 against upstream `references/method.md` L30). The count above now says so. `LICENSE` was already included, so nothing else changes. Why: the review flagged the narrower scope (low).

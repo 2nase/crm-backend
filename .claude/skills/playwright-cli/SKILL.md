@@ -518,6 +518,6 @@ Adapted from `microsoft/playwright-cli` at commit `b85c7a7` (`@playwright/cli` 0
 - `references/pr-attachments.md`, `references/video-recording.md`: upload attachments only when the user asks.
 - `references/storage-state.md`: state files go under `.playwright-cli/`, which `.gitignore` already covers.
 - `SKILL.md`, `references/running-code.md`, `references/storage-state.md`, `references/video-recording.md`, `references/pr-attachments.md`: the examples write state, snapshots, screenshots, PDFs, recordings, downloads and scripts under `.playwright-cli/` instead of the working directory.
-- `references/test-generation.md`: ask the user before bootstrapping a Playwright workspace, with a pinned bootstrap command and a pinned `@playwright/test`; notes on the workspace check in cloud sessions, on what the bootstrap changes and on this repo's build layout. In it, `references/playwright-tests.md` and `references/pr-attachments.md`, `npx playwright test` runs as `npx --no-install playwright test`.
+- `references/test-generation.md`: ask the user before bootstrapping a Playwright workspace, with a pinned bootstrap command (without its browser download) and a pinned `@playwright/test`; notes on the workspace check in cloud sessions, on what the bootstrap changes and on this repo's build layout. In it, `references/playwright-tests.md` and `references/pr-attachments.md`, `npx playwright test` runs as `npx --no-install playwright test`.
 
 All other files are unchanged.

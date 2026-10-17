@@ -4,7 +4,7 @@ name: Nintendo.com (2001) Analysis
 description: An analysis of Nintendo.com's 2001 design language — a brushed-periwinkle "console chrome" interface where every panel is a beveled metal plate, navigation glows amber over a halftone-dotted carbon bar, and bold outlined display type sits on circuit-board hero fields. A Y2K hardware aesthetic that treats the web page like the faceplate of a game system.
 
 colors:
-  primary: "#e60012"          # Nintendo Red — racetrack logo, alert
+  primary: "#e60012"          # Nintendo Red — brand accent, alert
   signal: "#f68d1f"           # Signal Orange — forward cues, submit, "Play It On"
   amber: "#ecab37"            # Amber — utility buttons, info-box tabs, badges
   nav-gold: "#e48600"         # Nav Gold — top-nav menu links
@@ -103,11 +103,11 @@ components:
     typography: "{typography.ui-label}"
     rounded: "{rounded.none}"
     padding: "{spacing.xs}"
-  logo-pill:
+  logo-slot:
     backgroundColor: "{colors.surface}"
-    textColor: "{colors.primary}"
+    textColor: "{colors.ink}"
     typography: "{typography.display}"
-    rounded: "{rounded.full}"
+    rounded: "{rounded.sm}"
     padding: "{spacing.xs}"
   button-primary:
     backgroundColor: "{colors.amber}"
@@ -353,7 +353,7 @@ Atmosphere comes from the **hero fields**, which break the periwinkle calm with 
 
 **Key Characteristics:**
 - Every UI region is a **beveled metal plate** in `{colors.canvas}` periwinkle, edge-lit on top and shadow-lined with `{colors.chrome-indigo}` below — the page is assembled, not laid out.
-- **Chamfered (cut-corner) panel geometry** on the largest modules; most chrome is sharp-edged (`{rounded.none}`), with rounding reserved for the logo pill, radio dots, and circle-arrow badges (`{rounded.full}`).
+- **Chamfered (cut-corner) panel geometry** on the largest modules; most chrome is sharp-edged (`{rounded.none}`), with rounding reserved for radio dots and circle-arrow badges (`{rounded.full}`).
 - A **carbon-navy command layer** (`{colors.carbon}`) with halftone-dot texture carries the top nav, right-rail buttons, and footer.
 - Warmth is rationed as **directional signal only**: `{colors.nav-gold}` for menu words, `{colors.amber}` for utility chips/badges, `{colors.signal}` for every forward/Submit cue.
 - **Photographic hero fields** cycle a page-specific accent tint (`{colors.lavender}` home → `{colors.systems-teal}` systems → `{colors.games-red}` games) under outlined `{typography.display}` box-art wordmarks.
@@ -365,7 +365,7 @@ Atmosphere comes from the **hero fields**, which break the periwinkle calm with 
 The palette is a **cool metallic chassis with rationed warm signal**. Read it as three layers: the periwinkle chrome that everything is built from, the carbon command slabs, and the warm wayfinding accents that are the only saturated color in the steady-state interface.
 
 ### Brand & Accent
-- **Nintendo Red** (`{colors.primary}` — #e60012): The racetrack logo wordmark and the brand's anchor hue. Used sparingly as pure brand identity and doubled as the validation/alert color. Never a surface fill outside the logo plate.
+- **Nintendo Red** (`{colors.primary}` — #e60012): The brand's anchor hue. Used sparingly as a brand accent and doubled as the validation/alert color. Never a surface fill.
 - **Signal Orange** (`{colors.signal}` — #f68d1f): The "go forward" color. Fills every round arrow button, every chevron chip beside a headline, the Submit button, and the "Play It On" platform badges. If something advances you, it is orange.
 - **Amber** (`{colors.amber}` — #ecab37): Utility energy. Fills the Code Bank / Game Finder / Go chips, the info-box header tabs, the sweepstakes stars, and the ESRB Privacy-Certified badge. Distinguished from Signal Orange by being more golden and reserved for *tools and marks* rather than *forward motion*.
 - **Nav Gold** (`{colors.nav-gold}` — #e48600): The deeper orange-gold reserved exclusively for the primary navigation words (Games, Systems, News, Nsider, Downloads) glowing on the carbon bar.
@@ -379,7 +379,7 @@ The palette is a **cool metallic chassis with rationed warm signal**. Read it as
 - **Chrome Indigo** (`{colors.chrome-indigo}` — #3d4f97): The beveled border / shadow line under every plate, and the leading angled edge of nav tabs.
 - **Muted Indigo** (`{colors.muted-indigo}` — #60619c): Inactive tabs and recessed chrome.
 - **Platinum Gray** (`{colors.platinum}` — #dedede): The list-row and inset content surface — news headlines and archive rows sit on this cool platinum.
-- **White** (`{colors.surface}` — #ffffff): Content cards, form fields, the logo pill, and list-row highlight.
+- **White** (`{colors.surface}` — #ffffff): Content cards, form fields, the logo slot, and list-row highlight.
 
 ### Text
 - **Carbon Navy** (`{colors.ink}` — #21242e): Primary text on light chrome, and the fill of the dark command layer (nav bar, rail buttons, footer).
@@ -479,9 +479,9 @@ Depth is also carried by **texture and photography**: the halftone dot-matrix on
 | `{rounded.sm}` | 4px | Small panels, featured tiles, list rows |
 | `{rounded.md}` | 6px | Content panels, hero panel |
 | `{rounded.lg}` | 10px | Outer section panels, mascot bubble |
-| `{rounded.full}` | 9999px | Logo racetrack pill, radio dots, circle-arrow badges |
+| `{rounded.full}` | 9999px | Radio dots, circle-arrow badges |
 
-The signature is **sharpness with rationed roundness**. The chrome is hard-edged and frequently *chamfered* (corners cut at 45° rather than curved) — this is the manufactured-faceplate look. Roundness appears only where it signals a physical control: the fully-pill logo, the round radio buttons, and the round Signal-Orange arrow badges. A modern reproduction should resist the urge to soften every corner; the tension between sharp plates and the few pill elements is the whole character.
+The signature is **sharpness with rationed roundness**. The chrome is hard-edged and frequently *chamfered* (corners cut at 45° rather than curved) — this is the manufactured-faceplate look. Roundness appears only where it signals a physical control: the round radio buttons and the round Signal-Orange arrow badges. A modern reproduction should resist the urge to soften every corner; the tension between sharp plates and the few pill elements is the whole character.
 
 ### Photography Geometry
 Hero photography fills beveled rectangles at roughly 4:1 (banner) and 16:9 proportions, full-bleed within the panel. Featured-site and game thumbnails are near-4:3 fixed tiles (~95×60px) framed by a 1–2px `{colors.chrome-indigo}` edge with `{rounded.sm}` corners. The mascot is a transparent cutout overlapping the masthead, breaking the rectangular grid for personality.
@@ -493,7 +493,7 @@ Hero photography fills beveled rectangles at roughly 4:1 (banner) and 16:9 propo
 ### Navigation
 
 **`nav-bar`** — Primary top navigation
-- `{colors.carbon}` slab with a faint halftone-dot texture, ~28px tall, carrying the `{components.logo-pill}` at left, the five `{colors.nav-gold}` section words in `{typography.nav-link}` uppercase, and the amber Code Bank / Game Finder utility chips at right. Sharp corners (`{rounded.none}`), `{spacing.sm}` padding.
+- `{colors.carbon}` slab with a faint halftone-dot texture, ~28px tall, carrying the `{components.logo-slot}` at left, the five `{colors.nav-gold}` section words in `{typography.nav-link}` uppercase, and the amber Code Bank / Game Finder utility chips at right. Sharp corners (`{rounded.none}`), `{spacing.sm}` padding.
 
 **`subnav-strip`** — Secondary navigation
 - A `{colors.canvas-soft}` pale-sky strip directly beneath the nav bar, carrying utility links (Parents, Customer Service, Corporate, Global, Privacy, Store, Contact) in `{typography.ui-label}` `{colors.ink}`, separated by thin dividers. Sharp, `{spacing.xs}` padding.
@@ -503,8 +503,8 @@ Hero photography fills beveled rectangles at roughly 4:1 (banner) and 16:9 propo
 
 ### Brand & Masthead
 
-**`logo-pill`** — logo slot
-- The product's own logo, in its own form. Sits at the left of the nav bar. `{spacing.xs}` padding. The reference shows Nintendo's logo, a red wordmark inside an outlined white racetrack pill; never reproduce it or that composition around another name.
+**`logo-slot`** — logo plate in the nav bar
+- The product's own logo, in its own form, on a white `{rounded.sm}` plate. Sits at the left of the nav bar. `{spacing.xs}` padding. The reference shows Nintendo's logo, a red wordmark inside an outlined white racetrack pill; never reproduce it or that composition around another name.
 
 **`mascot-bubble`** — welcome speech bubble
 - A white `{rounded.lg}` rounded-rectangle speech bubble with a tail, carrying a short welcome line in the product's own words in `{typography.micro}` `{colors.carbon}`, paired with the product's own mascot in the masthead (the reference uses Mario; never use Nintendo characters). `{spacing.sm}` padding.
@@ -637,7 +637,7 @@ Hero photography fills beveled rectangles at roughly 4:1 (banner) and 16:9 propo
 - Render hero wordmarks as **outlined + drop-shadowed `{typography.display}`** over full-bleed photographic fields tinted per page.
 - Use `{colors.carbon}` with halftone texture for the **command layer** (nav, right rail, footer) to separate "system controls" from "content."
 - Let panels **butt together** with thin bevel seams; density is the intended texture.
-- Default corners to **sharp/chamfered** (`{rounded.none}`); spend roundness only on the logo pill, radio dots, and circle-arrow badges.
+- Default corners to **sharp/chamfered** (`{rounded.none}`); spend roundness only on radio dots and circle-arrow badges.
 
 ### Don't
 - Don't soften every corner — turning the sharp chrome into a uniformly rounded card system erases the manufactured-faceplate identity.

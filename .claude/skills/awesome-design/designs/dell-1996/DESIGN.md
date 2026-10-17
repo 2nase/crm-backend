@@ -212,7 +212,7 @@ components:
     rounded: "{rounded.none}"
     padding: 4px 8px
 
-  buy-a-dell-sticker:
+  cta-sticker:
     backgroundColor: "{colors.yellow-sticker}"
     textColor: "{colors.ink}"
     borderColor: "{colors.frame-ink}"
@@ -363,7 +363,7 @@ The brand voice carries through in two anchors: a vivid Dell-red CTA panel on th
 ### Brand & Accent
 - **Dell Red** (`{colors.primary}` — #e91d2a): The brand's signature red. Reserved for the homepage CTA panel ("At Dell.com, we'll help you find the right system…"), the top-right phone number, and the PC Magazine Readers' Choice seal ring. Never used as a card body fill.
 - **Dell Yellow** (`{colors.yellow-sticker}` — #fcc20f): Sticker yellow — the "BUY a DELL" tab in the top banner, and the angled "NEW!" bursts overlapping new product rows.
-- **Dell Purple** (`{colors.purple-stripe}` — #6a26a4): The accent stripe behind the lowercase ".com" / "DELL" wordmark text — appears inside the "BUY a DELL" sticker chrome only.
+- **Dell Purple** (`{colors.purple-stripe}` — #6a26a4): The reference's accent stripe inside its sticker. Use it as a small accent only, never as a stripe behind the product's name.
 
 ### Surface
 - **Frame Ink** (`{colors.frame-ink}` — #000000): Pure black. The page frame, the top banner background, button fills, and all 1 px ribbon-card hairlines.
@@ -393,7 +393,7 @@ The tints are saturated but not vivid — they sit just below true neutral chrom
 Three system-stack families, no webfonts (webfonts didn't exist yet):
 
 - **Arial Black** (fallback: Helvetica, system-ui sans) — display headings only. The chunky stenciled section eyebrows ("DIMENSION DESKTOPS", "OPTIPLEX DESKTOP SYSTEMS") are Arial Black at weight 900, set in all-caps with normal tracking.
-- **Helvetica** (fallback: Arial, system-ui sans) — product-row titles, button labels, the top banner's "BUILD YOUR OWN COMPUTER. ONLINE." headline. Always bold (700), always all-caps.
+- **Helvetica** (fallback: Arial, system-ui sans) — product-row titles, button labels, the top banner's headline. Always bold (700), always all-caps.
 - **Times New Roman** (fallback: Times, serif) — body copy. Every paragraph, every caption, every inline anchor sits in default-rendered Times Roman. The serifs date the design instantly — body text on the modern web is almost never serif.
 
 ### Hierarchy
@@ -407,7 +407,7 @@ Three system-stack families, no webfonts (webfonts didn't exist yet):
 | `{typography.body}` | 14px | 400 | 1.4 | Default paragraph copy, ribbon-card body, CTA-panel copy |
 | `{typography.body-sm}` | 12px | 400 | 1.4 | "This site is best viewed with browser versions 3.0 and higher." |
 | `{typography.caption}` | 11px | 400 | 1.35 | Footer copyright text |
-| `{typography.button}` | 12px | 700 | 1.0 | Button labels, "NEW!" sticker, BUY-a-DELL sticker |
+| `{typography.button}` | 12px | 700 | 1.0 | Button labels, "NEW!" sticker, call-to-action sticker |
 | `{typography.ui-label}` | 12px | 700 | 1.0 | Icon-label nav uppercase labels ("FIND", "HOME", "ONLINE STORE", "SERVICE & SUPPORT") |
 
 ### Principles
@@ -452,7 +452,7 @@ Tight by modern standards. Catalog density wins over editorial breath — every 
 #### Collapsing Strategy
 - At ≤ 768 px, the homepage's left-rail icon-link grid (Online Store / Service / Why Dell? / Government / Worldwide / Order Status / Company Info / U.S. Careers) collapses from a 2 × 4 grid to a single-column stack
 - Ribbon-card right-edge product photo notch becomes a top-aligned full-width image at mobile
-- The top banner's tagline ("BUILD YOUR OWN COMPUTER. ONLINE.") shrinks one type tier; the phone number wraps below the BUY-a-DELL sticker
+- The top banner's tagline shrinks one type tier; the phone number wraps below the call-to-action sticker
 - Footer icon-label nav stays 4-up at all widths — the icons are small enough to survive
 
 #### Image Behavior
@@ -465,7 +465,7 @@ Product photos are bitmap GIFs with hand-applied bevel shadows — they were aut
 | 0 — Flush | No shadow, no border | Body text, copyright row, footer band background |
 | 1 — Hairline | `1px solid {colors.frame-ink}` | Ribbon-card outer edge, table-cell dividers |
 | 2 — Frame | `8px solid {colors.frame-ink}` | The page-frame border around the entire viewport |
-| 3 — Bevel | Hard-edge 1 px highlight + 1 px shadow on GIF stickers and product photos | "BUY a DELL" yellow sticker, NEW! bursts, award seals, product photographs |
+| 3 — Bevel | Hard-edge 1 px highlight + 1 px shadow on GIF stickers and product photos | Call-to-action sticker, NEW! bursts, award seals, product photographs |
 
 There are **no soft shadows** in the 1996 design — every depth cue is either a hard 1 px border or a hand-painted bevel inside a GIF. Modern reproductions that need to feel period-accurate must resist the urge to add Material-style elevation or atmospheric drop shadows.
 
@@ -541,7 +541,7 @@ All seven share identical chrome: 1 px solid `{colors.frame-ink}` border, `{spac
 
 ### Stickers (GIF-style overlays)
 
-**`buy-a-dell-sticker`** — yellow rectangular sticker with the product's own short call to action in Helvetica Bold. Pinned to the top-right of every page. The reference reads "BUY a DELL", with "a" in a purple stripe and Dell's wordmark; never reproduce it or its "BUY a <name>" layout.
+**`cta-sticker`** — yellow rectangular sticker with the product's own short call to action in Helvetica Bold. Pinned to the top-right of every page. The reference reads "BUY a DELL", with "a" in a purple stripe and Dell's wordmark; never reproduce it or its "BUY a <name>" layout.
 - Background `{colors.yellow-sticker}`, text `{colors.ink}`, 1 px black border, type `{typography.button}`, padding 4 × 8, no radius.
 
 **`new-burst-sticker`** — angled yellow burst with "NEW!" in Helvetica Bold black, overlapping the right side of new product ribbon-cards. Slight rotation (~15°) gives it the pinned-on-with-tape feel.

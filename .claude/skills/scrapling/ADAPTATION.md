@@ -23,7 +23,7 @@ Source: official skill `scrapling-official` from [D4Vinci/Scrapling](https://git
 - `spiders/advanced.md`: login example reads credentials from environment variables, follows with `method="GET", data=None` (0.4.15 would otherwise re-POST the credentials), cache dir inside the project, corrected timestamp comments.
 - `spiders/sessions.md`: removed per-request `block_webrtc`/`hide_canvas` (silently ignored in 0.4.15), fixed an import, replaced a bearer-token example header.
 - Accuracy fixes verified against 0.4.15: sanitization claims in `fetching/choosing.md`, `building-rag-systems.md`, `mcp-server.md` (exact list of what is stripped; library bug: an `<svg>` containing `<style>` can leave later `<noscript>`/`<svg>` elements); `generic-templates.md` (empty `rules()` behaviour); `building-rag-systems.md` (robots.txt is not on by default); `parsing/selection.md` (relative XPath when chaining, `similarity_threshold=0`); `parsing/main_classes.md` (two example outputs); `fetching/static.md` (impersonation target); `fetching/dynamic.md` (Chrome install is system-wide and needs root); `migrating_from_beautifulsoup.md` (one wrong example).
-- Unchanged (byte-identical): parsing/adaptive.md, spiders/architecture.md, getting-started.md, requests-responses.md, platform-templates.md, integrations/scrapy.md. Examples 02 and 04 were unchanged until the PR review below.
+- Unchanged (byte-identical): parsing/adaptive.md, spiders/architecture.md, getting-started.md, requests-responses.md, platform-templates.md. Examples 02 and 04 and integrations/scrapy.md were unchanged too, until the PR review below.
 
 ## Project-level changes outside this folder
 
@@ -38,3 +38,4 @@ Source: official skill `scrapling-official` from [D4Vinci/Scrapling](https://git
 - `references/mcp-server.md`: adding the MCP server needs the owner's OK; Docker commands pinned by digest.
 - Examples: 02 and 03 run headless and read `SCRAPLING_EXECUTABLE_PATH` (pre-installed Chromium in cloud sessions); 03 passes `additional_args={"ignore_https_errors": False}` (in 0.4.15 `additional_args` is applied after the stealth defaults, verified in `engines/_browsers/_base.py`); 04 sets `robots_txt_obey = True` and writes `crawl_data/quotes.json` (gitignored) instead of `quotes.json` in the working directory.
 - `references/fetching/choosing.md` (4 links) and `static.md` (1 link): `parsing/main_classes.md` corrected to `../parsing/main_classes.md`.
+- `references/integrations/scrapy.md`: the installation note said `pip install scrapling` (unpinned, into whatever Python is active). It now points to SKILL.md > Setup: ask the owner first, pinned version, in the venv.

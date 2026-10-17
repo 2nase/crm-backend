@@ -30,10 +30,13 @@ Never run `npx` or install anything yourself: these commands download and run pa
 ```bash
 npx --yes lighthouse@13.5.0 <url> --output json --output-path /tmp/lighthouse-report.json
 # Chrome DevTools MCP CLI: by default it sends usage statistics to Google, checks npm for
-# updates and sends traced page URLs to Google's CrUX API. These three settings turn that off.
-export CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS=1 CHROME_DEVTOOLS_MCP_NO_UPDATE_CHECKS=1
-npx --yes -p chrome-devtools-mcp@1.10.1 chrome-devtools start --no-performance-crux
-npx --yes -p chrome-devtools-mcp@1.10.1 chrome-devtools <tool> <args>
+# updates and sends traced page URLs to Google's CrUX API. The two variables on every command
+# (`.claude/settings.json` sets them too) and the two flags on `start` turn that off. Tool commands do not take these flags, and one
+# that finds no daemon starts it with the defaults (CrUX on, browser profile not isolated):
+# run `start` first, and before any tool check that `status` lists both flags and --isolated.
+CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS=1 CHROME_DEVTOOLS_MCP_NO_UPDATE_CHECKS=1 npx --yes -p chrome-devtools-mcp@1.10.1 chrome-devtools start --no-usage-statistics --no-performance-crux
+CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS=1 CHROME_DEVTOOLS_MCP_NO_UPDATE_CHECKS=1 npx --yes -p chrome-devtools-mcp@1.10.1 chrome-devtools status
+CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS=1 CHROME_DEVTOOLS_MCP_NO_UPDATE_CHECKS=1 npx --yes -p chrome-devtools-mcp@1.10.1 chrome-devtools <tool> <args>
 ```
 
 Keep reports and traces outside the repository (as in `/tmp/` above): they hold screenshots and URLs of the audited pages.

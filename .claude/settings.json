@@ -1,7 +1,9 @@
 {
   "env": {
     "CHECKPOINT_DISABLE": "1",
-    "OPENCOLLECTIVE_HIDE": "1"
+    "OPENCOLLECTIVE_HIDE": "1",
+    "CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS": "1",
+    "CHROME_DEVTOOLS_MCP_NO_UPDATE_CHECKS": "1"
   },
   "hooks": {
     "SessionStart": [

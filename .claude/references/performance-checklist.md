@@ -190,11 +190,11 @@ For a shared cache, the same idea needs a distributed lock, or `stale-while-reva
 2. **Identify slow interactions** — open DevTools → Performance panel → record while interacting; look for long tasks triggered by clicks/keystrokes
 3. **Test on mid-range Android** — INP issues often only surface on slower hardware; use a real device or DevTools CPU throttling (4×–6× slowdown)
 
-None of these CLI tools is installed in this repo. Ask the owner first: npx downloads and runs a package from npm. Then use the exact versions below (checked on npm on 2026-10-17, each public for at least two weeks; change them only with the owner's OK), or add the tool as a devDependency and run it with `npx --no-install`. The npx route pins only the top-level package: its dependencies resolve fresh and their install scripts run. The devDependency route pins the whole tree in package-lock.json; install with `npm i -D --save-exact --before=<date two weeks back> <tool>@<version>`.
+None of these CLI tools is installed in this repo. Ask the owner first: npx downloads and runs a package from npm. Then use the exact versions below (checked on npm on 2026-10-17, each public for at least two weeks; change them only with the owner's OK), or add the tool as a devDependency and run it with `npx --no-install`. The npx route pins only the top-level package: its dependencies resolve fresh and their install scripts run. The devDependency route pins the whole tree in package-lock.json; install with `npm i -D --save-exact --before=<date two weeks back> <tool>@<version>`. As a devDependency, the install scripts in its tree run again on every `npm ci` (in each new cloud session's SessionStart hook and in every CI run): check them before you ask (bundlesize 0.18.2, for example, pulls the deprecated native `iltorb`, which downloads or compiles a binary).
 
 ```bash
-# Lighthouse CLI
-npx lighthouse@13.5.0 https://localhost:3000 --output json --output-path ./report.json
+# Lighthouse CLI (report outside the repo: it holds screenshots and URLs of the pages)
+npx lighthouse@13.5.0 https://localhost:3000 --output json --output-path /tmp/lighthouse-report.json
 
 # Bundle analysis
 npx webpack-bundle-analyzer@5.4.0 stats.json

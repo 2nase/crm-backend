@@ -279,7 +279,7 @@ jobs:
 ```
 .env.example       → Committed (template for developers)
 .env                → NOT committed (local development)
-.env.test           → Committed (test environment, no real secrets)
+.env.test           → Gitignored in this repo (.env* in .gitignore); commit one only with the owner's OK and a !.env.test line
 CI secrets          → Stored in GitHub Secrets / vault
 Production secrets  → Stored in deployment platform / vault
 ```

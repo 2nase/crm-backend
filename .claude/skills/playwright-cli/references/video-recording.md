@@ -10,7 +10,7 @@ playwright-cli open
 
 # Start recording, --cursor renders an animated mouse cursor that travels to each action point
 # and paces actions by 800ms so that it has time to travel
-playwright-cli video-start demo.webm --cursor --fps=60
+playwright-cli video-start .playwright-cli/demo.webm --cursor --fps=60
 
 # Add a chapter marker for section transitions
 playwright-cli video-chapter "Getting Started" --description="Opening the homepage" --duration=2000
@@ -37,7 +37,7 @@ opt-in and styled with plain CSS declarations, so they look exactly the way you 
 
 ```bash
 # Cursor only, nothing else on screen
-playwright-cli video-start demo.webm --cursor
+playwright-cli video-start .playwright-cli/demo.webm --cursor
 
 # Action callout, plus a red click point and a dark frame around the target
 playwright-cli video-show-actions --duration=800 --position=top-right \
@@ -84,8 +84,8 @@ Notes:
 
 ```bash
 # Include context in filename
-playwright-cli video-start recordings/login-flow-2024-01-15.webm
-playwright-cli video-start recordings/checkout-test-run-42.webm
+playwright-cli video-start .playwright-cli/recordings/login-flow-2024-01-15.webm
+playwright-cli video-start .playwright-cli/recordings/checkout-test-run-42.webm
 ```
 
 ### 2. Record entire hero scripts.
@@ -95,13 +95,13 @@ It allows inserting appropriate pauses between the actions and annotating the vi
 
 1) Perform scenario using CLI and take note of all locators and actions. You'll need those locators to request their bounding boxes for highlight.
 2) Create a file with the intended script for video (below). Use pressSequentially w/ delay for nice typing, make reasonable pauses.
-3) Use playwright-cli run-code --filename your-script.js
+3) Use playwright-cli run-code --filename .playwright-cli/your-script.js
 
 **Important**: Overlays are `pointer-events: none` — they do not interfere with page interactions. You can safely keep sticky overlays visible while clicking, filling, or performing any actions on the page.
 
 ```js
 async page => {
-  await page.screencast.start({ path: 'video.webm', size: { width: 1280, height: 800 }, fps: 60 });
+  await page.screencast.start({ path: '.playwright-cli/video.webm', size: { width: 1280, height: 800 }, fps: 60 });
   // Show the cursor and mark the click point, and pace actions by 800ms.
   await page.screencast.showActions({
     duration: 800,
@@ -194,9 +194,9 @@ Embrace creativity, overlays are powerful.
 A hero script recording is the best proof of work for a user-facing change. Only upload it when the user asks for it, since attachments are published to GitHub. GitHub accepts WebM as is, so once the recording looks right, attach it with `gh` 2.99+ instead of describing the flow in words:
 
 ```bash
-gh pr create --title "feat(todo): add items inline" --body-file body.md --attach ./demo.webm
-gh pr comment 123 --body "Walkthrough of the new flow." --attach ./demo.webm
-gh issue comment 456 --body "Recording of the repro steps." --attach ./repro.webm
+gh pr create --title "feat(todo): add items inline" --body-file body.md --attach ./.playwright-cli/demo.webm
+gh pr comment 123 --body "Walkthrough of the new flow." --attach ./.playwright-cli/demo.webm
+gh issue comment 456 --body "Recording of the repro steps." --attach ./.playwright-cli/repro.webm
 ```
 
 `gh` appends unreferenced attachments to the end of the body, which is the right place for a walkthrough. Videos are limited to 10 MB on free plans and 100 MB on paid plans, so keep the script focused, record at a modest size such as 1280x800 and drop chapters that do not add to the story. See [pr-attachments.md](pr-attachments.md) for the full set of commands, including attaching test artifacts from CI.

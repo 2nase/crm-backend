@@ -209,7 +209,7 @@ components:
     typography: "{typography.body-sm}"
     padding: "{spacing.3xl} {spacing.3xl}"
 
-  # ─── Examples (illustrative) — auto-derived; resolve any TO_FILL markers below ───
+  # ─── Examples (illustrative) — auto-derived by upstream tooling (not in this repo) ───
   ex-pricing-tier:
     description: "Default tier card. Mirrors card-content chrome with canvas-soft surface and a hairline border."
     backgroundColor: "{colors.canvas-soft}"
@@ -388,7 +388,7 @@ The `button-primary` pill renders at ~52 px tall (12 px vertical padding + 28 px
 #### Image Behavior
 - **Hero photography**: full-bleed 16:9 or 4:3 portraits at desktop; tighter crops at mobile.
 - **Story-card thumbnails**: 16:9 landscape inside `{rounded.card}` 6 px chrome.
-- **Speechmark orb**: always rendered as the red SVG quote-mark icon, never substituted.
+- **Logo orb**: always rendered as the product's own SVG mark on the red square, never Vodafone's quote-mark logo.
 - **Logo bar (if present on partner pages)**: monochrome SVGs at consistent height.
 
 ## Elevation & Depth
@@ -475,7 +475,7 @@ The brand does not use soft drop shadows; depth comes from polarity-flip between
 **`content-band-light`** — the white content band that follows every hero.
 - Background `{colors.canvas}`, text `{colors.ink}`, padding `{spacing.3xl} {spacing.3xl}`. Section headline in `{typography.display-md}` or `{typography.display-lg}` (weight 300).
 
-**`speechmark-logo-orb`** — the red square hosting Vodafone's quotation-mark icon. The brand's visual anchor.
+**`speechmark-logo-orb`** — the red square hosting the product's own mark (on the reference site, Vodafone's quotation-mark logo, which must not be reproduced). The brand's visual anchor.
 - Background `{colors.primary}`, white icon glyph, shape `{rounded.sm}`. Acts as a focal element between content bands, often near the centre of long pages.
 
 **`badge-chip`** — the inline metadata pill used for category tags inside story cards.
@@ -486,7 +486,7 @@ The brand does not use soft drop shadows; depth comes from polarity-flip between
 
 ### Examples (illustrative)
 
-> Auto-derived kit-mirror demonstration surfaces (`scripts/derive-examples-block.mjs`). Each `ex-*` entry references brand-native primitives so downstream consumers (`/preview-design`, `/generate-kit`) re-skin the same 10 surfaces consistently. `TO_FILL` markers indicate missing primitives — resolve in the LLM judgment pass.
+> Auto-derived kit-mirror demonstration surfaces (`scripts/derive-examples-block.mjs`). Each `ex-*` entry references brand-native primitives so downstream consumers (`/preview-design`, `/generate-kit`) re-skin the same 10 surfaces consistently. `TO_FILL` markers indicate missing primitives — resolve in the LLM judgment pass. **Not in this repo:** that script, those commands and the judgment pass are upstream tooling. Treat the `ex-*` entries as illustrative examples only, and do not run or look for that tooling.
 
 **`ex-pricing-tier`** — Default Pricing tier card. Re-uses feature-card chrome with brand canvas-soft surface.
 - Properties: `backgroundColor`, `textColor`, `borderColor`, `rounded`, `padding`

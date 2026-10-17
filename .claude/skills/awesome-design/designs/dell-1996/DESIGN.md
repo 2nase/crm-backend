@@ -278,9 +278,9 @@ components:
     typography: "{typography.body-sm}"
     padding: 16px
 
-  # ─── Examples (illustrative, kit-mirror) — injected by derive-examples-block.mjs ───
+  # ─── Examples (illustrative, kit-mirror) — injected by upstream derive-examples-block.mjs (not in this repo) ───
 
-  # ─── Examples (illustrative) — auto-derived; resolve any TO_FILL markers below ───
+  # ─── Examples (illustrative) — auto-derived by upstream tooling (not in this repo) ───
   ex-pricing-tier:
     description: "Default Pricing tier card. Re-uses feature-card chrome with the base white surface."
     backgroundColor: "{colors.surface}"
@@ -348,7 +348,7 @@ components:
 
 Dell's December 1996 home page is a perfectly preserved fossil of catalog-era enterprise web design — the moment when a Fortune-100 brand decided the web was *important enough* to invest in, but two years before CSS would be widely adopted and three years before "design system" was a phrase anyone used. Every visual choice on the page is a downstream consequence of that constraint: layout via HTML tables, type via the browser's built-in font stack (Arial Black / Helvetica / Times Roman), color via 8-bit-safe flat fills, and decoration via hand-cut GIF "stickers" (the NEW! burst, the round PC Magazine Readers' Choice seal, the beveled "BUY a DELL" yellow tab). The page is bordered — literally bordered, in a 1-cell-wide black HTML table — and inside that frame, every product line gets a "ribbon card": a white title bar with a sharp black underline, a tinted body block in one of eight catalog colors (sage, salmon, peach, lime, sky, steel, periwinkle, olive), and a beveled product photograph notched into the right edge of the card.
 
-The brand voice carries through in two anchors: a vivid Dell-red CTA panel on the left of the homepage (cream-yellow Times Roman copy on a `{colors.primary}` fill, set inside the black frame) and a screaming red phone number — `1-800-213-DELL` — pinned to the top-right of every page, because in 1996 the website was a brochure that ended with a phone call. The footer is a row of four hand-drawn icon-labels (FIND / HOME / ONLINE STORE / SERVICE & SUPPORT) linked by a thin green horizontal rule, and a single classic-Mosaic-blue underlined "Copyright" link sitting above the legal small print in Times Roman.
+The brand voice carries through in two anchors: a vivid Dell-red CTA panel on the left of the homepage (cream-yellow Times Roman copy on a `{colors.primary}` fill, set inside the black frame) and a screaming red phone number (on the reference, Dell's toll-free number; use the user's own number or a fictional 555-01xx placeholder) pinned to the top-right of every page, because in 1996 the website was a brochure that ended with a phone call. The footer is a row of four hand-drawn icon-labels (FIND / HOME / ONLINE STORE / SERVICE & SUPPORT) linked by a thin green horizontal rule, and a single classic-Mosaic-blue underlined "Copyright" link sitting above the legal small print in Times Roman.
 
 **Key Characteristics:**
 - Literal page frame: every page sits inside a `{colors.frame-ink}` (black) outer border ~8 px thick — the design treats the browser window as a printed picture frame
@@ -499,7 +499,7 @@ Product photos are rectangular GIFs with their own internal beveled "monitor" fr
 - Background `{colors.frame-ink}`, padding `{spacing.sm}` 8 px on every side, no radius.
 - The page sits *inside* this border. Treat it as a non-negotiable container chrome; collapsing it on mobile is acceptable (to ~4 px), but removing it entirely loses the brand.
 
-**`top-banner`** — pure-black strip running across the top with white "BUILD YOUR OWN COMPUTER. ONLINE." headline + sub-tagline, the yellow "BUY a DELL" sticker pinned at right, and the red "1-800-213-DELL" phone number.
+**`top-banner`** — pure-black strip running across the top with a white all-caps headline + sub-tagline in the product's own words, a yellow sticker pinned at right, and a red phone number (the user's real number, or a fictional placeholder such as 1-312-555-0123). The reference shows Dell's slogan, "BUY a DELL" sticker and toll-free number; never reproduce them.
 - Background `{colors.frame-ink}`, text `{colors.canvas}`, type `{typography.heading-2}`, padding 12 px vertical / 16 px horizontal, no radius.
 
 ### Section Eyebrow Blocks
@@ -532,22 +532,22 @@ All seven share identical chrome: 1 px solid `{colors.frame-ink}` border, `{spac
 
 ### Call-to-Action
 
-**`cta-block-red`** — the homepage's vivid Dell-red panel ("At Dell.com, we'll help you find the right system, configure it, price it, and order it…").
+**`cta-block-red`** — the homepage's vivid Dell-red panel with a short sales pitch in the product's own words (the reference carries Dell's own copy; never reproduce it).
 - Background `{colors.primary}`, text `{colors.on-primary}` (white), 1 px solid frame-ink border, type `{typography.body}` (Times Roman 14), padding 16 px, no radius.
 - One per page maximum. The brand's most aggressive attention-grab — never use it for anything except a top-tier sales message.
 
-**`phone-callout`** — top-right phone number ("1-800-213-DELL") rendered as red on the black banner.
+**`phone-callout`** — top-right phone number rendered as red on the black banner. Use the user's real number, or a fictional placeholder such as 1-312-555-0123; never the reference's toll-free number.
 - Background `{colors.frame-ink}`, text `{colors.primary}`, type `{typography.heading-2}` Helvetica Bold 16, padding 4 × 8, no radius. Pinned to the right of the top banner on every page.
 
 ### Stickers (GIF-style overlays)
 
-**`buy-a-dell-sticker`** — yellow rectangular sticker with "BUY a DELL" in Helvetica Bold, the "a" set in a small purple stripe, the "DELL" wordmark in black. Pinned to the top-right of every page.
+**`buy-a-dell-sticker`** — yellow rectangular sticker with a short call to action in Helvetica Bold, one small word set in a purple stripe and the product's own name in black (the reference reads "BUY a DELL" with Dell's wordmark; never reproduce it). Pinned to the top-right of every page.
 - Background `{colors.yellow-sticker}`, text `{colors.ink}`, 1 px black border, type `{typography.button}`, padding 4 × 8, no radius.
 
 **`new-burst-sticker`** — angled yellow burst with "NEW!" in Helvetica Bold black, overlapping the right side of new product ribbon-cards. Slight rotation (~15°) gives it the pinned-on-with-tape feel.
 - Background `{colors.yellow-sticker}`, text `{colors.ink}`, type `{typography.button}`, padding 4 × 8, no radius (rotation applied separately).
 
-**`cert-seal`** — round red award seal: center reads "PC MAGAZINE", ringed by "SERVICE · RELIABILITY · READERS' CHOICE", with an inner white field and red bordered ring. Sits on the right rail of product pages.
+**`cert-seal`** — round red award seal with an inner white field and red bordered ring. The reference shows a real PC Magazine Readers' Choice seal: show only an award the user confirms their product won, otherwise leave the seal out. Sits on the right rail of product pages.
 - Background `{colors.primary}`, text `{colors.canvas}`, type `{typography.button}`, rounded `{rounded.full}`, 64 px size.
 
 ### Navigation
@@ -573,12 +573,12 @@ All seven share identical chrome: 1 px solid `{colors.frame-ink}` border, `{spac
 
 ### Footer
 
-**`footer-band`** — the bottom of every page: icon-label nav row, classic-blue Copyright link, "(Terms of Use)" parenthetical, browser-compatibility small print, and the Microsoft BackOffice / Internet Explorer logo banners.
+**`footer-band`** — the bottom of every page: icon-label nav row, classic-blue Copyright link, "(Terms of Use)" parenthetical, browser-compatibility small print, and a row of third-party logo banners (on the reference: Microsoft BackOffice and Internet Explorer; show only logos the user has the right to show).
 - Background `{colors.canvas}`, text `{colors.ink}`, 1 px top border in frame-ink, type `{typography.body-sm}`, padding 16 px.
 
 ### Examples (illustrative)
 
-> Auto-derived kit-mirror demonstration surfaces (`scripts/derive-examples-block.mjs`). Each `ex-*` entry references brand-native primitives so downstream consumers (`/preview-design`, `/generate-kit`) re-skin the same 10 surfaces consistently. `TO_FILL` markers indicate missing primitives — resolve in the LLM judgment pass.
+> Auto-derived kit-mirror demonstration surfaces (`scripts/derive-examples-block.mjs`). Each `ex-*` entry references brand-native primitives so downstream consumers (`/preview-design`, `/generate-kit`) re-skin the same 10 surfaces consistently. `TO_FILL` markers indicate missing primitives — resolve in the LLM judgment pass. **Not in this repo:** that script, those commands and the judgment pass are upstream tooling. Treat the `ex-*` entries as illustrative examples only, and do not run or look for that tooling.
 
 **`ex-pricing-tier`** — Default Pricing tier card. Re-uses feature-card chrome with the base white surface.
 - Properties: `backgroundColor`, `textColor`, `borderColor`, `rounded`, `padding`
@@ -629,4 +629,4 @@ All seven share identical chrome: 1 px solid `{colors.frame-ink}` border, `{spac
 - Don't add soft drop-shadows or atmospheric gradients. The brand has hard borders and flat fills; everything else reads as anachronism.
 - Don't crop or "tuck" product photos with `border-radius` or `clip-path`. The notch into the ribbon-card right edge is the framing — the photo itself stays a hard rectangle.
 - Don't pair two `{components.cta-block-red}` panels on the same page. The red fill is meant to be the singular attention pole.
-- Don't strip the `{components.phone-callout}` from the top banner. In 1996 the website existed to drive phone-call orders; the phone number IS the navigation.
+- Don't strip the `{components.phone-callout}` from the top banner. In 1996 the website existed to drive phone-call orders; the phone number IS the navigation. Show the user's own number there, or a fictional 555-01xx placeholder until the user supplies one, never Dell's.

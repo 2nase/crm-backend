@@ -96,10 +96,10 @@ Once you have the design read (Section 0) and dials (Section 1), pick the right 
 | US public-sector / trust-first | `@uswds/uswds` | Same |
 | Fast local-business / agency MVP | Bootstrap 5.3 | Boring, fast, works |
 | Modern accessible React foundation | `@radix-ui/themes` | Primitives + polished theme |
-| Modern SaaS where you own the components | shadcn/ui (`npx shadcn@latest add ...`) | You own the code, easy to customise; never ship default state |
+| Modern SaaS where you own the components | shadcn/ui (`npx shadcn@4.21.0 add ...`, only after the user's OK, see 3.F) | You own the code, easy to customise; never ship default state |
 | Tailwind-based modern SaaS / AI marketing | Tailwind v4 utilities + `dark:` variant | Default for indie + small team builds |
 
-**Honesty rule:** if the brief reads as one of the systems above, install and use the **official** package. Do not recreate its CSS by hand. Do not import a system's tokens but then override 90% of them.
+**Honesty rule:** if the brief reads as one of the systems above, propose the **official** package and use it once the user agrees to the install (see 3.F). Do not recreate its CSS by hand. Do not import a system's tokens but then override 90% of them.
 
 **Government identity rule:** GOV.UK identity (header, crown, logo / logotype, GDS Transport font) is only for services that are actually on GOV.UK, and USWDS federal identity (the "An official website of the United States government" banner, agency identifier, seals) only for official US government sites. For every other brief, including commercial "trust-first" ones, use the components without those identity elements.
 
@@ -142,7 +142,7 @@ Unless the design read picks a real design system (Section 2.A), these are the d
 ### 3.C Icons
 * **Allowed libraries (priority order):** `@phosphor-icons/react`, `hugeicons-react`, `@radix-ui/react-icons`, `@tabler/icons-react`.
 * **Discouraged:** `lucide-react`. Acceptable only when the user explicitly asks for it or the project already depends on it.
-* **NEVER hand-roll SVG icons.** If a glyph is missing, install a second library or compose from primitives - do not draw icon paths from scratch.
+* **NEVER hand-roll SVG icons.** If a glyph is missing, propose a second library (installed only with the user's OK, see 3.F) or compose from primitives - do not draw icon paths from scratch.
 * **One family per project.** Do not mix Phosphor with Lucide in the same component tree.
 * **Standardize `strokeWidth` globally** (e.g. `1.5` or `2.0`).
 
@@ -157,6 +157,8 @@ Discouraged by default in code, markup, and visible text. Replace symbols with i
 
 ### 3.F Dependency Verification (mandatory)
 Before importing ANY 3rd-party library, check `package.json`. If the package is missing, output the install command first. **Never** assume a library exists.
+
+**Install gate (every install in this skill, including the 2.A table and Honesty rule, a second icon library in 3.C, the logo packages in 4.8 and Appendix A):** show the user the exact install command and wait for the user's OK before running it. Never run npm, npx or yarn installs unasked. Use `npm install`, not `yarn add`: this project keeps a `package-lock.json`. `npx` downloads and runs a package from npm, so use only a pinned version (`npx shadcn@4.21.0`, never `@latest`). The shadcn CLI also fetches component code from its registry and edits config and CSS files; say so when you ask.
 
 ---
 
@@ -272,6 +274,8 @@ Landing pages and portfolios are **visual products**. Text-only pages with fake-
    * Actual stock or brand URLs when the brief provides them
    * Open-license sources (Unsplash via direct URL, Pexels) if explicitly allowed
 3. **Last resort: tell the user.** If neither is possible, do NOT fill the page with hand-rolled SVG illustrations or div-based "fake screenshots." Instead, leave clearly-labeled placeholder slots (`<!-- TODO: hero product photo, 1600x1200 -->`) and at the end of the response say: *"This page needs real images at: \[list of placements\]. Please generate or provide them."*
+
+**Hotlinks are for local drafts only.** Picsum images, Simple Icons / devicon CDN logos and Google Fonts files loaded from third-party hosts are fine while drafting locally. Before a page is called done, download them into the project and serve them locally (fonts: see 3.A). Otherwise every visitor's browser sends its IP address to those hosts, which is a GDPR problem for sites with EU visitors.
 
 **Even minimalist sites need real images.** A pure-text page is not minimalism. It is incomplete work. Even an editorial Linear-style site needs at least 2-3 real images (hero, one product/lifestyle shot, one supporting image). Generate B&W minimalist photography if the brief is restrained; do not skip images entirely because the dial is low.
 
@@ -626,7 +630,7 @@ Avoid these signatures unless the brief explicitly asks for them.
 * **NO hand-rolled SVG icons.** Use Phosphor / HugeIcons / Radix / Tabler. Lucide on explicit request only.
 * **Hand-rolled decorative SVGs strongly discouraged** as default (see Section 4.8).
 * **NO div-based fake screenshots.** Never build a fake product UI out of `<div>` rectangles to simulate a screenshot. Use real images, generated images, or skip the preview.
-* **NO broken Unsplash links.** Use `https://picsum.photos/seed/{descriptive-string}/{w}/{h}`, or generated photo placeholders, or actual assets.
+* **NO broken Unsplash links.** Use `https://picsum.photos/seed/{descriptive-string}/{w}/{h}` (local drafts only, see Section 4.8), or generated photo placeholders, or actual assets.
 * **shadcn/ui customization:** Allowed, but NEVER in default state. Customize radii, colors, shadows, typography to the project aesthetic.
 * **Production-Ready Cleanliness:** Code visually clean, memorable, meticulously refined.
 
@@ -707,7 +711,7 @@ This rule is non-negotiable. The agent has historically ignored em-dash limits w
 
 ## 10. REFERENCE VOCABULARY (Pattern Names the Agent Should Know)
 
-This is a vocabulary, not a library. The agent should KNOW these pattern names to communicate about them, design with them in mind, and reach for them when the design read calls for them. **Implementations and code sketches live in the Block Library (Section 12), which is populated iteratively.**
+This is a vocabulary, not a library. The agent should KNOW these pattern names to communicate about them, design with them in mind, and reach for them when the design read calls for them. **Implementations and code sketches live in the Block Library (Section 12), which is populated iteratively.** In this project no block files exist yet (see Section 12).
 
 ### Hero Paradigms
 * **Asymmetric Split Hero** - Text on one side, asset on the other, generous white space.
@@ -841,6 +845,8 @@ The Reference Vocabulary (Section 10) names patterns. The Block Library implemen
 
 **Status:** schema defined here. Blocks will be added iteratively. Do not freelance new blocks without following this schema.
 
+**In this project:** this section is an upstream contract only. No `blocks/` folder ships with this skill (it holds only `SKILL.md`, `LICENSE` and `ADAPTATION.md`), so do not look for block files, and do not start a block library unless the user asks for one.
+
 ### 12.A File Location
 ```
 skills/taste-skill/blocks/
@@ -948,6 +954,7 @@ Run this matrix before outputting code. This is the last filter.
 - [ ] **Bento has rhythm AND exact cell count** (N items → N cells, no empty cells in middle or at end)?
 - [ ] **Long lists use the right UI component** (not default `<ul>` with `divide-y` for > 5 items - see Section 4.9 alternatives)?
 - [ ] **Real images used** (gen-tool first if the user approved it, then Picsum-seed, then explicit placeholder slots) - NO div-based fake screenshots, NO hand-rolled decorative SVGs, NO pure-text minimalism?
+- [ ] **No third-party hotlinks**: Picsum images, CDN logos and Google Fonts are downloaded into the project and served locally (Section 4.8)?
 - [ ] **No pills/labels overlaid on images** (no `Plate · Brand`, no `Field notes - journal`)?
 - [ ] **No photo-credit captions as decoration** (`Field study no. 12 · Ines Caetano`)?
 - [ ] **No version footers** (`v1.4.2`, `Build 0048`) on marketing pages?
@@ -985,7 +992,7 @@ If a single checkbox cannot be honestly ticked, the page is not done. Fix it bef
 
 # APPENDICES - Real Source-Backed Reference Material
 
-The sections below are vendored reference content. They give the agent real install commands, real canonical doc links, and real working starter snippets for each design system named in Section 2. Use them to ground decisions in production reality, not training-data fiction.
+The sections below are vendored reference content. They give the agent real install commands, real canonical doc links, and real working starter snippets for each design system named in Section 2. Use them to ground decisions in production reality, not training-data fiction. Run an install command only after the user's OK (Section 3.F).
 
 ## Appendix A - Install Commands per Design System
 
@@ -1005,9 +1012,9 @@ npm install @carbon/react @carbon/styles
 # Radix Themes
 npm install @radix-ui/themes
 
-# shadcn/ui (open code, owned components)
-npx shadcn@latest init
-npx shadcn@latest add button card badge separator input
+# shadcn/ui (open code, owned components); pinned on purpose, see Section 3.F
+npx shadcn@4.21.0 init
+npx shadcn@4.21.0 add button card badge separator input
 
 # Primer CSS (GitHub product/devtool UI)
 npm install --save @primer/css
@@ -1022,7 +1029,7 @@ npm install govuk-frontend
 npm install @uswds/uswds
 
 # Atlassian Design System (Atlaskit)
-yarn add @atlaskit/css-reset @atlaskit/tokens @atlaskit/button @atlaskit/badge @atlaskit/section-message @atlaskit/card
+npm install @atlaskit/css-reset @atlaskit/tokens @atlaskit/button @atlaskit/badge @atlaskit/section-message @atlaskit/card
 
 # Bootstrap 5.3
 npm install bootstrap

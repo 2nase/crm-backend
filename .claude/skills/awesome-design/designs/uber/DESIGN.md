@@ -257,7 +257,7 @@ components:
     typography: "{typography.body-sm}"
     padding: "{spacing.3xl} {spacing.3xl}"
 
-  # ─── Examples (illustrative) — auto-derived; resolve any TO_FILL markers below ───
+  # ─── Examples (illustrative) — auto-derived by upstream tooling (not in this repo) ───
   ex-pricing-tier:
     description: "Default tier card. Mirrors card-content chrome with canvas-soft surface and a faint border."
     backgroundColor: "{colors.canvas-soft}"
@@ -583,7 +583,7 @@ The pill `button-primary` renders at ~44 px tall (10 px vertical padding + 24 px
 
 ### Examples (illustrative)
 
-> Auto-derived kit-mirror demonstration surfaces (`scripts/derive-examples-block.mjs`). Each `ex-*` entry references brand-native primitives so downstream consumers (`/preview-design`, `/generate-kit`) re-skin the same 10 surfaces consistently. `TO_FILL` markers indicate missing primitives — resolve in the LLM judgment pass.
+> Auto-derived kit-mirror demonstration surfaces (`scripts/derive-examples-block.mjs`). Each `ex-*` entry references brand-native primitives so downstream consumers (`/preview-design`, `/generate-kit`) re-skin the same 10 surfaces consistently. `TO_FILL` markers indicate missing primitives — resolve in the LLM judgment pass. **Not in this repo:** that script, those commands and the judgment pass are upstream tooling. Treat the `ex-*` entries as illustrative examples only, and do not run or look for that tooling.
 
 **`ex-pricing-tier`** — Default Pricing tier card. Re-uses feature-card chrome with brand canvas-soft surface.
 - Properties: `backgroundColor`, `textColor`, `borderColor`, `rounded`, `padding`

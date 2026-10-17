@@ -38,6 +38,8 @@ __pycache__/
 # Safety net for playwright-cli files written outside .playwright-cli/ (can hold cookies and tokens)
 /auth.json
 *auth-state*.json
+/storage-state-*.json
+/.playwright/
 *.webm
 
 # Replica: screenshots of the original app and copied third-party reviews stay local

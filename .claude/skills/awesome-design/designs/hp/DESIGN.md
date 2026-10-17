@@ -663,7 +663,7 @@ Hero photography uses `{rounded.xl}` containers at every breakpoint. The chevron
 
 1. Focus on ONE component at a time; resist refactoring an entire section in one pass
 2. Reference component names and tokens directly (`{colors.primary}`, `{typography.display-xxl}`, `{rounded.xl}`, `card-product`) — do not paraphrase to hex/px in prose
-3. Optionally, and only with the user's explicit approval (`npx` downloads and executes an unpinned npm package), run `npx @google/design.md lint DESIGN.md` after edits — `broken-ref`, `contrast-ratio`, and `orphaned-tokens` warnings flag issues automatically
+3. Optionally, and only with the user's explicit approval (`npx` downloads and executes a package from npm), run `npx @google/design.md@0.4.0 lint DESIGN.md` after edits — `broken-ref`, `contrast-ratio`, and `orphaned-tokens` warnings flag issues automatically
 4. Add new variants as separate component entries (`-pressed`, `-disabled`, `-focused`); never bury state inside prose
 5. Default body to `{typography.body-md}`; reach for `{typography.body-emphasis}` for run-in bolds; keep display sizes for true heading roles
 6. Keep `{colors.primary}` scarce — at most two flame elements per viewport (one CTA + one chevron decoration). Three flame items in one viewport is over-saturation

@@ -382,7 +382,7 @@ Hero photography fills full-width with no rounding. Photo cards inside grids ret
 
 ### Top Navigation
 
-**`top-nav`** — Black nav bar pinned to the top of every page. 64px tall, `{colors.canvas}` background. Carries the BMW M logo at left (M tricolor + BMW roundel + "M" wordmark), primary horizontal menu (Models, Topics, Magazine, Configurator, Fastlane), right-side cluster with language selector, search icon, account icon. Menu items render in `{typography.nav-link}` with sentence-case labels.
+**`top-nav`** — Black nav bar pinned to the top of every page. 64px tall, `{colors.canvas}` background. Carries the product's own logo at left (the reference shows the BMW M logo with the M tricolor, the BMW roundel and the "M" wordmark; never reproduce it), primary horizontal menu (Models, Topics, Magazine, Configurator, Fastlane), right-side cluster with language selector, search icon, account icon. Menu items render in `{typography.nav-link}` with sentence-case labels.
 
 ### Buttons
 
@@ -402,7 +402,7 @@ Hero photography fills full-width with no rounding. Photo cards inside grids ret
 
 **`hero-photo-band`** — Full-width black band with full-bleed automotive photography filling most of the frame. The h1 uses `{typography.display-xl}` (80px / 700) and sits left-aligned over the photo, often with a small subtitle in `{typography.body-md}` below. Vertical padding `{spacing.xxl}` (64px). No card frame — the photo IS the band.
 
-**`feature-photo-card`** — Used in 3-up grids for "MORE FROM BMW M MAGAZINE" and similar editorial sections. Background `{colors.surface-card}`, rounded `{rounded.none}`, internal padding `{spacing.lg}` (24px). Top half of the card is a 16:9 photo (full-bleed within the card); below the photo, a category tag in `{typography.label-uppercase}`, a `{typography.title-lg}` title, and a short body description.
+**`feature-photo-card`** — Used in 3-up grids for editorial teaser sections, with headings in the product's own words. Background `{colors.surface-card}`, rounded `{rounded.none}`, internal padding `{spacing.lg}` (24px). Top half of the card is a 16:9 photo (full-bleed within the card); below the photo, a category tag in `{typography.label-uppercase}`, a `{typography.title-lg}` title, and a short body description.
 
 **`model-card`** — Used in the "MORE NEW M MODELS" 3-up grid. Background `{colors.canvas}` (no card surface — just photo on black), rounded `{rounded.none}`. Top: 16:10 hero shot of the model. Below: model name in `{typography.display-md}` (40px / 700), short specs line in `{typography.body-sm}`, a `{component.text-link}` ("EXPLORE THIS MODEL").
 
@@ -412,7 +412,7 @@ Hero photography fills full-width with no rounding. Photo cards inside grids ret
 
 **`motorsport-photo-card`** — Edge-to-edge photo cards used in the racing-team / motorsport sections. No card surface — just a full-bleed photograph with a small overlay caption in white text at the bottom-left. The photography IS the brand here.
 
-**`chatbot-launcher`** — A right-side card-style entry point ("BMW M CHATBOT") on the homepage. Background `{colors.surface-card}`, rounded `{rounded.none}`, padding `{spacing.lg}` (24px). Carries an h3 title, a short prompt, and a `{component.button-primary}` to launch.
+**`chatbot-launcher`** — A right-side card-style entry point, labelled in the product's own words, on the homepage. Background `{colors.surface-card}`, rounded `{rounded.none}`, padding `{spacing.lg}` (24px). Carries an h3 title, a short prompt, and a `{component.button-primary}` to launch.
 
 **`category-tab`** + **`category-tab-active`** — The category selector tabs used on the magazine and topics pages (e.g., "ALL · MAGAZINE · MODELS · LIFESTYLE · MOTORSPORT"). Tabs render as text-only labels in `{typography.label-uppercase}`. Active state changes text color from `{colors.body}` to `{colors.on-dark}` and adds a 2px white underline below the label. No background fill, no rounded corners.
 
@@ -430,7 +430,7 @@ Hero photography fills full-width with no rounding. Photo cards inside grids ret
 
 ### Footer
 
-**`footer`** — Black footer that closes every page. Background `{colors.canvas}`, text `{colors.body}`. 4-column link list at desktop covering BMW M Models / BMW M Lifestyle / Owners / Company. Vertical padding 64px. Bottom row carries the BMW corporate disclaimer in `{typography.caption}` and language selector. The footer never inverts — it stays black even when the body might transition.
+**`footer`** — Black footer that closes every page. Background `{colors.canvas}`, text `{colors.body}`. 4-column link list at desktop covering the product's own sections (on the reference: Models / Lifestyle / Owners / Company). Vertical padding 64px. Bottom row carries the company's own legal disclaimer in `{typography.caption}` and language selector. The footer never inverts — it stays black even when the body might transition.
 
 ## Do's and Don'ts
 
@@ -438,7 +438,7 @@ Hero photography fills full-width with no rounding. Photo cards inside grids ret
 - Anchor every page with full-bleed automotive photography. The cars are the brand voltage; chrome backs off.
 - Use UPPERCASE display headlines in `{typography.display-xl}` or `{typography.display-lg}`. Sentence-case display reads as off-brand.
 - Pair heavy display (700) with light body (300). The weight contrast is the editorial signature.
-- Reserve the M tricolor stripe for brand-identity moments — wordmark accents, motorsport chrome, model badges. Never as a button fill or surface.
+- Reserve the tricolor stripe for the product's own identity moments, such as accents next to its own wordmark and motorsport-style chrome. Never pair it with BMW M wordmarks or model badges, and never use it as a button fill or surface.
 - Use `{rounded.none}` (0px) by default. Reserve `{rounded.full}` for circular icon buttons only.
 - Letter-space all-caps labels at 1.5px. The "machined" feel is non-negotiable.
 - Use `{spacing.section}` (96px) between major editorial bands for grid-aligned vertical rhythm.

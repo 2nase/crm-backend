@@ -158,8 +158,10 @@ In Claude Code cloud sessions the `npx` check also passes without a workspace, b
 If there is no Playwright install, ask the user before bootstrapping one (it adds dependencies, config and example files to the project), and let the user pick the defaults:
 
 ```bash
-npm init playwright@latest
+npm init playwright@1.17.139
 ```
+
+The version is pinned on purpose (checked on npm on 2026-10-17; change it only with the owner's OK). It still installs the newest `@playwright/test`, so afterwards remove the `^` in front of that version in `package.json`. Claude's shell cannot answer the interactive questions: pass the user's picks as flags after `--` (for example `npm init playwright@1.17.139 -- --quiet --lang=TypeScript --browser=chromium`), and in cloud sessions add `--no-browsers`, because Chromium is pre-installed there (see "Setup in this project" in [SKILL.md](../SKILL.md)).
 
 ### 1.2 Prerequisite: seed test
 

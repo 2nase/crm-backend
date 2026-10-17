@@ -8,7 +8,7 @@ description: Automate browser interactions, test web pages and work with Playwri
 ## Setup in this project
 
 - `playwright-cli` is not preinstalled. Install it only after the user has agreed, with the pinned version: `npm install -g @playwright/cli@0.1.22`. Do not upgrade it (or follow the CLI's "Update available" notice) without asking.
-- Claude Code cloud images ship a global `playwright` 1.56.1 that has no `cli` command. So the check under "Installation" (`npx --no-install playwright --version`) succeeds there, but `npx playwright cli` fails with "unknown command 'cli'": use the pinned `playwright-cli` instead. A passing check also does not mean the project has a Playwright workspace; look for `playwright.config.*` or a `@playwright/test` devDependency.
+- Claude Code cloud images ship a global `playwright` 1.56.1 that has no `cli` command. So the check under "Installation" (`npx --no-install playwright --version`) succeeds there, but `npx playwright cli` fails with "unknown command 'cli'": use the pinned `playwright-cli` instead. A passing check also does not mean the project has a Playwright workspace; look for `playwright.config.*` or a `@playwright/test` devDependency. The `npx playwright test` commands in the references assume such a workspace, and this repo has none: run them as `npx --no-install playwright test ...`, so npx fails instead of downloading the latest Playwright, and ask the owner before adding `@playwright/test` (a new dependency).
 - Do not run `playwright-cli install --skills`: this skill is an audited adaptation, and that command would overwrite it with the upstream version. The CLI's "skill ... does not match the tool version" notice is expected; ignore it. Setting `NO_UPDATE_NOTIFIER=1` skips both notices and the CLI's daily version check against registry.npmjs.org.
 - Claude Code cloud sessions ship a Chromium under `/opt/pw-browsers` (`/opt/pw-browsers/chromium` is a symlink to its `chrome` binary). Use it. Do not run `playwright-cli install-browser` unless the user asks: it ignores `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` and downloads browsers into `/opt/pw-browsers` (with no argument: Chromium, Firefox and WebKit). The pre-installed revision (currently 1194) differs from the one the CLI expects (1247), so the CLI will not find it on its own.
 - Point the CLI at it with `browser.launchOptions.executablePath` in a config file. In cloud sessions use the global `~/.playwright/cli.config.json`: it is loaded in every directory and keeps the repo clean. `.playwright/cli.config.json` in the working directory (loaded automatically) or any file passed with `--config=<file>` also works, but this browser path only exists in cloud images, so never commit such a file. Also set `"browserName": "chromium"`: without it the CLI uses the `chrome` channel with the Chromium sandbox enabled, which fails as root ("Chromium sandboxing failed!").
@@ -24,6 +24,7 @@ description: Automate browser interactions, test web pages and work with Playwri
 
   Without a config file, `PLAYWRIGHT_MCP_EXECUTABLE_PATH=/opt/pw-browsers/chromium playwright-cli open --browser=chromium` does the same. Either way Chromium runs without its sandbox (as root it cannot run sandboxed), so use it for the project's own app and for sites the user names. To ignore tools that third-party pages register (see "WebMCP" below), also add `"webmcp": false` at the top level of the config, or set `PLAYWRIGHT_MCP_WEBMCP=false`.
 - Cloud sessions have no display: stay headless. `--headed`, `show --annotate`, `attach --cdp=chrome` and `attach --extension` need a browser on the user's own machine.
+- Keep every file you create with playwright-cli under `.playwright-cli/`, which `.gitignore` already covers. Without a file name, the CLI writes its output (snapshots, screenshots, traces) as timestamped files there. A file name you pass is resolved against the working directory, which is the repo root, so prefix it: `state-save .playwright-cli/auth.json`, `--filename=.playwright-cli/page.png`, `> .playwright-cli/before.yml`, or `path: '.playwright-cli/video.webm'` inside `run-code`. This covers saved state, snapshots, screenshots, PDFs, recordings, downloads, `find` results and the scripts you write for `run-code`. The examples below follow it.
 
 ## Quick start
 
@@ -72,7 +73,7 @@ playwright-cli find --regex "Sign (in|up)"
 # wrap the regexp in slashes to add flags, e.g. /i for case-insensitive
 playwright-cli find --regex "/sign (in|up)/i"
 # save results to a file when a query produces too many matches
-playwright-cli find "Add" --filename=results.md
+playwright-cli find "Add" --filename=.playwright-cli/results.md
 playwright-cli eval "document.title"
 playwright-cli eval "el => el.textContent" e5
 # get element id, class, or any attribute not visible in the snapshot
@@ -118,9 +119,9 @@ playwright-cli mousewheel 0 100
 ```bash
 playwright-cli screenshot
 playwright-cli screenshot e5
-playwright-cli screenshot --filename=page.png
+playwright-cli screenshot --filename=.playwright-cli/page.png
 playwright-cli screenshot --hires
-playwright-cli pdf --filename=page.pdf
+playwright-cli pdf --filename=.playwright-cli/page.pdf
 ```
 
 ### Tabs
@@ -138,8 +139,8 @@ playwright-cli tab-select 0
 
 ```bash
 playwright-cli state-save
-playwright-cli state-save auth.json
-playwright-cli state-load auth.json
+playwright-cli state-save .playwright-cli/auth.json
+playwright-cli state-load .playwright-cli/auth.json
 
 # Cookies
 playwright-cli cookie-list
@@ -165,7 +166,7 @@ playwright-cli sessionstorage-delete step
 playwright-cli sessionstorage-clear
 ```
 
-Saved state files (e.g. `auth.json`), persistent profile directories and the `.playwright-cli/` output folder (snapshots, traces with request headers) can contain cookies and tokens: never commit them, keep them in `.gitignore`, and delete them when done.
+Saved state files (e.g. `.playwright-cli/auth.json`), persistent profile directories and the `.playwright-cli/` output folder (snapshots, traces with request headers) can contain cookies and tokens: never commit them, keep the files you name under `.playwright-cli/` (already in `.gitignore`, so no `.gitignore` edit is needed), and delete them when done.
 
 ### Emulation
 
@@ -200,7 +201,7 @@ playwright-cli console warning
 playwright-cli requests
 playwright-cli request 5
 playwright-cli run-code "async page => await page.context().grantPermissions(['geolocation'])"
-playwright-cli run-code --filename=script.js
+playwright-cli run-code --filename=.playwright-cli/script.js
 playwright-cli tracing-start
 playwright-cli tracing-stop
 
@@ -208,7 +209,7 @@ playwright-cli tracing-stop
 playwright-cli recording-start
 playwright-cli recording-stop
 
-playwright-cli video-start video.webm
+playwright-cli video-start .playwright-cli/video.webm
 playwright-cli video-chapter "Chapter Title" --description="Details" --duration=2000
 playwright-cli video-stop
 
@@ -269,11 +270,11 @@ The global `--raw` option strips page status, generated code, and snapshot secti
 
 ```bash
 playwright-cli --raw eval "JSON.stringify(performance.timing)" | jq '.loadEventEnd - .navigationStart'
-playwright-cli --raw eval "JSON.stringify([...document.querySelectorAll('a')].map(a => a.href))" > links.json
-playwright-cli --raw snapshot > before.yml
+playwright-cli --raw eval "JSON.stringify([...document.querySelectorAll('a')].map(a => a.href))" > .playwright-cli/links.json
+playwright-cli --raw snapshot > .playwright-cli/before.yml
 playwright-cli click e5
-playwright-cli --raw snapshot > after.yml
-diff before.yml after.yml
+playwright-cli --raw snapshot > .playwright-cli/after.yml
+diff .playwright-cli/before.yml .playwright-cli/after.yml
 TOKEN=$(playwright-cli --raw cookie-get session_id)
 playwright-cli --raw localstorage-get theme
 ```
@@ -355,7 +356,7 @@ You can also take a snapshot on demand using `playwright-cli snapshot` command. 
 playwright-cli snapshot
 
 # save to file, use when snapshot is a part of the workflow result
-playwright-cli snapshot --filename=after-click.yaml
+playwright-cli snapshot --filename=.playwright-cli/after-click.yaml
 
 # snapshot an element instead of the whole page
 playwright-cli snapshot "#main"
@@ -490,8 +491,8 @@ playwright-cli show --annotate
 `gh` 2.99+ uploads local images and videos with the repeatable `--attach` flag on `gh pr create`, `gh pr comment` and `gh issue comment`. Only upload when the user asks for it: attachments are published to GitHub, and screenshots of this CRM can show customer data. When asked, attach a screenshot or a short video when it saves the reviewer a checkout: a UI fix, a before/after pair, a new user-facing flow, or the failure state in a bug report.
 
 ```bash
-playwright-cli screenshot --filename=settings-after.png
-gh pr comment 123 --body "Settings page after the fix." --attach ./settings-after.png
+playwright-cli screenshot --filename=.playwright-cli/settings-after.png
+gh pr comment 123 --body "Settings page after the fix." --attach ./.playwright-cli/settings-after.png
 ```
 
 See [references/pr-attachments.md](references/pr-attachments.md) for alt text, inline references, size limits and attaching test artifacts from CI.
@@ -515,7 +516,8 @@ Adapted from `microsoft/playwright-cli` at commit `b85c7a7` (`@playwright/cli` 0
 
 - `SKILL.md`: removed the `allowed-tools` pre-approval; added "Setup in this project", this section and the note on not committing state files; the global install now needs the user's agreement and is pinned to 0.1.22; PR attachments are uploaded only when the user asks.
 - `references/pr-attachments.md`, `references/video-recording.md`: upload attachments only when the user asks.
-- `references/storage-state.md`: the `.gitignore` advice covers every state file you create.
-- `references/test-generation.md`: ask the user before bootstrapping a Playwright workspace; note on the workspace check in cloud sessions.
+- `references/storage-state.md`: state files go under `.playwright-cli/`, which `.gitignore` already covers.
+- `SKILL.md`, `references/running-code.md`, `references/storage-state.md`, `references/video-recording.md`, `references/pr-attachments.md`: the examples write state, snapshots, screenshots, PDFs, recordings, downloads and scripts under `.playwright-cli/` instead of the working directory.
+- `references/test-generation.md`: ask the user before bootstrapping a Playwright workspace, with a pinned bootstrap command; note on the workspace check in cloud sessions.
 
 All other files are unchanged.

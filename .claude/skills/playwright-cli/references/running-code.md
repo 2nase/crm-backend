@@ -14,7 +14,7 @@ playwright-cli run-code "async page => {
 You can also load the function from a file:
 
 ```bash
-playwright-cli run-code --filename=./my-script.js
+playwright-cli run-code --filename=./.playwright-cli/my-script.js
 ```
 
 
@@ -139,7 +139,7 @@ playwright-cli run-code "async page => {
   const downloadPromise = page.waitForEvent('download');
   await page.getByRole('link', { name: 'Download' }).click();
   const download = await downloadPromise;
-  await download.saveAs('./downloaded-file.pdf');
+  await download.saveAs('./.playwright-cli/downloaded-file.pdf');
   return download.suggestedFilename();
 }"
 ```
@@ -228,7 +228,7 @@ playwright-cli run-code "async page => {
   await page.getByRole('textbox', { name: 'Password' }).fill('secret');
   await page.getByRole('button', { name: 'Sign in' }).click();
   await page.waitForURL('**/dashboard');
-  await page.context().storageState({ path: 'auth.json' });
+  await page.context().storageState({ path: '.playwright-cli/auth.json' });
   return 'Login successful';
 }"
 
@@ -243,3 +243,5 @@ playwright-cli run-code "async page => {
   return results;
 }"
 ```
+
+Changed for this project from `microsoft/playwright-cli` @ `b85c7a7` (Apache-2.0); see "Provenance" in [SKILL.md](../SKILL.md).

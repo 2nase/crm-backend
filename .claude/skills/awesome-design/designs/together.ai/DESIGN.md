@@ -264,7 +264,7 @@ components:
     textColor: "{colors.body}"
     typography: "{typography.display-xxl}"
 
-  # ─── Examples (illustrative) — auto-derived; resolve any TO_FILL markers below ───
+  # ─── Examples (illustrative) — auto-derived by upstream tooling (not in this repo) ───
   ex-pricing-tier:
     description: "Default Pricing tier card. Mirrors article-card chrome on canvas-soft surface with a hairline border."
     backgroundColor: "{colors.canvas}"
@@ -580,7 +580,7 @@ The mono-cap button label is set at 16 px; combined with `{spacing.xs}` 4 px top
 
 ### Examples (illustrative)
 
-> Auto-derived kit-mirror demonstration surfaces (`scripts/derive-examples-block.mjs`). Each `ex-*` entry references brand-native primitives so downstream consumers (`/preview-design`, `/generate-kit`) re-skin the same 10 surfaces consistently. `TO_FILL` markers indicate missing primitives — resolve in the LLM judgment pass.
+> Auto-derived kit-mirror demonstration surfaces (`scripts/derive-examples-block.mjs`). Each `ex-*` entry references brand-native primitives so downstream consumers (`/preview-design`, `/generate-kit`) re-skin the same 10 surfaces consistently. `TO_FILL` markers indicate missing primitives — resolve in the LLM judgment pass. **Not in this repo:** that script, those commands and the judgment pass are upstream tooling. Treat the `ex-*` entries as illustrative examples only, and do not run or look for that tooling.
 
 **`ex-pricing-tier`** — Default Pricing tier card. Re-uses feature-card chrome with brand canvas-soft surface.
 - Properties: `backgroundColor`, `textColor`, `borderColor`, `rounded`, `padding`

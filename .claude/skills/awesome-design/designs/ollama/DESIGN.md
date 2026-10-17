@@ -483,7 +483,7 @@ There is no photography. The only image-like elements are:
 - Use `{typography.display-xl}` SF Pro Rounded for the hero headline and `{typography.body-md}` system sans for everything else. Avoid intermediate display sizes.
 - Reserve `{component.pricing-card-dark}` (the inverted dark surface) for exactly one "look here" moment per page — never use it twice.
 - Render install commands and CLI examples inside `{component.install-snippet}` or `{component.terminal-card}` with `{typography.code-md}` / `{typography.code-sm}`. Code is a first-class component.
-- Keep one hand-drawn mascot the only illustration in the system. It is the brand.
+- Keep one hand-drawn mascot (the product's own, never Ollama's llama) the only illustration in the system. It is the brand.
 
 ### Don't
 - Don't introduce gradients, drop shadows, or atmospheric backgrounds. The canvas is pure `{colors.canvas}`.
@@ -524,7 +524,7 @@ The only image asset is the llama mascot (raster PNG at multiple resolutions: 16
 
 1. Focus on ONE component at a time. Pull its YAML entry from the front matter and verify every property resolves.
 2. Reference component names and tokens directly (`{colors.primary}`, `{component.button-primary-active}`, `{rounded.full}`) — do not paraphrase.
-3. With the user's approval (`npx` downloads and executes a package from npm), run `npx @google/design.md lint DESIGN.md` after edits — `broken-ref`, `contrast-ratio`, and `orphaned-tokens` warnings flag issues automatically.
+3. With the user's approval (`npx` downloads and executes a package from npm), run `npx @google/design.md@0.4.0 lint DESIGN.md` after edits — `broken-ref`, `contrast-ratio`, and `orphaned-tokens` warnings flag issues automatically.
 4. Add new variants as separate component entries (`-active`, `-disabled`, `-focused`) — do not bury them inside prose.
 5. Default body to `{typography.body-md}`; reach for `{typography.body-sm}` for footer/utility text; reserve `{typography.display-xl}` strictly for the page-top headline.
 6. Keep `{colors.primary}` scarce per viewport — there should be at most one black pill per fold (counting nav, hero CTA, and pricing-card CTA together). The design's restraint is the design.

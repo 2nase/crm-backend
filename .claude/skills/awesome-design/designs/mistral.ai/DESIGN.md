@@ -758,7 +758,7 @@ The radius scale is sober and editorial — Mistral does NOT use pill buttons. `
 
 1. Focus on ONE component at a time
 2. Reference component names and tokens directly (`{colors.primary}`, `{component-name}-pressed`)
-3. With the user's approval (`npx` downloads and executes a package from npm), run `npx @google/design.md lint DESIGN.md` after edits
+3. With the user's approval (`npx` downloads and executes a package from npm), run `npx @google/design.md@0.4.0 lint DESIGN.md` after edits
 4. Add new variants as separate `components:` entries
 5. Default to `{typography.body-md}` for body and `{typography.subtitle}` for emphasis. Hero displays use `{typography.hero-display}` (PP Editorial Old).
 6. Keep `{colors.primary}` confined to primary CTAs, active states, and the sunset stripe band

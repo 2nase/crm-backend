@@ -414,7 +414,7 @@ There is no monospace face used outside of inline `<code>` chips in documentatio
 The hierarchy works on a 1.6-line-height ladder for body and a 1.1–1.4 ladder for display/heading. Letter-spacing is consistently positive (0.1–0.4px) — slightly opening the type — which gives Raycast's chrome an airy quality at body sizes despite the dark canvas. The `ss03` stylistic set is the brand's most distinctive typographic detail; without it, the body face renders identically to plain Inter and loses Raycast's signature rendering.
 
 ### Note on Font Substitutes
-Inter is open-source and Google-Fonts-hosted; load it directly. To preserve the brand's signature look, you must enable `font-feature-settings: "calt", "kern", "liga", "ss03"` on the body element. Without `ss03`, the typography is recognizably "Inter default" rather than "Raycast." On systems where Inter cannot be loaded, the documented fallback is `Inter Fallback` (a self-hosted variant) → `system-ui`. **JetBrains Mono** or **Geist Mono** are acceptable substitutes for inline code chips when needed, though Raycast's marketing chrome rarely uses code-styled text.
+Inter is open-source and available from Google Fonts; self-host the font files in the project rather than linking Google Fonts, so visitors' IP addresses do not go to Google. To preserve the brand's signature look, you must enable `font-feature-settings: "calt", "kern", "liga", "ss03"` on the body element. Without `ss03`, the typography is recognizably "Inter default" rather than "Raycast." On systems where Inter cannot be loaded, the documented fallback is `Inter Fallback` (a self-hosted variant) → `system-ui`. **JetBrains Mono** or **Geist Mono** are acceptable substitutes for inline code chips when needed, though Raycast's marketing chrome rarely uses code-styled text.
 
 ## Layout
 
@@ -449,7 +449,7 @@ The system has no drop-shadow elevation at all. Depth is built entirely from the
 Depth comes from product imagery and a single stripe-gradient band:
 - **Hero stripe gradient** — three diagonal red stripes (`{colors.hero-stripe-start}` → `{colors.hero-stripe-end}`) layered across the home-page hero band, evoking a launch-banner / motion-blur effect. The system's signature decorative moment.
 - **Command-palette mockups** — full-fidelity Raycast in-product UI screenshots (the actual Spotlight-style overlay with rounded keycaps, command rows, and accent-color glyphs) sitting inside the home-page hero and feature rows. These ARE the brand decoration.
-- **App icon tiles** — small 48–64px rounded-corner tiles displaying real app icons (Slack, Spotify, Figma, Notion, Linear, Hacker News) inside store and feature illustrations.
+- **App icon tiles** — small 48–64px rounded-corner tiles displaying app icons inside store and feature illustrations. The reference shows real third-party app icons; use generic placeholder tiles, or icons of apps the user has the right to show.
 - **Keycap glyphs** — subtle gradient-filled rounded keycap glyphs used inline to indicate keyboard shortcuts (e.g., `⌘ K`), with a faint `{colors.key-bg-start}` → `{colors.key-bg-end}` linear gradient suggesting a physical key surface.
 
 ## Shapes
@@ -471,7 +471,7 @@ The radius vocabulary clusters tightly between 4 and 16px, with most chrome at 6
 ### Photography Geometry
 There is no traditional photography. Visual elements are limited to:
 - **Command-palette mockups** — full-fidelity Raycast UI screenshots at 16:9 or 4:3 aspect inside `{rounded.xl}` (16px) containers.
-- **App icon tiles** — 48–64px square at `{rounded.md}` (8px), displaying real app icons.
+- **App icon tiles** — 48–64px square at `{rounded.md}` (8px), displaying app icons (generic placeholders, or icons the user has the right to show).
 - **Avatar circles** — 32–40px at `{rounded.full}` for in-extension author attribution.
 - **Hero stripe gradient** — full-bleed wash with no aspect ratio.
 
@@ -653,7 +653,7 @@ The only "imagery" in the system is in-product Raycast UI screenshots and small 
 
 1. Focus on ONE component at a time. Pull its YAML entry and verify every property resolves.
 2. Reference component names and tokens directly (`{colors.primary}`, `{component.button-primary-pressed}`, `{rounded.md}`) — do not paraphrase.
-3. With the user's approval (`npx` downloads and executes a package from npm), run `npx @google/design.md lint DESIGN.md` after edits — `broken-ref`, `contrast-ratio`, and `orphaned-tokens` warnings flag issues automatically.
+3. With the user's approval (`npx` downloads and executes a package from npm), run `npx @google/design.md@0.4.0 lint DESIGN.md` after edits — `broken-ref`, `contrast-ratio`, and `orphaned-tokens` warnings flag issues automatically.
 4. Add new variants as separate component entries (`-pressed`, `-disabled`, `-active`) — do not bury them inside prose.
 5. Default body to `{typography.body-md}` (16px / 400 / 1.6); reach for `{typography.body-strong}` for emphasis; reserve `{typography.display-xl}` strictly for the hero band.
 6. Keep `{colors.primary}` (white CTA pill) scarce per viewport — at most one solid white pill per fold.

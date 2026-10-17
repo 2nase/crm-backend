@@ -445,7 +445,7 @@ The brand-distinctive choice is the **mixed weight ladder** (400 / 500 / 600 / 7
 The hierarchy is explicitly built from weight + size + occasional uppercase transform — there is no italic style, no decorative display variant, no proprietary face. The biggest display moments use weight 800 with -0.6px tracking, and the body settles at 400 with 1.5 line-height; everything else fills the band between. Section eyebrows (`{typography.heading-sm}` and `{typography.utility-xs}`) consistently render uppercase, which gives the doc layout its textbook-chapter feel.
 
 ### Note on Font Substitutes
-IBM Plex Sans Variable is open-source and Google-Fonts-hosted. There is no need for a substitute — load it directly. If a substitute is genuinely needed, **Inter** is the closest geometric match at all five weights; pair with Inter's letter-spacing -0.5 to -0.6px on display sizes to approximate Plex's display tracking. For monospace, **JetBrains Mono** is a near-perfect substitute for Source Code Pro at body sizes.
+IBM Plex Sans Variable is open-source and available from Google Fonts. There is no need for a substitute: self-host the font files in the project rather than linking Google Fonts, so visitors' IP addresses do not go to Google. If a substitute is genuinely needed, **Inter** is the closest geometric match at all five weights; pair with Inter's letter-spacing -0.5 to -0.6px on display sizes to approximate Plex's display tracking. For monospace, **JetBrains Mono** is a near-perfect substitute for Source Code Pro at body sizes.
 
 ## Layout
 
@@ -570,8 +570,8 @@ There is no photography. Visual elements are limited to:
 - Container: background `{colors.surface-card}`, 1px solid `{colors.hairline}`, padding `{spacing.xxl}` (32px), rounded `{rounded.md}`.
 - Layout: tier name in `{typography.display-lg}` (24px / 800 / -0.6px), large price + period, feature checklist with check-icon bullets, primary or secondary CTA at bottom.
 
-**`hedgehog-mascot-card`** — feature card with margin-anchored hedgehog
-- Same chrome as `{component.product-card}` but with a hand-drawn hedgehog illustration anchored in the right margin or top-right corner — the brand's signature card variant.
+**`hedgehog-mascot-card`** — feature card with a margin-anchored mascot
+- Same chrome as `{component.product-card}` but with a hand-drawn illustration of the product's own mascot (never PostHog's hedgehog) anchored in the right margin or top-right corner — the brand's signature card variant.
 
 ### Callout Banners
 
@@ -624,7 +624,7 @@ There is no photography. Visual elements are limited to:
 ### Do
 - Use `{colors.canvas}` (cream — `#eeefe9`) as the page body. Never substitute pure white as the canvas.
 - Reserve `{colors.primary}` (yellow-orange) for the primary CTA pill only. The "Get started — free" treatment is the brand's anchor.
-- Render the brand wordmark with the mascot illustration alongside it, not as a stand-alone wordmark. The mascot IS the brand identity.
+- Render the product's own wordmark with its own mascot illustration alongside it, not as a stand-alone wordmark. Never use PostHog's wordmark or hedgehog: an original mascot carries this style's identity.
 - Use IBM Plex Sans Variable across every text role — body 400, emphasis 600/700, display 800.
 - Stack content sections at `{spacing.section}` (80px) rhythm with no decorative dividers between them; let the cream canvas continue uninterrupted.
 - Use `{component.banner-tip-blue}` / `-green` / `-red` / `-purple` only inside doc article body for tip/warning/note panels — keep marketing chrome out of the four-color callout family.
@@ -674,7 +674,7 @@ The only "imagery" in the system is hand-drawn hedgehog illustrations rendered a
 
 1. Focus on ONE component at a time. Pull its YAML entry and verify every property resolves.
 2. Reference component names and tokens directly (`{colors.primary}`, `{component.button-primary-pressed}`, `{rounded.md}`) — do not paraphrase.
-3. With the user's approval (`npx` downloads and executes a package from npm), run `npx @google/design.md lint DESIGN.md` after edits — `broken-ref`, `contrast-ratio`, and `orphaned-tokens` warnings flag issues automatically.
+3. With the user's approval (`npx` downloads and executes a package from npm), run `npx @google/design.md@0.4.0 lint DESIGN.md` after edits — `broken-ref`, `contrast-ratio`, and `orphaned-tokens` warnings flag issues automatically.
 4. Add new variants as separate component entries (`-pressed`, `-disabled`, `-focused`) — do not bury them inside prose.
 5. Default body to `{typography.body-md}` (16px / 400 / 1.5); reach for `{typography.body-strong}` for emphasis; reserve `{typography.display-lg}` (24px / 800) strictly for marketing display moments.
 6. Keep `{colors.primary}` scarce per viewport — at most one yellow-orange pill per fold.

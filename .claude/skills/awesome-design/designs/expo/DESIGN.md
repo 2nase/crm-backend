@@ -453,7 +453,7 @@ Compact developer-ergonomic radii — 8px CTAs, 12px cards. Pill geometry is res
 
 ### Ecosystem
 
-**`ecosystem-tile`** — Square logo plate for ecosystem partner logos (TypeScript, React, Sentry, etc.). Background `{colors.surface-card}`, rounded `{rounded.md}`, 64px size, 1px `{colors.hairline}` border.
+**`ecosystem-tile`** — Square logo plate for ecosystem partner logos (show only tools and partners the user's product really works with). Background `{colors.surface-card}`, rounded `{rounded.md}`, 64px size, 1px `{colors.hairline}` border.
 
 ### Forms & Tags
 

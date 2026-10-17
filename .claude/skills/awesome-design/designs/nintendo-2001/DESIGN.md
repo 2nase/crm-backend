@@ -503,11 +503,11 @@ Hero photography fills beveled rectangles at roughly 4:1 (banner) and 16:9 propo
 
 ### Brand & Masthead
 
-**`logo-pill`** — Nintendo racetrack logo
-- The wordmark in `{colors.primary}` red set inside a white `{rounded.full}` racetrack pill, outlined. Sits at the left of the nav bar. `{spacing.xs}` padding.
+**`logo-pill`** — racetrack logo pill
+- The product's own wordmark in `{colors.primary}` red set inside a white `{rounded.full}` racetrack pill, outlined (the reference shows Nintendo's racetrack logo; never reproduce it). Sits at the left of the nav bar. `{spacing.xs}` padding.
 
-**`mascot-bubble`** — Mario welcome speech bubble
-- A white `{rounded.lg}` rounded-rectangle speech bubble with a tail, carrying "Welcome to Nintendo.com!" in `{typography.micro}` `{colors.carbon}`, paired with the Mario cutout in the masthead. `{spacing.sm}` padding.
+**`mascot-bubble`** — welcome speech bubble
+- A white `{rounded.lg}` rounded-rectangle speech bubble with a tail, carrying a short welcome line in the product's own words in `{typography.micro}` `{colors.carbon}`, paired with the product's own mascot in the masthead (the reference uses Mario; never use Nintendo characters). `{spacing.sm}` padding.
 
 ### Buttons
 
@@ -584,8 +584,8 @@ Hero photography fills beveled rectangles at roughly 4:1 (banner) and 16:9 propo
 
 ### Badges & Footer
 
-**`esrb-badge`** — ESRB Privacy-Certified mark
-- A small `{colors.amber}` `{rounded.xs}` badge reading "ESRB — Privacy Certified" in `{typography.micro}` `{colors.carbon}`, pinned in the footer.
+**`esrb-badge`** — certification badge
+- A small `{colors.amber}` `{rounded.xs}` badge naming a certification in `{typography.micro}` `{colors.carbon}`, pinned in the footer. The reference shows the real ESRB Privacy Certified mark: show only a certification the user confirms their product holds.
 
 **`esrb-rating-square`** — Game content-rating square
 - A 20px white `{rounded.xs}` square stamping the content-rating letter (E, T) in `{typography.ui-label}` `{colors.carbon}`, on each game card.
@@ -595,7 +595,7 @@ Hero photography fills beveled rectangles at roughly 4:1 (banner) and 16:9 propo
 
 ### Examples (illustrative)
 
-> Kit-mirror demonstration surfaces. Each `ex-*` entry references brand-native primitives so downstream consumers (`/preview-design`, `/generate-kit`) re-skin the same 10 surfaces consistently.
+> Kit-mirror demonstration surfaces. Each `ex-*` entry references brand-native primitives so downstream consumers (`/preview-design`, `/generate-kit`) re-skin the same 10 surfaces consistently. **Not in this repo:** those commands are upstream tooling. Treat the `ex-*` entries as illustrative examples only, and do not run or look for that tooling.
 
 **`ex-pricing-tier`** — Default Pricing tier card. Re-uses feature-card chrome with brand canvas-soft surface.
 - Properties: `backgroundColor`, `textColor`, `borderColor`, `rounded`, `padding`

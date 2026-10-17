@@ -211,7 +211,7 @@ components:
     typography: "{typography.body-sm}"
     padding: "{spacing.3xl} {spacing.xl}"
 
-  # ─── Examples (illustrative) — auto-derived; resolve any TO_FILL markers below ───
+  # ─── Examples (illustrative) — auto-derived by upstream tooling (not in this repo) ───
   ex-pricing-tier:
     description: "Default Pricing tier card. Re-uses feature-card chrome with brand canvas-soft surface."
     backgroundColor: "{colors.canvas-soft}"
@@ -344,7 +344,7 @@ Three faces ladder the system:
 
 ### Note on Font Substitutes
 All three faces are open or freely-loadable:
-- **Inter** — load directly from Google Fonts or Vercel-hosted CDN.
+- **Inter** — open-source, on Google Fonts and Vercel's CDN; download it and self-host it in the project rather than hotlinking either.
 - **DM Mono** — open-source on Google Fonts.
 - **Instrument Serif** — open-source on Google Fonts.
 
@@ -476,7 +476,7 @@ The brand uses surface-contrast and hairline borders for elevation; soft drop-sh
 
 ### Examples (illustrative)
 
-> Auto-derived kit-mirror demonstration surfaces (`scripts/derive-examples-block.mjs`). Each `ex-*` entry references brand-native primitives so downstream consumers (`/preview-design`, `/generate-kit`) re-skin the same 10 surfaces consistently. `TO_FILL` markers indicate missing primitives — resolve in the LLM judgment pass.
+> Auto-derived kit-mirror demonstration surfaces (`scripts/derive-examples-block.mjs`). Each `ex-*` entry references brand-native primitives so downstream consumers (`/preview-design`, `/generate-kit`) re-skin the same 10 surfaces consistently. `TO_FILL` markers indicate missing primitives — resolve in the LLM judgment pass. **Not in this repo:** that script, those commands and the judgment pass are upstream tooling. Treat the `ex-*` entries as illustrative examples only, and do not run or look for that tooling.
 
 **`ex-pricing-tier`** — Default Pricing tier card. Re-uses feature-card chrome with brand canvas-soft surface.
 - Properties: `backgroundColor`, `textColor`, `borderColor`, `rounded`, `padding`

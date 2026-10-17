@@ -1,7 +1,8 @@
 #!/bin/bash
 # Stop hook: Claude cannot finish while the project typecheck or Prisma client generation is red.
 # Runs only when a watched file (see watched.sh) was added, edited, deleted, renamed or replaced
-# since the last green run (before the first one: since the first session in this checkout).
+# since the last green run (before the first one: since the first session in this checkout), or
+# when the Prisma client was not built from the current schema.
 # Whole project on purpose: tsc on single files ignores tsconfig.json, and NestJS decorators
 # need experimentalDecorators/emitDecoratorMetadata.
 cd "$CLAUDE_PROJECT_DIR" || exit 0
@@ -26,6 +27,12 @@ else
   changed=$(git status --porcelain -- '*.ts' '*.tsx' '*.mts' '*.cts' 'src/*.json' \
     prisma/schema.prisma 'tsconfig*.json' 'package*.json' 2>/dev/null)
 fi
+# A Prisma client built from another schema also turns tsc red, for example after a red run
+# whose schema was then restored with its old modification time.
+if [ -z "$changed" ] && [ -f node_modules/.prisma/client/schema.prisma ] &&
+  ! cmp -s prisma/schema.prisma node_modules/.prisma/client/schema.prisma; then
+  changed=client
+fi
 [ -z "$changed" ] && exit 0
 
 if [ ! -x node_modules/.bin/tsc ]; then
@@ -36,15 +43,18 @@ fi
 start=.claude/.typecheck-start.$$
 touch "$start"
 snapshot=$(fingerprint)
-# Every run regenerates the Prisma client that tsc checks against: a restored schema can keep
-# an old modification time.
-if ! gen=$(node_modules/.bin/prisma generate 2>&1); then
-  rm -f "$start"
-  {
-    echo "prisma generate failed. Fix prisma/schema.prisma, then finish:"
-    printf '%s\n' "$gen" | tail -25
-  } >&2
-  exit 2
+# Regenerate the Prisma client that tsc checks against only when it was not built from the
+# current schema. Prisma keeps a copy next to the client; a restored schema can keep an old
+# modification time, and an unneeded generate restarts a running `nest start --watch`.
+if ! cmp -s prisma/schema.prisma node_modules/.prisma/client/schema.prisma; then
+  if ! gen=$(node_modules/.bin/prisma generate 2>&1); then
+    rm -f "$start"
+    {
+      echo "prisma generate failed. Fix prisma/schema.prisma, then finish:"
+      printf '%s\n' "$gen" | tail -25
+    } >&2
+    exit 2
+  fi
 fi
 if out=$(node_modules/.bin/tsc --noEmit -p tsconfig.json 2>&1); then
   printf '%s\n' "$snapshot" > "$list.$$" && mv -f "$list.$$" "$list"

@@ -31,13 +31,15 @@ Files that commonly hold secrets are still searched, but a hit there shows
 only the file and line, never the line itself: .env and .env.*, .npmrc, .netrc,
 .pgpass and similar dotfiles, key, certificate, keystore and VPN files,
 Terraform variables, Android local.properties, Docker and kube configs, auth
-state, other files named like credentials, secrets, service accounts or
-kubeconfig, and files kept in a folder named secrets or credentials (their
-hits say so). Web source code (.ts, .tsx, .js, .vue, .svelte, .astro, .html,
-.css and the like) and CI workflows in .github/workflows/ are the exception to
-those last two groups: CredentialsForm.tsx or lib/secrets.ts prints its lines
-like any other file. The list covers the usual names, not every file a secret
-could be in. Other files print the start of the matching line.
+state, and other files named like credentials, secrets, service accounts or
+kubeconfig. Web source code (.ts, .tsx, .js, .vue, .svelte, .astro, .html,
+.css and the like) and CI workflows directly in .github/workflows/ are the
+exception to that last group: CredentialsForm.tsx or lib/secrets.ts prints its
+lines like any other file. Every other file in a folder named like that
+(secrets/, prod-secrets/, config/credentials/) is hidden too, code included,
+and those hits say so, since an ordinary feature folder can have such a name.
+The list covers the usual names, not every file a secret could be in. Other
+files print the start of the matching line.
 """
 
 import argparse
@@ -70,16 +72,16 @@ SECRET_FILES = (".env", ".env.*", "*.env", ".envrc", ".dev.vars", ".npmrc", ".ya
                 "*.tfvars", "*.tfvars.json", "local.properties")
 # The same, matched on the end of the lower-case path.
 SECRET_PATHS = ("/.docker/config.json", "/.kube/config")
-# Names that also fit ordinary app code (CredentialsForm.tsx, lib/secrets.ts), and folders
-# whose files are hidden (secrets/prod.json). Both hide the lines of files other than web code
-# and CI workflows; a folder hit says so, since a feature folder can be named like this too.
+# Names that also fit ordinary app code (CredentialsForm.tsx, lib/secrets.ts), matched on the
+# file name and on every folder of the path (secrets/prod.json, prod-secrets/). A file name hides
+# the lines of files other than web code and CI workflows; a folder hides every file in it, and
+# its hits say so, since an ordinary feature folder can be named like this too.
 BROAD_SECRET_NAMES = ("*credentials*", "*secret*", "*serviceaccount*", "*service_account*",
                       "*kubeconfig*")
-SECRET_DIRS = {"secret", "secrets", ".secrets", "credentials", ".credentials"}
 CODE_EXT = {".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".mts", ".cts", ".vue", ".svelte",
             ".astro", ".css", ".scss", ".sass", ".less", ".html"}
 HIDDEN = "(line not shown: this file can hold secrets)"
-HIDDEN_DIR = "(line not shown: it is in a secrets or credentials folder)"
+HIDDEN_DIR = "(line not shown: its folder is named like secrets or credentials)"
 BINARY_EXT = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".icns", ".pdf", ".zip",
               ".gz", ".woff", ".woff2", ".ttf", ".otf", ".eot", ".mp4", ".mov", ".mp3",
               ".wav", ".avif", ".heic", ".psd", ".sketch", ".fig", ".jar", ".so", ".dylib"}
@@ -130,12 +132,13 @@ def hidden_text(rel):
     if ("/" + rel).endswith(SECRET_PATHS):
         return HIDDEN
     ext = os.path.splitext(parts[-1])[1]
-    workflow = path.startswith(".github/workflows/") and path.endswith((".yml", ".yaml"))
-    if ext in CODE_EXT or workflow:
-        return None  # web app code and CI workflows, written for the clone
-    if any(fnmatch.fnmatchcase(parts[-1], pat) for pat in BROAD_SECRET_NAMES):
+    # GitHub runs only the workflow files directly in .github/workflows/.
+    workflow = (path.startswith(".github/workflows/") and path.count("/") == 2
+                and path.endswith((".yml", ".yaml")))
+    code = ext in CODE_EXT or workflow  # web app code and CI workflows, written for the clone
+    if not code and any(fnmatch.fnmatchcase(parts[-1], pat) for pat in BROAD_SECRET_NAMES):
         return HIDDEN
-    if any(part in SECRET_DIRS for part in parts[:-1]):
+    if any(fnmatch.fnmatchcase(part, pat) for part in parts[:-1] for pat in BROAD_SECRET_NAMES):
         return HIDDEN_DIR
     return None
 

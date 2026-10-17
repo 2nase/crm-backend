@@ -111,22 +111,23 @@ identifiers like `CalendlyEmbed`), domains and colours, skipping
 `CLAUDE.md` (the skills and settings, not the app), virtualenvs and tool
 folders. In files that commonly hold secrets (`.env`, keys, certificates,
 Terraform variables, Docker and kube configs and the like, plus files named
-like secrets or credentials or kept in a `secrets/` or `credentials/` folder;
-the list is at the top of `sweep.py` and covers the usual names, not every
-file a secret could be in) it shows only the file and line, never the text.
-Do not print those lines yourself: fix `.env.example` directly (it holds no
-values), and for the other files tell the owner which file and line to
-change. Hits marked "it is in a secrets or credentials folder"
-(`src/features/secrets/messages.json`) can be ordinary app files: ask the
+like secrets or credentials and every file in a folder named so, such as
+`secrets/` or `prod-secrets/`; the list is at the top of `sweep.py` and covers
+the usual names, not every file a secret could be in) it shows only the file
+and line, never the text. Do not print those lines yourself: fix
+`.env.example` directly (it holds no values), and for the other files tell the
+owner which file and line to change. Hits marked "its folder is named like
+secrets or credentials" (`config/secrets/production.js`,
+`src/features/secret-santa/messages.json`) can be ordinary app files: ask the
 owner once per folder whether it holds secrets, and open and fix its files
-yourself only if the owner says it does not. Web source code (`.ts`, `.tsx`,
-`.js`, `.vue`, `.svelte`, `.astro`, `.html`, `.css` and the like) and CI
-workflows in `.github/workflows/` are shown in full even when their name says
-secret or credentials (`CredentialsForm.tsx`, `lib/secrets.ts`): fix them
-yourself, and if a line holds a real secret, stop and tell the owner which
-file. Exit 1 means something is left. Fix until it says clean. Also check by
-eye: the favicon, the page titles, the email templates, the OG image, the app
-icon.
+yourself only if the owner says it does not. Outside such folders, web source
+code (`.ts`, `.tsx`, `.js`, `.vue`, `.svelte`, `.astro`, `.html`, `.css` and
+the like) and CI workflows directly in `.github/workflows/` are shown in full
+even when their name says secret or credentials (`CredentialsForm.tsx`,
+`lib/secrets.ts`): fix them yourself, and if a line holds a real secret, stop
+and tell the owner which file. Exit 1 means something is left. Fix until it
+says clean. Also check by eye: the favicon, the page titles, the email
+templates, the OG image, the app icon.
 
 ## Output
 

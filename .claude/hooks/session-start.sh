@@ -6,6 +6,7 @@
 set -euo pipefail
 cd "${CLAUDE_PROJECT_DIR:?}"
 [ -t 0 ] || cat > /dev/null  # the hook input is not needed
+. .claude/hooks/watched.sh    # fingerprint, client_current, generate_client
 
 # Reference point for the typecheck Stop hook until its first green run: files changed after
 # this get checked. Set once per checkout, so later, parallel, resumed or cleared sessions keep
@@ -14,7 +15,6 @@ if [ ! -f .claude/.session-start ]; then
   # Before the first green run the gate compares against this fingerprint to see deletes,
   # renames and restored copies.
   if [ ! -f .claude/.typecheck-ok ]; then
-    . .claude/hooks/watched.sh
     fingerprint > .claude/.typecheck-files || true
   fi
   touch .claude/.session-start
@@ -33,9 +33,8 @@ if [ "${CLAUDE_CODE_REMOTE:-}" = "true" ] && [ "${CLAUDE_CODE_REMOTE_ENVIRONMENT
     npm ci --no-audit --no-fund --no-update-notifier --loglevel=error >/dev/null
     touch "$stamp"
   fi
-  # Prisma keeps a copy of the schema it generated the client from.
-  if ! cmp -s prisma/schema.prisma node_modules/.prisma/client/schema.prisma; then
-    node_modules/.bin/prisma generate >/dev/null
+  if ! client_current; then
+    generate_client >/dev/null
   fi
   [ -f .env ] || cp .env.example .env
 fi

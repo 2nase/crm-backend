@@ -2,7 +2,7 @@
 # Stop hook: Claude cannot finish while the project typecheck or Prisma client generation is red.
 # Runs only when a watched file (see watched.sh) was added, edited, deleted, renamed or replaced
 # since the last green run (before the first one: since the first session in this checkout), or
-# when the Prisma client was not built from the current schema.
+# when an existing Prisma client was built from another schema.
 # Whole project on purpose: tsc on single files ignores tsconfig.json, and NestJS decorators
 # need experimentalDecorators/emitDecoratorMetadata.
 cd "$CLAUDE_PROJECT_DIR" || exit 0
@@ -29,8 +29,7 @@ else
 fi
 # A Prisma client built from another schema also turns tsc red, for example after a red run
 # whose schema was then restored with its old modification time.
-if [ -z "$changed" ] && [ -f node_modules/.prisma/client/schema.prisma ] &&
-  ! cmp -s prisma/schema.prisma node_modules/.prisma/client/schema.prisma; then
+if [ -z "$changed" ] && [ -f node_modules/.prisma/client/schema.prisma ] && ! client_current; then
   changed=client
 fi
 [ -z "$changed" ] && exit 0
@@ -44,10 +43,10 @@ start=.claude/.typecheck-start.$$
 touch "$start"
 snapshot=$(fingerprint)
 # Regenerate the Prisma client that tsc checks against only when it was not built from the
-# current schema. Prisma keeps a copy next to the client; a restored schema can keep an old
+# current schema (see client_current in watched.sh): a restored schema can keep an old
 # modification time, and an unneeded generate restarts a running `nest start --watch`.
-if ! cmp -s prisma/schema.prisma node_modules/.prisma/client/schema.prisma; then
-  if ! gen=$(node_modules/.bin/prisma generate 2>&1); then
+if ! client_current; then
+  if ! gen=$(generate_client 2>&1); then
     rm -f "$start"
     {
       echo "prisma generate failed. Fix prisma/schema.prisma, then finish:"

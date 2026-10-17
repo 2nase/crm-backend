@@ -19,7 +19,8 @@ app), not for ordinary work on this CRM.
 Everything else in the pack builds from what this skill writes. A bad recon
 map means a bad clone, so take the time here.
 
-Output goes in the user's project:
+Output goes in the clone's own repository (step 1, question 4), never in this
+CRM repo:
 
 ```
 replica/recon.md        the recon map (template: recon-map.md in this folder)
@@ -51,12 +52,24 @@ anything the app owns.
 
 ## Step 1: scope
 
-Ask three things, or propose answers and get a yes:
+Ask four things, or propose answers and get a yes:
 
 1. **Which app, which platform.** Web, iOS, Android, desktop.
 2. **Which slice.** "All of Notion" is not a project. "Notion's pages, blocks
    and sharing" is. Default to the core loop: the one flow users pay for.
 3. **Who it is for.** The user's own business, a niche, a product to sell.
+4. **Where the clone lives.** Never in this CRM repository: its tsconfig
+   compiles every .ts/.tsx outside dot folders, and one .ts file outside
+   `src/` moves the build from `dist/main.js` (what CI and `start:prod` run)
+   to `dist/src/main.js`. Ask the owner for a separate repository (the owner
+   creates it, and in a cloud session adds it to the session). With the
+   owner's OK, copy this pack (`.claude/skills/replica-*/`) and the five
+   `/replica/...` lines of this repo's `.gitignore` into it. All Replica work
+   happens there, `replica/` included: every path in the pack is relative to
+   that repository's root. Never add `replica/`, clone code, `e2e/`,
+   `playwright.config.ts` or clone dependencies to this repo, never connect
+   this repo to a host, and never edit this repo's tsconfig to quiet the
+   typecheck gate (that is the owner's decision).
 
 ## Step 2: list the sources
 

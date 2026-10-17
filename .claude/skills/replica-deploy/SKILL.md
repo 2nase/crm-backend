@@ -16,6 +16,8 @@ description: >-
 
 **Only for a Replica project the owner asked for** (a clone of an existing
 app, with `replica/recon.md`), not for ordinary work on this CRM.
+Work in the clone's own repository (`replica-recon`, step 1), never in this
+CRM repo.
 
 Reads everything in `replica/`. Writes `replica/deploy.md` (the checklist in
 `preflight.md` in this folder, filled in).
@@ -47,7 +49,8 @@ python3 .claude/skills/replica-launch/listing.py replica/launch/listing.json    
 npm run build                                                        # production build passes
 ```
 
-(In this project the pack is installed in `.claude/skills/`.)
+(Run these in the clone's own repository, where `replica-recon` step 1 copied
+the pack into `.claude/skills/`.)
 
 `npx --no-install` never downloads anything: if Playwright is not installed,
 the check fails, and replica-test sets it up with the owner's OK. For sweep
@@ -78,8 +81,8 @@ Any failure stops the deploy. Say which and why.
 ## Step 3: host and domain
 
 Default: Vercel for Next.js (Netlify, Cloudflare Pages, Fly or Render
-otherwise). Connect the repo so `main` deploys and pull requests get preview
-URLs.
+otherwise). Connect the clone's repository (never this CRM repo) so `main`
+deploys and pull requests get preview URLs.
 
 The domain, after the user buys it at any registrar:
 

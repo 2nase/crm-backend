@@ -27,9 +27,11 @@ with a pyvenv.cfg), tool working folders (.playwright-cli, .scrapling_cache,
 .unlazy, .pgdata and similar), and research_notes/, reports/, crawl_data/ and
 dev_cache/ at the top level.
 
-Files that can hold secrets (.env, .env.*, .npmrc, key files, credentials and
+Files that can hold secrets (.env, .env.*, .npmrc, key and certificate files,
+credentials, secrets, service-account and keystore files, Terraform variables,
 auth state) are still searched, but a hit there shows only the file and line,
-never the line itself, so no secret ends up in the output.
+never the line itself, so no secret ends up in the output. Other files print
+the start of the matching line.
 """
 
 import argparse
@@ -56,7 +58,10 @@ SECRET_FILES = (".env", ".env.*", "*.env", ".envrc", ".dev.vars", ".npmrc", ".ya
                 ".netrc", ".pypirc", "*.pem", "*.key", "*.p8", "id_rsa*", "id_dsa*",
                 "id_ecdsa*", "id_ed25519*", "credentials.json", "*service-account*.json",
                 "google-services.json", "googleservice-info.plist", "auth.json",
-                "*auth-state*.json", "*storage-state*.json", "*storagestate*.json")
+                "*auth-state*.json", "*storage-state*.json", "*storagestate*.json",
+                "credentials", "*credentials*", "*secret*", "*serviceaccount*",
+                "*firebase-adminsdk*", "*.p12", "*.pfx", "*.keystore", "*.jks", "*.tfvars",
+                ".dockercfg")
 HIDDEN = "(line not shown: this file can hold secrets)"
 BINARY_EXT = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".icns", ".pdf", ".zip",
               ".gz", ".woff", ".woff2", ".ttf", ".otf", ".eot", ".mp4", ".mov", ".mp3",

@@ -15,6 +15,8 @@ description: >-
 
 **Only for a Replica project the owner asked for** (a clone of an existing
 app, with `replica/recon.md`), not for ordinary work on this CRM.
+Work in the clone's own repository (`replica-recon`, step 1), never in this
+CRM repo.
 
 Reads `replica/architecture.md`. Writes migrations and server code, and keeps
 `replica/backend.md` (checklist below) up to date.

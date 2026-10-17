@@ -15,10 +15,13 @@ description: >-
 
 **Only for a Replica project the owner asked for** (a clone of an existing
 app, with `replica/recon.md`), not for ordinary work on this CRM.
+Work in the clone's own repository (`replica-recon`, step 1), never in this
+CRM repo.
 
 Reads the flows in `replica/recon.md`. Writes `replica/test-plan.md`,
-`replica/bugs.md`, and end-to-end tests in the project (`e2e/`). Templates in
-this folder: `test-plan.md`, `bug-report.md`, `e2e.example.ts`.
+`replica/bugs.md`, and end-to-end tests in the clone's own repository (`e2e/`
+there, never in this CRM repo). Templates in this folder: `test-plan.md`,
+`bug-report.md`, `e2e.example.ts`.
 
 ## The rule
 
@@ -48,6 +51,11 @@ Playwright, one spec per flow, against the local dev server with seed data.
 Use roles and labels for selectors (`getByRole('button', { name: 'Book' })`),
 never CSS classes. See `e2e.example.ts`.
 
+In Claude Code cloud sessions, first run `npx --no-install playwright --version`
+and use the version it prints instead of 1.63.0 below. Before the install that
+is the pre-installed Playwright (1.56.1 on 2026-10-17), whose Chromium is in
+`/opt/pw-browsers`; after the install npx prints the local version instead.
+
 ```bash
 npm i -D --save-exact @playwright/test@1.63.0 @axe-core/playwright@4.13.0
 npx --no-install playwright install chromium
@@ -58,9 +66,9 @@ npx --no-install playwright test
 owner first (npm downloads both, and `playwright install` downloads Chromium),
 then pin exact versions (the ones above were checked on npm on 2026-10-17). In Claude Code cloud sessions Chromium is
 pre-installed (`PLAYWRIGHT_BROWSERS_PATH`), so skip `playwright install` and
-pin the `@playwright/test` version that `npx --no-install playwright --version`
-prints, so the browser matches. Write `playwright.config.ts` with
-`testDir: 'e2e'`, so Playwright only runs the specs in `e2e/`.
+use the version from the check above, so the browser matches. In the clone's
+repository root, write `playwright.config.ts` with `testDir: 'e2e'`, so
+Playwright only runs the specs in `e2e/`.
 
 Add to every spec: fail on console errors, fail on any 5xx response, and an
 axe accessibility scan (`@axe-core/playwright`) on each screen.

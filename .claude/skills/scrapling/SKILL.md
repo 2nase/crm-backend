@@ -25,7 +25,7 @@ Blazing fast crawls with real-time stats and streaming. Built by Web Scrapers fo
 Scrapling is a new dependency: **ask the owner before the first install** and wait for a yes. Then create a virtual Python environment (never install into the system Python) and install the audited version inside it:
 
 ```bash
-uv venv .venv-scrapling --python 3.11 --no-python-downloads   # any installed Python 3.10+ works
+uv venv .venv-scrapling --python 3.11 --no-python-downloads   # no 3.11? use another installed 3.10+ (uv python list --only-installed); never turn Python downloads on
 uv pip install --python .venv-scrapling/bin/python --exclude-newer 2026-10-06 "scrapling[rag]==0.4.15"
 ```
 

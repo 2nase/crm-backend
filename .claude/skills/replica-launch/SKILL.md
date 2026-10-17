@@ -15,10 +15,17 @@ description: >-
 
 **Only for a Replica project the owner asked for** (a clone of an existing
 app, with `replica/recon.md`), not for ordinary work on this CRM.
+Work in the clone's own repository (`replica-recon`, step 1), never in this
+CRM repo.
 
-Reads `replica/fixes.md` (the angle and the evidence), `replica/brand.md`,
+Reads `replica/angle.md` (the angle and the fix plan), `replica/brand.md`,
 and `replica/brand.json`. Writes `replica/launch/`: `landing.md`,
 `pricing.md`, `listing.json`, `launch-plan.md`.
+
+If a local-only input (`replica/screens/`, `replica/reviews.csv`,
+`replica/feedback.md`, `replica/fixes.md`) is missing, for example in a new
+cloud session, say so and collect it again or ask the owner; never rebuild
+screenshots, quotes or counts from memory.
 
 ```bash
 python3 .claude/skills/replica-launch/listing.py replica/launch/listing.json      # limits, claims, the original's name
@@ -41,15 +48,15 @@ Start from `listing.example.json` in this folder.
 
 ## Step 1: landing page
 
-`landing.md`, section by section, then build it in the project:
+`landing.md`, section by section, then build it in the clone's repository:
 
 1. **Hero**: the angle as a headline (what you do, for whom), one line under
    it, one button. Screenshot of the real product.
 2. **The problem**: the top two "hate" themes, in plain words. Paraphrase,
    do not quote reviewers.
 3. **How it works**: three steps, from the core flow.
-4. **Features**: each tied to a fix from `fixes.md`. Lead with the fixes,
-   not the parity features. Parity is the price of entry.
+4. **Features**: each tied to a fix from the fix plan in `angle.md`. Lead
+   with the fixes, not the parity features. Parity is the price of entry.
 5. **Pricing**: the table from step 2.
 6. **FAQ**: the real objections, including "can I import from {{category}}
    tools?" if you built an importer.
@@ -63,7 +70,9 @@ Copy in the brand voice. Run replica-design's contrast check on the page.
 
 - The original's public pricing page and 2 or 3 alternatives, in one table,
   with the URL and the date read. Prices change, so the date matters.
-- What reviewers said about price and billing, from `feedback.md`, with counts.
+- What reviewers said about price and billing, from `feedback.md`, as themes
+  and counts in your own words: no verbatim quotes and no review links
+  (`pricing.md` is committed; review texts stay local).
 - The model: free plan or trial, per seat or flat, monthly and annual
   (annual usually 2 months free).
 - Three tiers at most. Name them by who they are for.

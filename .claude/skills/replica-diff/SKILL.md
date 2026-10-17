@@ -16,10 +16,18 @@ description: >-
 
 **Only for a Replica project the owner asked for** (a clone of an existing
 app, with `replica/recon.md`), not for ordinary work on this CRM.
+Work in the clone's own repository (`replica-recon`, step 1), never in this
+CRM repo.
+
+If a local-only input (`replica/screens/`, `replica/reviews.csv`,
+`replica/feedback.md`, `replica/fixes.md`) is missing, for example in a new
+cloud session, say so and collect it again or ask the owner; never rebuild
+screenshots, quotes or counts from memory.
 
 Two tools in this folder, both standard-library Python, no installs:
 
 ```bash
+mkdir -p replica/diffs
 python3 .claude/skills/replica-diff/parity.py replica/features.csv                         # feature parity + missing list
 python3 .claude/skills/replica-diff/imgdiff.py replica/screens/S07.png replica/clone-screens/S07.png --out replica/diffs/S07.png
 python3 .claude/skills/replica-diff/imgdiff.py a.png b.png --json > replica/diffs/S07.json # for parity.py --visual
@@ -60,6 +68,7 @@ like `replica/diffs/`): never commit, push or publish them. The clone's go in
 `replica/clone-screens/`.
 
 ```bash
+mkdir -p replica/diffs
 python3 .claude/skills/replica-diff/imgdiff.py replica/screens/S07.png replica/clone-screens/S07.png --out replica/diffs/S07.png
 ```
 

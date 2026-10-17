@@ -16,10 +16,17 @@ description: >-
 
 **Only for a Replica project the owner asked for** (a clone of an existing
 app, with `replica/recon.md`), not for ordinary work on this CRM.
+Work in the clone's own repository (`replica-recon`, step 1), never in this
+CRM repo.
 
 Reads `replica/recon.md` and the screenshots in `replica/screens/`. Writes
 `replica/design/tokens.json` (template in this folder), `tokens.css`, the
 Tailwind mapping, and `replica/design/components.md`.
+
+If a local-only input (`replica/screens/`, `replica/reviews.csv`,
+`replica/feedback.md`, `replica/fixes.md`) is missing, for example in a new
+cloud session, say so and collect it again or ask the owner; never rebuild
+screenshots, quotes or counts from memory.
 
 ```bash
 python3 .claude/skills/replica-design/contrast.py replica/design/tokens.json     # every text pair, WCAG ratio

@@ -17,6 +17,8 @@ description: >-
 
 **Only for a Replica project the owner asked for** (a clone of an existing
 app, with `replica/recon.md`), not for ordinary work on this CRM.
+Work in the clone's own repository (`replica-recon`, step 1), never in this
+CRM repo.
 
 A straight copy of an app has no reason to exist. This skill finds the reason:
 what the original's users hate, in their own words, and fixes it in yours.
@@ -101,7 +103,9 @@ a trend.
 Pick the top 5 to 8 by evidence times how cheaply you can fix them. For each:
 what to build or change, size (S, M, L), which skill does it, and the
 evidence. Add each one to `replica/features.csv` as a row with `original` set
-to `no`. Pricing and billing complaints go to `/replica-launch`.
+to `no`; that file is committed, so give the evidence there as theme and
+counts only, never quotes or review links. Pricing and billing complaints go
+to `/replica-launch`.
 
 ## Step 5: the angle
 
@@ -120,5 +124,8 @@ A factual comparison page is a legal question for a lawyer in your country.
 ## Output
 
 `replica/reviews.csv`, `replica/feedback.md`, `replica/fixes.md` (three
-lists, fix plan, angle), new rows in `features.csv`, and a summary that
-states the sample size. Next: `/replica-brand`.
+lists, fix plan, angle; all three stay local), `replica/angle.md` (committed:
+the recommended angle, the fix plan, theme names and counts, no quotes and no
+links; later steps read it, because the local files are missing in a new
+cloud session), new rows in `features.csv`, and a summary that states the
+sample size. Next: `/replica-brand`.

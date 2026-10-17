@@ -16,6 +16,8 @@ description: >-
 
 **Only for a Replica project the owner asked for** (a clone of an existing
 app, with `replica/recon.md`), not for ordinary work on this CRM.
+Work in the clone's own repository (`replica-recon`, step 1), never in this
+CRM repo.
 
 Nothing launches under the original's identity. This skill is the line
 between "a clone" and "your app".
@@ -32,7 +34,8 @@ Writes `replica/brand.md` and `replica/brand.json` (`avoid`, `domains`,
 
 ## Step 1: the name
 
-Read the angle from `replica/fixes.md`. Generate 20 candidates across styles:
+Read the angle from `replica/angle.md` (`fixes.md` is local and missing in a
+new cloud session). Generate 20 candidates across styles:
 descriptive (Booklink), compound (Slotwise), invented (Calvo), metaphor
 (Harbor), verb (Book). Then cut to 5 with these filters:
 
@@ -106,12 +109,12 @@ It searches file contents and file names for the original's name (also inside
 identifiers like `CalendlyEmbed`), domains and colours, skipping
 `node_modules`, build output, the `replica/` planning folder, `.claude/` and
 `CLAUDE.md` (the skills and settings, not the app), virtualenvs and tool
-folders. In `.env` and key files it shows only the file and line, never the
-text, so no secret is printed. Do not print those lines yourself: fix
-`.env.example` directly (it holds no values), and for the other files tell the
-owner which file and line to change. Exit 1 means something is left. Fix
-until it says clean. Also check by eye: the favicon, the page titles, the
-email templates, the OG image, the app icon.
+folders. In `.env`, key, credential and other secret files it shows only the
+file and line, never the text, so no secret is printed. Do not print those
+lines yourself: fix `.env.example` directly (it holds no values), and for the
+other files tell the owner which file and line to change. Exit 1 means
+something is left. Fix until it says clean. Also check by eye: the favicon,
+the page titles, the email templates, the OG image, the app icon.
 
 ## Output
 

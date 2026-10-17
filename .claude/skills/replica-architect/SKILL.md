@@ -15,7 +15,8 @@ description: >-
 # replica-architect
 
 **Only for a Replica project the owner asked for** (a clone of an existing
-app), not for ordinary work on this CRM.
+app), not for ordinary work on this CRM. Work in the clone's own repository
+(`replica-recon`, step 1), never in this CRM repo.
 
 Reads `replica/recon.md` and `replica/features.csv`. Writes
 `replica/architecture.md` (template: architecture.md in this folder).

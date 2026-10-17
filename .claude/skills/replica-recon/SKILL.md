@@ -58,18 +58,36 @@ Ask four things, or propose answers and get a yes:
 2. **Which slice.** "All of Notion" is not a project. "Notion's pages, blocks
    and sharing" is. Default to the core loop: the one flow users pay for.
 3. **Who it is for.** The user's own business, a niche, a product to sell.
-4. **Where the clone lives.** Never in this CRM repository: its tsconfig
-   compiles every .ts/.tsx outside dot folders, and one .ts file outside
-   `src/` moves the build from `dist/main.js` (what CI and `start:prod` run)
-   to `dist/src/main.js`. Ask the owner for a separate repository (the owner
-   creates it, and in a cloud session adds it to the session). With the
-   owner's OK, copy this pack (`.claude/skills/replica-*/`) and the five
-   `/replica/...` lines of this repo's `.gitignore` into it. All Replica work
-   happens there, `replica/` included: every path in the pack is relative to
-   that repository's root. Never add `replica/`, clone code, `e2e/`,
-   `playwright.config.ts` or clone dependencies to this repo, never connect
-   this repo to a host, and never edit this repo's tsconfig to quiet the
-   typecheck gate (that is the owner's decision).
+4. **Where the clone lives.** Never in the CRM repository (2nase/crm-backend):
+   its tsconfig compiles every .ts/.tsx outside dot folders, and one .ts file
+   outside `src/` moves the build from `dist/main.js` (what CI and
+   `start:prod` run) to `dist/src/main.js`. Ask the owner for a separate
+   repository (the owner creates it, and in a cloud session adds it to the
+   session). Check it out next to the CRM repository, never in a folder
+   inside it: the CRM's tsconfig and its Stop gate pick up nested
+   repositories too. Locally, open a session in that folder or add it with
+   `/add-dir`. With the owner's OK, copy into it:
+   - this pack (`.claude/skills/replica-*/`);
+   - from the CRM's `.gitignore`, the env and key lines at the top and the
+     blocks headed "playwright-cli output", "Safety net for playwright-cli
+     files", "Playwright test runner output", "Scrapling spider dev cache"
+     and "Replica";
+   - into its `CLAUDE.md`, the CRM's `npx` rule (*Commands*) and, from
+     *Definition of done*, "No new dependencies or global installs without
+     asking" and the "Ask the owner first for" list, so sessions opened
+     there keep them.
+
+   All Replica work happens there, `replica/` included: every path in the
+   pack is relative to that repository's root. Run every command from that
+   root (start it with `cd <path of the clone's repository> &&`) and give
+   that path to any subagent you hand a command to, such as `runner` for
+   installs and builds: subagents start in the CRM repository. Before the
+   first write, check that `git rev-parse --show-toplevel` prints the
+   clone's repository. Never add `replica/`, clone code, `e2e/`,
+   `playwright.config.ts` or clone dependencies to the CRM repository, never
+   connect it to a host, and never edit its tsconfig to quiet the typecheck
+   gate (that is the owner's decision). In the clone's own repository, where
+   this pack has been copied, this question is already answered: skip it.
 
 ## Step 2: list the sources
 

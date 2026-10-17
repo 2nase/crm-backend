@@ -18,9 +18,13 @@ app, with `replica/recon.md`), not for ordinary work on this CRM.
 Work in the clone's own repository (`replica-recon`, step 1), never in this
 CRM repo.
 
-Reads `replica/recon.md`, `replica/architecture.md`, `replica/design/`.
-Updates `replica/features.csv` (the `clone` column) and keeps
-`replica/build-log.md`.
+Reads `replica/recon.md`, `replica/architecture.md`, `replica/design/` and
+the reference screenshots in `replica/screens/`. Updates `replica/features.csv`
+(the `clone` column) and keeps `replica/build-log.md`.
+
+`replica/screens/` is local only. If it is missing, for example in a new
+cloud session, say so and collect it again or ask the owner; never rebuild a
+screen's layout from memory.
 
 ## The rules
 

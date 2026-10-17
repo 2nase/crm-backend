@@ -109,10 +109,14 @@ It searches file contents and file names for the original's name (also inside
 identifiers like `CalendlyEmbed`), domains and colours, skipping
 `node_modules`, build output, the `replica/` planning folder, `.claude/` and
 `CLAUDE.md` (the skills and settings, not the app), virtualenvs and tool
-folders. In `.env`, key, credential and other secret files it shows only the
-file and line, never the text, so no secret is printed. Do not print those
-lines yourself: fix `.env.example` directly (it holds no values), and for the
-other files tell the owner which file and line to change. Exit 1 means
+folders. In files that commonly hold secrets (`.env`, keys, credential and
+secret files, Terraform variables, Docker and kube configs and the like; the
+list is at the top of `sweep.py`) it shows only the file and line, never the
+text. Do not print those lines yourself: fix `.env.example` directly (it holds
+no values), and for the other files tell the owner which file and line to
+change. Source code is shown in full even when its name says secret or
+credentials (`CredentialsForm.tsx`, `lib/secrets.ts`): fix it yourself, and if
+a line holds a real secret, stop and tell the owner which file. Exit 1 means
 something is left. Fix until it says clean. Also check by eye: the favicon,
 the page titles, the email templates, the OG image, the app icon.
 

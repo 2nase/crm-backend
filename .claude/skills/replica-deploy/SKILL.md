@@ -49,8 +49,8 @@ python3 .claude/skills/replica-launch/listing.py replica/launch/listing.json    
 npm run build                                                        # production build passes
 ```
 
-(Run these in the clone's own repository, where `replica-recon` step 1 copied
-the pack into `.claude/skills/`.)
+(Run these from the clone's repository root, with `cd <its path> &&` on each
+command, where `replica-recon` step 1 copied the pack into `.claude/skills/`.)
 
 `npx --no-install` never downloads anything: if Playwright is not installed,
 the check fails, and replica-test sets it up with the owner's OK. For sweep

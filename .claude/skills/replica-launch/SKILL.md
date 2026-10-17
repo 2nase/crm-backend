@@ -107,9 +107,11 @@ notes with a demo account the reviewer can use.
 ## Step 4: launch plan
 
 `launch-plan.md`: a waitlist or beta list before launch, analytics and error
-tracking live, where the original's unhappy users talk (the Reddit threads
-and communities from the research), a Product Hunt or Hacker News post that
-leads with the fix, and the first 10 users to talk to by hand.
+tracking live, where the original's unhappy users talk (name the communities,
+such as a subreddit or forum, not single threads or posts: `launch-plan.md` is
+committed and review links stay local), a Product Hunt or Hacker News post
+that leads with the fix, and how you will find the first 10 users to talk to
+by hand (no names, handles or contact details in this file).
 
 ## Output
 

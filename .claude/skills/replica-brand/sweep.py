@@ -27,11 +27,15 @@ with a pyvenv.cfg), tool working folders (.playwright-cli, .scrapling_cache,
 .unlazy, .pgdata and similar), and research_notes/, reports/, crawl_data/ and
 dev_cache/ at the top level.
 
-Files that can hold secrets (.env, .env.*, .npmrc, key and certificate files,
-credentials, secrets, service-account and keystore files, Terraform variables,
-auth state) are still searched, but a hit there shows only the file and line,
-never the line itself, so no secret ends up in the output. Other files print
-the start of the matching line.
+Files that commonly hold secrets are still searched, but a hit there shows
+only the file and line, never the line itself: .env and .env.*, .npmrc, .netrc,
+.pgpass and similar dotfiles, key, certificate, keystore and VPN files,
+Terraform variables, Android local.properties, Docker and kube configs, auth
+state, and other files named like credentials, secrets or service accounts or
+kept in a folder named so. Source code is the exception to that last group:
+CredentialsForm.tsx or lib/secrets.ts prints its lines like any other file.
+The list covers the usual names, not every file a secret could be in. Other
+files print the start of the matching line.
 """
 
 import argparse
@@ -55,13 +59,21 @@ SKIP_FILES = {"package-lock.json", "yarn.lock", "pnpm-lock.yaml", "bun.lockb",
               "Podfile.lock", "Cargo.lock", "poetry.lock", "CLAUDE.md", "CLAUDE.local.md"}
 # Searched, but a hit shows only file and line (matched on the lower-case file name).
 SECRET_FILES = (".env", ".env.*", "*.env", ".envrc", ".dev.vars", ".npmrc", ".yarnrc.yml",
-                ".netrc", ".pypirc", "*.pem", "*.key", "*.p8", "id_rsa*", "id_dsa*",
-                "id_ecdsa*", "id_ed25519*", "credentials.json", "*service-account*.json",
-                "google-services.json", "googleservice-info.plist", "auth.json",
-                "*auth-state*.json", "*storage-state*.json", "*storagestate*.json",
-                "credentials", "*credentials*", "*secret*", "*serviceaccount*",
+                ".netrc", ".pypirc", ".pgpass", ".htpasswd", ".s3cfg", ".dockercfg",
+                "*.pem", "*.key", "*.p8", "*.ppk", "*.asc", "*.ovpn", "id_rsa*", "id_dsa*",
+                "id_ecdsa*", "id_ed25519*", "credentials", "credentials.json",
+                "*service-account*.json", "google-services.json", "googleservice-info.plist",
+                "auth.json", "*auth-state*.json", "*storage-state*.json", "*storagestate*.json",
                 "*firebase-adminsdk*", "*.p12", "*.pfx", "*.keystore", "*.jks", "*.tfvars",
-                ".dockercfg")
+                "*.tfvars.json", "local.properties")
+# The same, matched on the end of the lower-case path.
+SECRET_PATHS = ("/.docker/config.json", "/.kube/config")
+# Names that also fit ordinary app code (CredentialsForm.tsx, lib/secrets.ts). They hide the
+# lines of other files only, and also match a folder on the path (secrets/prod.json).
+BROAD_SECRET_NAMES = ("*credentials*", "*secret*", "*serviceaccount*")
+CODE_EXT = {".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".vue", ".svelte", ".astro", ".css",
+            ".scss", ".sass", ".less", ".html", ".md", ".mdx", ".py", ".rb", ".go", ".rs",
+            ".java", ".kt", ".swift", ".dart", ".php"}
 HIDDEN = "(line not shown: this file can hold secrets)"
 BINARY_EXT = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".icns", ".pdf", ".zip",
               ".gz", ".woff", ".woff2", ".ttf", ".otf", ".eot", ".mp4", ".mov", ".mp3",
@@ -103,9 +115,17 @@ def is_binary(path):
         return True
 
 
-def is_secret(name):
-    name = name.lower()
-    return any(fnmatch.fnmatchcase(name, pat) for pat in SECRET_FILES)
+def is_secret(rel):
+    rel = rel.replace(os.sep, "/").lower()
+    parts = rel.split("/")
+    if any(fnmatch.fnmatchcase(parts[-1], pat) for pat in SECRET_FILES):
+        return True
+    if ("/" + rel).endswith(SECRET_PATHS):
+        return True
+    ext = os.path.splitext(parts[-1])[1]
+    if ext in CODE_EXT or (parts[0] == ".github" and ext in (".yml", ".yaml")):
+        return False  # app code and CI workflows, written for the clone
+    return any(fnmatch.fnmatchcase(part, pat) for part in parts for pat in BROAD_SECRET_NAMES)
 
 
 def sweep(root, avoid=(), domains=(), colors=(), include_replica=False, max_size=2_000_000):
@@ -138,7 +158,7 @@ def sweep(root, avoid=(), domains=(), colors=(), include_replica=False, max_size
                 continue
             path = os.path.join(dirpath, fn)
             rel = os.path.normpath(os.path.join(rel_dir, fn))
-            secret = is_secret(fn)
+            secret = is_secret(rel)
             for kind, label, rx in pats:
                 if kind == "name" and rx.search(fn):
                     hits.append({"file": rel, "line": 0, "kind": "path", "match": label,

@@ -56,8 +56,11 @@ and use the version it prints instead of 1.63.0 below. Before the install that
 is the pre-installed Playwright (1.56.1 on 2026-10-17), whose Chromium is in
 `/opt/pw-browsers`; after the install npx prints the local version instead.
 
+Run these from the clone's repository root (`cd <its path> &&` on each
+command, see `replica-recon` step 1), never in the CRM repository:
+
 ```bash
-npm i -D --save-exact @playwright/test@1.63.0 @axe-core/playwright@4.13.0
+npm i -D --save-exact --before=<date two weeks back> @playwright/test@1.63.0 @axe-core/playwright@4.13.0
 npx --no-install playwright install chromium
 npx --no-install playwright test
 ```

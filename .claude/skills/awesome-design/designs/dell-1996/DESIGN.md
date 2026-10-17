@@ -541,7 +541,7 @@ All seven share identical chrome: 1 px solid `{colors.frame-ink}` border, `{spac
 
 ### Stickers (GIF-style overlays)
 
-**`buy-a-dell-sticker`** — yellow rectangular sticker with a short call to action in Helvetica Bold, one small word set in a purple stripe and the product's own name in black (the reference reads "BUY a DELL" with Dell's wordmark; never reproduce it). Pinned to the top-right of every page.
+**`buy-a-dell-sticker`** — yellow rectangular sticker with the product's own short call to action in Helvetica Bold. Pinned to the top-right of every page. The reference reads "BUY a DELL", with "a" in a purple stripe and Dell's wordmark; never reproduce it or its "BUY a <name>" layout.
 - Background `{colors.yellow-sticker}`, text `{colors.ink}`, 1 px black border, type `{typography.button}`, padding 4 × 8, no radius.
 
 **`new-burst-sticker`** — angled yellow burst with "NEW!" in Helvetica Bold black, overlapping the right side of new product ribbon-cards. Slight rotation (~15°) gives it the pinned-on-with-tape feel.

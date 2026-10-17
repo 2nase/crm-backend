@@ -4,7 +4,7 @@ Source: [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) @ce26fc2
 
 ## How it was reviewed
 
-Every file was read in full by an audit agent, then re-audited by an independent adversarial verifier that diffed it against upstream; groups with findings went through a fix round and a second verification. Final verdict of that audit: image-to-code: needs_fix. That verdict was stale: the orchestrator closed the verifier's last two findings afterwards (see the next paragraph), but the record was not updated. The PR review (2026-10-08) then found that the description and the consent wording still needed work, and that this record was out of date. See "Fixes from the PR review (2026-10-08)" below. After those fixes, a diff against upstream shows only line 3 and lines 7-23 changed, and the review has no open finding for this skill.
+Every file was read in full by an audit agent, then re-audited by an independent adversarial verifier that diffed it against upstream; groups with findings went through a fix round and a second verification. Final verdict of that audit: image-to-code: needs_fix. That verdict was stale: the orchestrator closed the verifier's last two findings afterwards (see the next paragraph), but the record was not updated. The PR review of 2026-10-08 then found that the description and the consent wording still needed work, and that this record was out of date. See "Fixes from the PR review of 2026-10-08" below. After those fixes, a diff against upstream shows only line 3 and lines 7-23 changed, and the review has no open finding for this skill.
 
 The verifier's last two low findings (self-written social proof; personal data in image prompts) were closed by the orchestrator in the 'Claude Code adaptation' section.
 
@@ -33,7 +33,7 @@ The adaptation as it stood before the PR review. This list was regenerated from 
 
 - the other skills of the repo
 
-## Fixes from the PR review (2026-10-08)
+## Fixes from the PR review of 2026-10-08
 
 - L3 (description): 'it must first generate the design image(s) itself, deeply analyze them, then implement ... In Codex, it must prefer ... generate fresh standalone images ... avoid lazy under-generation, avoid cards-inside-cards-inside-cards UI, and keep the hero ...' -> 'it works from reference images the user provides, or from images generated with an image tool only after the user says yes (such tools may send prompts and images to a third-party service and cost credits). It deeply analyzes them, then implements ... It prefers ... uses fresh standalone images ... avoids cards-inside-cards-inside-cards UI, and keeps the hero ...'. 'avoid lazy under-generation' is dropped. Why: the description appears in every session's skill list and said the skill must generate images itself, which contradicted the gated body (review finding F4-6).
 - L13 (step 2): the consent question now says that the tool may send prompts and images to a third-party service, may cost credits and may save the results into a connected account, and gives roughly how many images are planned. Added 'Generate only after the user says yes', and 'ask again before going well beyond that number' -> 'ask again before going beyond that number'. Why: the user was asked for a yes without being told about the third party, the cost or the account, and 'well beyond' allowed extra paid generations without a second ask, while the body pushes for more images in several places (F4-6). The disclosure follows taste-skill section 4.8.

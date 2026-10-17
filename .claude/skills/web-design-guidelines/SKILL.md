@@ -14,6 +14,8 @@ Review files for compliance with the Web Interface Guidelines.
 3. Check the files against every rule in `guidelines.md`, including the anti-patterns list.
 4. Output findings in the terse `file:line` format that `guidelines.md` specifies, grouped by file.
 
+For the `preconnect` and font `preload` rules in `guidelines.md`: recommend self-hosted fonts and assets first, suggest `preconnect` only for a third-party host the project already uses with the owner's OK, and report every third-party hotlink (fonts, images, scripts, CDNs) as a finding. A hotlink sends each visitor's IP address to that host, a GDPR problem for sites with EU visitors.
+
 ## Why Vendored
 
 The upstream skill (vercel-labs/agent-skills, `skills/web-design-guidelines`) downloaded its rules from the `main` branch of vercel-labs/web-interface-guidelines at the start of every review. That meant the instructions the agent followed could change at any time without review.

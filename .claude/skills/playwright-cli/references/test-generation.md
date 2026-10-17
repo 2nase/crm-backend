@@ -7,7 +7,7 @@ End-to-end workflow for authoring and maintaining Playwright tests with `playwri
 - **Generate** — turn a spec into Playwright test files. Update the spec if it's vague or stale.
 - **Heal** — diagnose failing tests, fix the code, reconcile the spec with reality.
 
-Plan / generate / heal lean on the same mechanic: run `npx playwright test --debug=cli` in the background, then `playwright-cli attach tw-XXXX` to drive the paused page interactively. See [playwright-tests.md](playwright-tests.md) for the debug/attach mechanics.
+Plan / generate / heal lean on the same mechanic: run `npx --no-install playwright test --debug=cli` in the background, then `playwright-cli attach tw-XXXX` to drive the paused page interactively. See [playwright-tests.md](playwright-tests.md) for the debug/attach mechanics.
 
 ---
 
@@ -161,7 +161,9 @@ If there is no Playwright install, ask the user before bootstrapping one (it add
 npm init playwright@1.17.139
 ```
 
-The version is pinned on purpose (checked on npm on 2026-10-17; change it only with the owner's OK). It still installs the newest `@playwright/test`, so afterwards remove the `^` in front of that version in `package.json`. Claude's shell cannot answer the interactive questions: pass the user's picks as flags after `--` (for example `npm init playwright@1.17.139 -- --quiet --lang=TypeScript --browser=chromium`), and in cloud sessions add `--no-browsers`, because Chromium is pre-installed there (see "Setup in this project" in [SKILL.md](../SKILL.md)).
+The version is pinned on purpose (checked on npm on 2026-10-17; change it only with the owner's OK). It still installs the newest `@playwright/test`, so afterwards pin that to an exact version that has been public for at least two weeks: `npm install -D --save-exact @playwright/test@1.63.0` (checked on npm on 2026-10-17; change it only with the owner's OK). In cloud sessions, use the version that `npx --no-install playwright --version` printed before the bootstrap instead: that is the pre-installed Playwright, whose Chromium is in `/opt/pw-browsers`. Claude's shell cannot answer the interactive questions: pass the user's picks as flags after `--` (for example `npm init playwright@1.17.139 -- --quiet --lang=TypeScript --browser=chromium`), and in cloud sessions add `--no-browsers`, because Chromium is pre-installed there (see "Setup in this project" in [SKILL.md](../SKILL.md)).
+
+Tell the user up front what else the bootstrap does: outside cloud sessions it downloads Chromium (unless `--no-browsers` is passed), and it appends entries to `.gitignore`. In this repo it also changes the Nest build: tsconfig.json has no `include`, so `playwright.config.ts` and `tests/` move the build entry to `dist/src/main.js`, and `npm run start:prod` and CI's boot step fail (see Gotchas in CLAUDE.md). With the owner's OK, add a `tsconfig.build.json` containing `{ "extends": "./tsconfig.json", "include": ["src"] }` (the Nest CLI picks it up automatically), then run `npm run build` and `test -f dist/main.js`.
 
 ### 1.2 Prerequisite: seed test
 
@@ -209,7 +211,7 @@ If no seed exists, create one that at least navigates to the app.
 Launch the app via the seed in the background and attach:
 
 ```bash
-PLAYWRIGHT_HTML_OPEN=never npx playwright test tests/seed.spec.ts --debug=cli
+PLAYWRIGHT_HTML_OPEN=never npx --no-install playwright test tests/seed.spec.ts --debug=cli
 # wait for "Debugging Instructions" and the session name tw-XXXX
 playwright-cli attach tw-XXXX
 ```
@@ -297,7 +299,7 @@ Goal: take a spec file and produce Playwright test files. Optionally update the 
 For each target scenario, in sequence (never in parallel — scenarios share the seed session):
 
 ```bash
-PLAYWRIGHT_HTML_OPEN=never npx playwright test <seed-file> --debug=cli   # background
+PLAYWRIGHT_HTML_OPEN=never npx --no-install playwright test <seed-file> --debug=cli   # background
 playwright-cli attach tw-XXXX
 # resume
 ```
@@ -360,7 +362,7 @@ Loop 2.2 over the targeted scenarios one at a time, restarting the seed between 
 After generation, run the new tests once:
 
 ```bash
-PLAYWRIGHT_HTML_OPEN=never npx playwright test tests/<group>/<scenario>.spec.ts
+PLAYWRIGHT_HTML_OPEN=never npx --no-install playwright test tests/<group>/<scenario>.spec.ts
 ```
 
 Any failure goes to Section 3.
@@ -374,7 +376,7 @@ Goal: fix failing tests, and update the spec if the app's intended behaviour cha
 ### 3.1 Find failing tests
 
 ```bash
-PLAYWRIGHT_HTML_OPEN=never npx playwright test
+PLAYWRIGHT_HTML_OPEN=never npx --no-install playwright test
 ```
 
 Record the list of failing `<file>:<line>` entries and process them one at a time. Do not attempt parallel fixes — shared state and the single CLI session make that fragile.
@@ -384,7 +386,7 @@ Record the list of failing `<file>:<line>` entries and process them one at a tim
 Run the single failing test in debug mode in the background, then attach:
 
 ```bash
-PLAYWRIGHT_HTML_OPEN=never npx playwright test tests/<group>/<scenario>.spec.ts:<line> --debug=cli
+PLAYWRIGHT_HTML_OPEN=never npx --no-install playwright test tests/<group>/<scenario>.spec.ts:<line> --debug=cli
 # wait for "Debugging Instructions" and the tw-XXXX session name
 playwright-cli attach tw-XXXX
 ```

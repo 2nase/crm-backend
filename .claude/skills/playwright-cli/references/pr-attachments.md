@@ -45,7 +45,7 @@ Attach the screenshots and videos Playwright Test already saves under `test-resu
 permissions:
   pull-requests: write
 steps:
-  - run: npx playwright test
+  - run: npx --no-install playwright test
   - name: Attach failure screenshots and videos to the PR
     if: failure() && github.event_name == 'pull_request'
     env:

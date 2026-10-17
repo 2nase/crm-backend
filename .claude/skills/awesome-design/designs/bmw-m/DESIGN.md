@@ -438,7 +438,7 @@ Hero photography fills full-width with no rounding. Photo cards inside grids ret
 - Anchor every page with full-bleed automotive photography. The cars are the brand voltage; chrome backs off.
 - Use UPPERCASE display headlines in `{typography.display-xl}` or `{typography.display-lg}`. Sentence-case display reads as off-brand.
 - Pair heavy display (700) with light body (300). The weight contrast is the editorial signature.
-- Reserve the tricolor stripe for the product's own identity moments, such as accents next to its own wordmark and motorsport-style chrome. Never pair it with BMW M wordmarks or model badges, and never use it as a button fill or surface.
+- Reserve the tricolor stripe for dividers and motorsport-style chrome. Never set it beside a letter mark or wordmark as a logo (the BMW M logo's composition), never pair it with BMW M wordmarks or model badges, and never use it as a button fill or surface.
 - Use `{rounded.none}` (0px) by default. Reserve `{rounded.full}` for circular icon buttons only.
 - Letter-space all-caps labels at 1.5px. The "machined" feel is non-negotiable.
 - Use `{spacing.section}` (96px) between major editorial bands for grid-aligned vertical rhythm.

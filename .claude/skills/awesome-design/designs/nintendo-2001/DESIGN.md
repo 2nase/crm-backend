@@ -503,8 +503,8 @@ Hero photography fills beveled rectangles at roughly 4:1 (banner) and 16:9 propo
 
 ### Brand & Masthead
 
-**`logo-pill`** — racetrack logo pill
-- The product's own wordmark in `{colors.primary}` red set inside a white `{rounded.full}` racetrack pill, outlined (the reference shows Nintendo's racetrack logo; never reproduce it). Sits at the left of the nav bar. `{spacing.xs}` padding.
+**`logo-pill`** — logo slot
+- The product's own logo, in its own form. Sits at the left of the nav bar. `{spacing.xs}` padding. The reference shows Nintendo's logo, a red wordmark inside an outlined white racetrack pill; never reproduce it or that composition around another name.
 
 **`mascot-bubble`** — welcome speech bubble
 - A white `{rounded.lg}` rounded-rectangle speech bubble with a tail, carrying a short welcome line in the product's own words in `{typography.micro}` `{colors.carbon}`, paired with the product's own mascot in the masthead (the reference uses Mario; never use Nintendo characters). `{spacing.sm}` padding.

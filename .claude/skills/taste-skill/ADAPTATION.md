@@ -4,7 +4,7 @@ Source: [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) @ce26fc2
 
 ## How it was reviewed
 
-Every file was read in full by an audit agent, then re-audited by an independent adversarial verifier that diffed it against upstream; groups with findings went through a fix round and a second verification. Final verdict of that audit: taste-skill: clean. That verdict was wrong: the PR review (2026-10-08) found ungated install instructions (including the unpinned `npx shadcn@latest` and `yarn add`) and other gaps. See "Fixes from the PR review (2026-10-08)" below.
+Every file was read in full by an audit agent, then re-audited by an independent adversarial verifier that diffed it against upstream; groups with findings went through a fix round and a second verification. Final verdict of that audit: taste-skill: clean. That verdict was wrong: the PR review of 2026-10-08 found ungated install instructions (including the unpinned `npx shadcn@latest` and `yarn add`) and other gaps. See "Fixes from the PR review of 2026-10-08" below.
 
 ## Changes to upstream
 
@@ -29,7 +29,7 @@ The adaptation as it stood before the PR review. This list was regenerated from 
 
 - the other 11 skills of the repo (only the one requested)
 
-## Fixes from the PR review (2026-10-08)
+## Fixes from the PR review of 2026-10-08
 
 - L161-162 (3.F): added an install gate that covers every install path in the skill (including the 2.A table and Honesty rule, a second icon library in 3.C, the `simple-icons` and `@svgr/cli` packages in 4.8, and Appendix A): show the user the exact install command and wait for the user's OK; never run npm, npx or yarn installs unasked; use `npm install`, since the project keeps a `package-lock.json`; use `npx` only with a pinned version, and say that the shadcn CLI fetches component code from its registry and edits config and CSS files. Why: the skill told Claude to install packages and offered the unpinned `npx shadcn@latest` with no approval step (review finding F4-1); the owner's rules forbid unreviewed remote code and new dependencies without asking.
 - L99 (2.A table): `npx shadcn@latest add ...` -> `npx shadcn@4.21.0 add ...`, with 'only after the user's OK, see 3.F'. Why: `@latest` runs whatever version npm serves that day. 4.21.0 (published 2026-09-04) was chosen on purpose as a version public for more than two weeks; the latest on 2026-10-08 was 4.21.4.

@@ -4,7 +4,7 @@ Source: [VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-desig
 
 ## How it was reviewed
 
-Every file was read in full by an audit agent, then re-audited by an independent adversarial verifier that diffed it against upstream; groups with findings went through a fix round and a second verification. Final verdicts: awesome-design-1: clean; awesome-design-2: clean; awesome-design-3: clean; awesome-design-4: clean; awesome-design-5: clean; awesome-design-6: clean; awesome-design-extra-1: clean. Those verdicts missed brand-asset instructions that the cleanup had not reached, notes that name upstream tooling, and font hotlinks. The PR review (2026-10-08) found them; see "Fixes from the PR review (2026-10-08)" below.
+Every file was read in full by an audit agent, then re-audited by an independent adversarial verifier that diffed it against upstream; groups with findings went through a fix round and a second verification. Final verdicts: awesome-design-1: clean; awesome-design-2: clean; awesome-design-3: clean; awesome-design-4: clean; awesome-design-5: clean; awesome-design-6: clean; awesome-design-extra-1: clean. Those verdicts missed brand-asset instructions that the cleanup had not reached, notes that name upstream tooling, and font hotlinks. The PR review of 2026-10-08 found them; see "Fixes from the PR review of 2026-10-08" below.
 
 ## Changes to upstream
 
@@ -17,7 +17,7 @@ Every file was read in full by an audit agent, then re-audited by an independent
 
 - per-brand README.md stubs that only link to getdesign.md
 
-## Fixes from the PR review (2026-10-08)
+## Fixes from the PR review of 2026-10-08
 
 - `SKILL.md` L25 (Guardrails): new bullet 'This guardrail beats the DESIGN.md text'. Logos, glyphs, wordmarks, mascots, stickers, award seals, certification badges, slogans, sample copy, product and size names, phone numbers, customer or partner logo strips, third-party app icons and prompts that name the brand only describe the reference site. Replace them with the user's own assets or neutral placeholders (invented names, a fictional 555-01xx number), even where a file says "never substituted", "Don't strip" or "IS the brand identity"; show an award, a certification or a customer logo only if the user confirms it is real for their product. Why: many files give specific, emphatic instructions to reproduce the reference brand's assets, and the review read only 6 of the 74 files line by line. One rule that wins over all of them covers what line edits miss (review finding F4-2).
 - Brand-asset lines rewritten to the product's own mark, words or mascot, or to placeholders (F4-2):
@@ -38,3 +38,11 @@ Every file was read in full by an audit agent, then re-audited by an independent
 - warp L347, raycast L417, posthog L448: the font lines now say to self-host the open-source font in the project instead of loading it from Google Fonts or a CDN. Why: F4-8; warp said outright to load Inter from Google Fonts or Vercel's CDN.
 - The 'Run `npx @google/design.md lint`' step in all 34 files now pins `npx @google/design.md@0.4.0 lint DESIGN.md` (Google's package, checked on npm on 2026-10-17: public since 2026-07-27, no install scripts, has a `lint` command); airtable, hp and slack no longer call it an unpinned package. It still needs the user's approval. Why: CLAUDE.md asks to neutralize unpinned remote code, and the approval gate alone left the version open. Change the version only with the owner's OK.
 - This file: the count of changed files, the two kinds of earlier edits with the files and lines they touched, and a note on the 'clean' verdicts. Why: the record overstated the logo cleanup (F4-2).
+
+## Fixes from the second PR review of 2026-10-17
+
+- `SKILL.md` L25 (Guardrails): the brand-asset bullet now also forbids rebuilding a reference logo's composition around the user's name (the same shape, colour order and arrangement), with the three cases below as examples. Why: the first fix round swapped the brand names for "the product's own", but three components still described the logo's design, so the guardrail against reproducing logos no longer caught them.
+  - nintendo-2001 L506-507: `logo-pill` is a logo slot for the product's own logo; the red wordmark in an outlined racetrack pill is named only as the reference's logo, never to be rebuilt.
+  - bmw-m L441: the tricolor stripe is for dividers and motorsport-style chrome, never beside a letter mark or wordmark as a logo.
+  - dell-1996 L544: the sticker carries the product's own call to action; the "BUY a <name>" layout is named only as the reference's.
+

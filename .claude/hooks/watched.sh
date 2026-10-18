@@ -45,7 +45,8 @@ generate_client() {
   if [ -f "$m" ] && [ -z "$(find -L prisma/schema.prisma -cnewer "$m" 2>/dev/null)" ] &&
     [ "$(cksum < prisma/schema.prisma 2>/dev/null)" = "$s" ]; then
     { printf '%s\n' "$s"; cksum < node_modules/.prisma/client/schema.prisma; } \
-      > .claude/.typecheck-schema 2>/dev/null || rm -f .claude/.typecheck-schema 2>/dev/null
+      > .claude/.typecheck-schema 2>/dev/null ||
+      { rm -f .claude/.typecheck-schema 2>/dev/null || :; }
   fi
   rm -f "$m" 2>/dev/null || :
   return 0

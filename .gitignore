@@ -29,7 +29,7 @@ coverage
 /.lighthouseci/
 
 # Claude Code hook state (.typecheck-ok, .typecheck-files, .typecheck-schema, temporary
-# .typecheck-start.<pid> and .typecheck-gen.<pid>)
+# .typecheck-start.<pid>, .typecheck-files.<pid> and .typecheck-gen.<pid>)
 .claude/.typecheck-*
 .claude/.session-start
 

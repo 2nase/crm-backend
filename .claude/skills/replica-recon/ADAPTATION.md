@@ -96,3 +96,9 @@ The review rated these findings low.
 - Step 6: hits marked "this file can hold secrets" stay with the owner even in a folder the owner has cleared. Why: "open and fix its files" could be read as every file in that folder, `.env` files and keys included.
 - `sweep.py`: the hyphenated `*service-account*` joins the broad names, so `service-account/` and `service-accounts/` folders and non-JSON files such as `service-account.yaml` are hidden like the joined and underscore spellings. Why: they printed in full in every earlier round, while the docstring said files and folders named like service accounts are hidden. The singular `credential` is still not matched: matching it would also hide ordinary folders such as `src/credential/`.
 - Checked: the upstream test cases and the third-review cases still pass, and a new local test covers 53 paths: the fifth-review test's 37 plus nested matching folders, original case and the hyphenated spelling. On 12 review samples the decisions match the fifth-review version except for the hyphenated service-account paths, which are now hidden; no file prints that the fifth-review version hid.
+
+## Fixes from the seventh PR review of 2026-10-18
+
+The review rated this finding low.
+
+- `replica-brand/sweep.py`: the broad names also match a file or folder name with its spaces, dots, hyphens and underscores removed, so `kube-config.yml`, `kube_config.yaml`, `kube-config/`, `Service Account Keys/`, `service account.json` and `service.accounts/` are hidden like `kubeconfig` and `serviceaccount`. Why: they printed in full in every earlier round, while the docstring said files and folders named like service accounts or kubeconfig are hidden. Checked: the upstream test cases, the third-review cases and the sixth-review test pass, and on the review samples only names spelled with such separators change, from printed to hidden.

@@ -32,10 +32,11 @@ only the file and line, never the line itself: .env and .env.*, .npmrc, .netrc,
 .pgpass and similar dotfiles, key, certificate, keystore and VPN files,
 Terraform variables, Android local.properties, Docker and kube configs, auth
 state, and other files named like credentials, secrets, service accounts or
-kubeconfig. Web source code (.ts, .tsx, .js, .vue, .svelte, .astro, .html,
-.css and the like) and CI workflows directly in .github/workflows/ are the
-exception to that last group: CredentialsForm.tsx or lib/secrets.ts prints its
-lines like any other file. Every other file in a folder named like that
+kubeconfig, with or without separators (kube-config, Service Account Keys).
+Web source code (.ts, .tsx, .js, .vue, .svelte, .astro, .html, .css and the
+like) and CI workflows directly in .github/workflows/ are the exception to
+that last group: CredentialsForm.tsx or lib/secrets.ts prints its lines like
+any other file. Every other file in a folder named like that
 (secrets/, prod-secrets/, config/credentials/, service-accounts/) is hidden
 too, code included, and those hits name the nearest such folder, since an
 ordinary feature folder can have such a name. The list covers the usual names,
@@ -123,6 +124,14 @@ def is_binary(path):
         return True
 
 
+def broad(name):
+    """True when a lower-case file or folder name matches BROAD_SECRET_NAMES, also with its
+    spaces, dots, hyphens and underscores removed (kube-config, service account keys)."""
+    squeezed = re.sub(r"[\s._-]+", "", name)
+    return any(fnmatch.fnmatchcase(name, pat) or fnmatch.fnmatchcase(squeezed, pat)
+               for pat in BROAD_SECRET_NAMES)
+
+
 def hidden_text(rel):
     """What a hit in this file shows instead of its line, or None to show the line."""
     path = rel.replace(os.sep, "/")
@@ -137,10 +146,10 @@ def hidden_text(rel):
     workflow = (path.startswith(".github/workflows/") and path.count("/") == 2
                 and path.endswith((".yml", ".yaml")))
     code = ext in CODE_EXT or workflow  # web app code and CI workflows, written for the clone
-    if not code and any(fnmatch.fnmatchcase(parts[-1], pat) for pat in BROAD_SECRET_NAMES):
+    if not code and broad(parts[-1]):
         return HIDDEN
     for i in range(len(parts) - 2, -1, -1):  # the nearest such folder, in its original case
-        if any(fnmatch.fnmatchcase(parts[i], pat) for pat in BROAD_SECRET_NAMES):
+        if broad(parts[i]):
             return HIDDEN_DIR % "/".join(path.split("/")[:i + 1])
     return None
 

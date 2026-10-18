@@ -2,7 +2,8 @@
 # Stop hook: Claude cannot finish while the project typecheck or Prisma client generation is red.
 # Runs only when a watched file (see watched.sh) was added, edited, deleted, renamed or replaced
 # since the last green run (before the first one: since the first session in this checkout), or
-# when an existing Prisma client was built from another schema.
+# when client_current (see watched.sh) cannot show that an existing Prisma client was built from
+# the current schema.
 # Whole project on purpose: tsc on single files ignores tsconfig.json, and NestJS decorators
 # need experimentalDecorators/emitDecoratorMetadata.
 cd "$CLAUDE_PROJECT_DIR" || exit 0
@@ -42,8 +43,8 @@ fi
 start=.claude/.typecheck-start.$$
 touch "$start"
 snapshot=$(fingerprint)
-# Regenerate the Prisma client that tsc checks against only when it was not built from the
-# current schema (see client_current in watched.sh): a restored schema can keep an old
+# Regenerate the Prisma client that tsc checks against only when client_current (watched.sh)
+# cannot show it was built from the current schema: a restored schema can keep an old
 # modification time, and an unneeded generate restarts a running `nest start --watch`.
 if ! client_current; then
   if ! gen=$(generate_client 2>&1); then

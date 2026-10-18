@@ -21,21 +21,32 @@ schema_sums() {
   cksum < prisma/schema.prisma && cksum < node_modules/.prisma/client/schema.prisma
 }
 
-# True when the Prisma client was built from the current schema. Prisma's copy is formatted, so
-# an unformatted schema (alignment, trailing spaces, CRLF) never matches it byte for byte; for
-# that case generate_client records both checksums.
+# True when the Prisma client is known to be built from the current schema. Prisma's copy is
+# formatted, so an unformatted schema (alignment, trailing spaces, CRLF) never matches it byte
+# for byte; for that case generate_client records both checksums. Only the hooks' own generates
+# are recorded: a client generated outside them from an unformatted schema counts as stale once.
 client_current() {
+  local sums
   cmp -s prisma/schema.prisma node_modules/.prisma/client/schema.prisma && return 0
-  [ -f .claude/.typecheck-schema ] &&
-    [ "$(schema_sums 2>/dev/null)" = "$(cat .claude/.typecheck-schema)" ]
+  [ -f .claude/.typecheck-schema ] && sums=$(schema_sums 2>/dev/null) &&
+    [ "$sums" = "$(cat .claude/.typecheck-schema)" ]
 }
 
 # prisma generate, then the record that client_current reads. Prisma's own output passes through.
+# Fails only when the schema cannot be read or prisma generate fails.
 generate_client() {
-  local s
-  s=$(cksum < prisma/schema.prisma) || return 1  # taken first: an edit during generate stays stale
-  rm -f .claude/.typecheck-schema
-  node_modules/.bin/prisma generate || return 1
-  { printf '%s\n' "$s"; cksum < node_modules/.prisma/client/schema.prisma; } \
-    > .claude/.typecheck-schema 2>/dev/null || rm -f .claude/.typecheck-schema
+  local s m=.claude/.typecheck-gen.$$
+  rm -f .claude/.typecheck-schema 2>/dev/null || :
+  touch "$m" 2>/dev/null || :
+  s=$(cksum < prisma/schema.prisma) || { rm -f "$m"; return 1; }
+  if ! node_modules/.bin/prisma generate; then rm -f "$m"; return 1; fi
+  # No record when the schema was written while Prisma ran, even if it was changed back since:
+  # the client may come from the other version.
+  if [ -f "$m" ] && [ -z "$(find -L prisma/schema.prisma -cnewer "$m" 2>/dev/null)" ] &&
+    [ "$(cksum < prisma/schema.prisma 2>/dev/null)" = "$s" ]; then
+    { printf '%s\n' "$s"; cksum < node_modules/.prisma/client/schema.prisma; } \
+      > .claude/.typecheck-schema 2>/dev/null || rm -f .claude/.typecheck-schema 2>/dev/null
+  fi
+  rm -f "$m" 2>/dev/null || :
+  return 0
 }

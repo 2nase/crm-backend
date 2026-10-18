@@ -28,7 +28,8 @@ coverage
 # Lighthouse CI reports (page screenshots and URLs)
 /.lighthouseci/
 
-# Claude Code hook state (.typecheck-ok, .typecheck-files, temporary .typecheck-start.<pid>)
+# Claude Code hook state (.typecheck-ok, .typecheck-files, .typecheck-schema, temporary
+# .typecheck-start.<pid> and .typecheck-gen.<pid>)
 .claude/.typecheck-*
 .claude/.session-start
 

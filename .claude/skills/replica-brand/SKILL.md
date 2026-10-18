@@ -111,23 +111,25 @@ identifiers like `CalendlyEmbed`), domains and colours, skipping
 `CLAUDE.md` (the skills and settings, not the app), virtualenvs and tool
 folders. In files that commonly hold secrets (`.env`, keys, certificates,
 Terraform variables, Docker and kube configs and the like, plus files named
-like secrets or credentials and every file in a folder named so, such as
-`secrets/` or `prod-secrets/`; the list is at the top of `sweep.py` and covers
-the usual names, not every file a secret could be in) it shows only the file
-and line, never the text. Do not print those lines yourself: fix
-`.env.example` directly (it holds no values), and for the other files tell the
-owner which file and line to change. Hits marked "its folder is named like
-secrets or credentials" (`config/secrets/production.js`,
-`src/features/secret-santa/messages.json`) can be ordinary app files: ask the
-owner once per folder whether it holds secrets, and open and fix its files
-yourself only if the owner says it does not. Outside such folders, web source
-code (`.ts`, `.tsx`, `.js`, `.vue`, `.svelte`, `.astro`, `.html`, `.css` and
-the like) and CI workflows directly in `.github/workflows/` are shown in full
-even when their name says secret or credentials (`CredentialsForm.tsx`,
-`lib/secrets.ts`): fix them yourself, and if a line holds a real secret, stop
-and tell the owner which file. Exit 1 means something is left. Fix until it
-says clean. Also check by eye: the favicon, the page titles, the email
-templates, the OG image, the app icon.
+like secrets, credentials or service accounts and every file in a folder named
+so, such as `secrets/` or `prod-secrets/`; the list is at the top of
+`sweep.py` and covers the usual names, not every file a secret could be in)
+it shows only the file and line, never the text. Do not print those lines
+yourself: fix `.env.example` directly (it holds no values), and for the other
+files tell the owner which file and line to change. Hits marked `it is in
+<folder>/, a folder whose name suggests secrets`
+(`config/secrets/production.js`, `src/features/secret-santa/messages.json`)
+can be ordinary app files: ask the owner once per folder the marker names
+whether it holds secrets, and open and fix the hits naming that folder
+yourself only if the owner says it does not. Hits marked "this file can hold
+secrets" stay with the owner even in such a folder. Outside such folders, web
+source code (`.ts`, `.tsx`, `.js`, `.vue`, `.svelte`, `.astro`, `.html`,
+`.css` and the like) and CI workflows directly in `.github/workflows/` are
+shown in full even when their name says secret or credentials
+(`CredentialsForm.tsx`, `lib/secrets.ts`): fix them yourself, and if a line
+holds a real secret, stop and tell the owner which file. Exit 1 means
+something is left. Fix until it says clean. Also check by eye: the favicon,
+the page titles, the email templates, the OG image, the app icon.
 
 ## Output
 

@@ -36,10 +36,11 @@ kubeconfig. Web source code (.ts, .tsx, .js, .vue, .svelte, .astro, .html,
 .css and the like) and CI workflows directly in .github/workflows/ are the
 exception to that last group: CredentialsForm.tsx or lib/secrets.ts prints its
 lines like any other file. Every other file in a folder named like that
-(secrets/, prod-secrets/, config/credentials/) is hidden too, code included,
-and those hits say so, since an ordinary feature folder can have such a name.
-The list covers the usual names, not every file a secret could be in. Other
-files print the start of the matching line.
+(secrets/, prod-secrets/, config/credentials/, service-accounts/) is hidden
+too, code included, and those hits name the nearest such folder, since an
+ordinary feature folder can have such a name. The list covers the usual names,
+not every file a secret could be in. Other files print the start of the
+matching line.
 """
 
 import argparse
@@ -75,13 +76,13 @@ SECRET_PATHS = ("/.docker/config.json", "/.kube/config")
 # Names that also fit ordinary app code (CredentialsForm.tsx, lib/secrets.ts), matched on the
 # file name and on every folder of the path (secrets/prod.json, prod-secrets/). A file name hides
 # the lines of files other than web code and CI workflows; a folder hides every file in it, and
-# its hits say so, since an ordinary feature folder can be named like this too.
+# its hits name the nearest such folder, since an ordinary feature folder can be named like this.
 BROAD_SECRET_NAMES = ("*credentials*", "*secret*", "*serviceaccount*", "*service_account*",
-                      "*kubeconfig*")
+                      "*service-account*", "*kubeconfig*")
 CODE_EXT = {".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".mts", ".cts", ".vue", ".svelte",
             ".astro", ".css", ".scss", ".sass", ".less", ".html"}
 HIDDEN = "(line not shown: this file can hold secrets)"
-HIDDEN_DIR = "(line not shown: its folder is named like secrets or credentials)"
+HIDDEN_DIR = "(line not shown: it is in %s/, a folder whose name suggests secrets)"
 BINARY_EXT = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".icns", ".pdf", ".zip",
               ".gz", ".woff", ".woff2", ".ttf", ".otf", ".eot", ".mp4", ".mov", ".mp3",
               ".wav", ".avif", ".heic", ".psd", ".sketch", ".fig", ".jar", ".so", ".dylib"}
@@ -138,8 +139,9 @@ def hidden_text(rel):
     code = ext in CODE_EXT or workflow  # web app code and CI workflows, written for the clone
     if not code and any(fnmatch.fnmatchcase(parts[-1], pat) for pat in BROAD_SECRET_NAMES):
         return HIDDEN
-    if any(fnmatch.fnmatchcase(part, pat) for part in parts[:-1] for pat in BROAD_SECRET_NAMES):
-        return HIDDEN_DIR
+    for i in range(len(parts) - 2, -1, -1):  # the nearest such folder, in its original case
+        if any(fnmatch.fnmatchcase(parts[i], pat) for pat in BROAD_SECRET_NAMES):
+            return HIDDEN_DIR % "/".join(path.split("/")[:i + 1])
     return None
 
 

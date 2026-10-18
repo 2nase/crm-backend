@@ -1,0 +1,111 @@
+---
+name: replica-test
+description: >-
+  Replica pack, step 6 of 11: a clean-room rebuild of an existing app. Only
+  when the owner is explicitly building such a clone (replica/recon.md
+  exists); not for testing or QA of this CRM. Clicks through every flow of an
+  app clone and tests it for bugs: a test plan generated from the recon flows
+  with happy paths and edge cases, Playwright end-to-end tests where
+  possible, a browser click-through where not, and bug reports in a fixed
+  format with severity, steps and evidence. Use when the user says "test my
+  clone", or after /replica-build or /replica-backend.
+---
+
+# replica-test
+
+**Only for a Replica project the owner asked for** (a clone of an existing
+app, with `replica/recon.md`), not for ordinary work on this CRM.
+Work in the clone's own repository (`replica-recon`, step 1), never in this
+CRM repo.
+
+Reads the flows in `replica/recon.md`. Writes `replica/test-plan.md`,
+`replica/bugs.md`, and end-to-end tests in the clone's own repository (`e2e/`
+there, never in this CRM repo). Templates in this folder: `test-plan.md`,
+`bug-report.md`, `e2e.example.ts`.
+
+## The rule
+
+**Test your clone, not the original.** Never load test, fuzz, script or
+hammer the original app's servers. Using the original by hand, as a normal
+user, to see how it behaves is fine.
+
+## Step 1: the plan
+
+For every flow F01, F02... in the recon map, write:
+
+- **Happy path**: the steps, and what the user should see at the end.
+- **Edge cases** that apply. Go down this list for every flow:
+  empty input, very long input, emoji and accents, two tabs at once,
+  double click on submit, back button mid-flow, refresh mid-flow, slow
+  network, offline, expired session, second user's data (must be invisible),
+  time zones and daylight saving, mobile width, keyboard only, screen reader
+  labels.
+- **Negative cases**: wrong password, card declined (Stripe test card
+  `4000 0000 0000 0002`), permission denied, deleted record.
+
+Number every case: F01-H1, F01-E3, F01-N2.
+
+## Step 2: automate what you can
+
+Playwright, one spec per flow, against the local dev server with seed data.
+Use roles and labels for selectors (`getByRole('button', { name: 'Book' })`),
+never CSS classes. See `e2e.example.ts`.
+
+In Claude Code cloud sessions, first run `npx --no-install playwright --version`
+and use the version it prints instead of 1.63.0 below. Before the install that
+is the pre-installed Playwright (1.56.1 on 2026-10-17), whose Chromium is in
+`/opt/pw-browsers`; after the install npx prints the local version instead.
+
+Run these from the clone's repository root (`cd <its path> &&` on each
+command, see `replica-recon` step 1), never in the CRM repository:
+
+```bash
+npm i -D --save-exact --before=<date two weeks back> @playwright/test@1.63.0 @axe-core/playwright@4.13.0
+npx --no-install playwright install chromium
+npx --no-install playwright test
+```
+
+`@playwright/test` and `@axe-core/playwright` are new dev dependencies: ask the
+owner first (npm downloads both, and `playwright install` downloads Chromium),
+then pin exact versions (the ones above were checked on npm on 2026-10-17). In Claude Code cloud sessions Chromium is
+pre-installed (`PLAYWRIGHT_BROWSERS_PATH`), so skip `playwright install` and
+use the version from the check above, so the browser matches. In the clone's
+repository root, write `playwright.config.ts` with `testDir: 'e2e'`, so
+Playwright only runs the specs in `e2e/`.
+
+Add to every spec: fail on console errors, fail on any 5xx response, and an
+axe accessibility scan (`@axe-core/playwright`) on each screen.
+
+## Step 3: click through the rest
+
+What cannot be automated (emails arriving, OAuth with real providers,
+payments end to end, visual glitches) gets a manual pass. If a browser tool is
+available, drive the local clone with it and screenshot each step. Otherwise
+give the user the checklist and wait for answers.
+
+## Step 4: report bugs
+
+Every bug goes in `replica/bugs.md` in the `bug-report.md` format: an ID, a
+severity, exact steps, expected, actual, evidence. Severity:
+
+| | means |
+| --- | --- |
+| S1 | data loss, security hole, payments wrong, core flow blocked |
+| S2 | a feature broken, no workaround |
+| S3 | broken with a workaround, or visibly wrong |
+| S4 | cosmetic |
+
+Only report what you reproduced. "Might be an issue" goes in a separate
+"to check" list.
+
+## Step 5: fix loop
+
+Fix S1 and S2 first. For every fix: write the failing test first, fix, watch
+it pass, keep the test. Re-run the whole suite after each batch. Update
+`bugs.md` with the commit that fixed each one.
+
+## Output
+
+`test-plan.md`, the specs, `bugs.md`, and a summary: cases run, passed,
+failed, bugs by severity, fixed so far. Ship nothing with an open S1. Next:
+`/replica-diff`.

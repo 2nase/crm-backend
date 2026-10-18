@@ -1,0 +1,31 @@
+{
+  "env": {
+    "CHECKPOINT_DISABLE": "1",
+    "OPENCOLLECTIVE_HIDE": "1",
+    "CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS": "1",
+    "CHROME_DEVTOOLS_MCP_NO_UPDATE_CHECKS": "1",
+    "NPM_CONFIG_UPDATE_NOTIFIER": "false"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-start.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/typecheck-gate.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

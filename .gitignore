@@ -2,9 +2,64 @@ node_modules
 dist
 .env
 .env.local
+# other env files (.env.test, .env.production, .envrc, editor backups) and key material
+# (see security-and-hardening/SKILL.md, Secrets)
+.env*
+!.env.example
+*.pem
+*.key
 *.log
 .DS_Store
 coverage
 .nest
 .tsbuildinfo
 .pgdata
+
+# unlazy working files
+.unlazy/
+
+# playwright-cli output (snapshots, screenshots, session data)
+.playwright-cli/
+
+# research working files (repo root only, so src/**/reports/ stays tracked)
+/research_notes/
+/reports/
+
+# Lighthouse CI reports (page screenshots and URLs)
+/.lighthouseci/
+
+# Claude Code hook state (.typecheck-ok, .typecheck-files, .typecheck-schema, temporary
+# .typecheck-start.<pid>, .typecheck-files.<pid> and .typecheck-gen.<pid>)
+.claude/.typecheck-*
+.claude/.session-start
+
+# Scrapling spider dev cache and checkpoints (can hold cookies, headers, pickled requests)
+.scrapling_cache/
+dev_cache/
+crawl_data/
+
+# Python bytecode caches (unreviewable binaries)
+__pycache__/
+*.pyc
+
+# Scrapling skill virtualenv (python3 -m venv on Python <= 3.12 does not self-ignore)
+/.venv-scrapling/
+
+# Safety net for playwright-cli files written outside .playwright-cli/ (can hold cookies and tokens)
+/auth.json
+*auth-state*.json
+/storage-state-*.json
+/.playwright/
+*.webm
+
+# Playwright test runner output (run state, failure screenshots, traces, saved logins)
+/test-results/
+/playwright-report/
+/playwright/.auth/
+
+# Replica: screenshots of the original app and copied third-party reviews stay local
+/replica/screens/
+/replica/diffs/
+/replica/reviews.csv
+/replica/feedback.md
+/replica/fixes.md
